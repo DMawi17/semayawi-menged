@@ -14,6 +14,9 @@ export const source = {
 					cover: page.cover,
 					published: page.published,
 					tags: page.tags,
+					category: page.category,
+					featured: page.featured,
+					author: page.author,
 				},
 			};
 		});
@@ -37,6 +40,9 @@ export const source = {
 				cover: page.cover,
 				published: page.published,
 				tags: page.tags,
+				category: page.category,
+				featured: page.featured,
+				author: page.author,
 			},
 		};
 	},

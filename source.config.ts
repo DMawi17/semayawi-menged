@@ -13,6 +13,9 @@ export const blog = defineCollections({
     cover: z.string(),
     published: z.boolean().default(true),
     tags: z.array(z.string()).optional(),
+    category: z.string().default('women-of-bible'), // Category ID: women-of-bible, men-of-bible, church-history, theology-wisdom
+    featured: z.boolean().default(false), // Featured posts appear in hero section
+    author: z.string().optional(), // Author name for multi-author support
   }),
 });
 
