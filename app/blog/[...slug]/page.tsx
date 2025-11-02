@@ -5,6 +5,13 @@ import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { slug as slugger } from "github-slugger";
+import { getCategoryById } from "@/lib/categories";
+import { siteConfig } from "@/config/site";
+import { calculateReadingTime } from "@/lib/reading-time";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { CategoryBadge } from "@/components/blog/category-badge";
+import { ReadingTime } from "@/components/blog/reading-time";
+import { Calendar, User } from "lucide-react";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -32,9 +39,35 @@ export async function generateMetadata({
     return {};
   }
 
+  const category = getCategoryById(post.category);
+  const postUrl = `${siteConfig.url}${post.url}`;
+  const imageUrl = post.cover ? `${siteConfig.url}${post.cover}` : undefined;
+
   return {
-    title: post.data.title,
-    description: post.data.description,
+    title: post.title,
+    description: post.description,
+    authors: post.author ? [{ name: post.author }] : [{ name: siteConfig.author }],
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      publishedTime: new Date(post.date).toISOString(),
+      authors: [post.author || siteConfig.author],
+      tags: post.tags,
+      images: imageUrl ? [{ url: imageUrl, alt: post.title }] : undefined,
+      url: postUrl,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+    keywords: [
+      ...(post.tags || []),
+      category?.name || "",
+      category?.nameAmharic || "",
+    ],
   };
 }
 
@@ -47,70 +80,95 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const MDX = post.body;
+  const category = getCategoryById(post.category);
+  const readingTime = calculateReadingTime(post.body.toString());
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-4xl">
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        {/* Cover Image */}
-        {post.data.cover && (
-          <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
-            <Image
-              src={post.data.cover}
-              alt={post.data.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Post Header */}
-        <header className="mb-8 not-prose">
-          <h1 className="text-4xl font-bold mb-4">{post.data.title}</h1>
-
-          {post.data.description && (
-            <p className="text-xl text-muted-foreground mb-4">
-              {post.data.description}
-            </p>
-          )}
-
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <time dateTime={String(post.data.date)}>
-              {formatDate(String(post.data.date))}
-            </time>
-          </div>
-
-          {/* Tags */}
-          {post.data.tags && post.data.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {post.data.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/tags/${slugger(tag)}`}
-                  className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                >
-                  {tag}
-                </Link>
-              ))}
+    <>
+      <ReadingProgress />
+      <main className="container mx-auto px-4 py-12 max-w-4xl">
+        <article className="prose prose-slate dark:prose-invert max-w-none">
+          {/* Cover Image */}
+          {post.data.cover && (
+            <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
+              <Image
+                src={post.data.cover}
+                alt={post.data.title}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           )}
-        </header>
 
-        {/* Post Content */}
-        <div className="mt-8">
-          <MDX />
-        </div>
+          {/* Post Header */}
+          <header className="mb-8 not-prose">
+            {/* Category Badge */}
+            {category && (
+              <div className="mb-4">
+                <CategoryBadge category={category} showIcon />
+              </div>
+            )}
 
-        {/* Back to Blog Link */}
-        <div className="mt-12 pt-8 border-t not-prose">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-primary hover:underline font-medium"
-          >
-            ← ወደ ብሎግ ተመለስ
-          </Link>
-        </div>
-      </article>
-    </main>
+            <h1 className="text-4xl font-bold mb-4">{post.data.title}</h1>
+
+            {post.data.description && (
+              <p className="text-xl text-muted-foreground mb-6">
+                {post.data.description}
+              </p>
+            )}
+
+            {/* Post Metadata */}
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-4 w-4" />
+                <time dateTime={String(post.data.date)}>
+                  {formatDate(String(post.data.date))}
+                </time>
+              </div>
+
+              {post.data.author && (
+                <div className="flex items-center gap-1.5">
+                  <User className="h-4 w-4" />
+                  <span>{post.data.author}</span>
+                </div>
+              )}
+
+              <ReadingTime minutes={readingTime.minutes} />
+            </div>
+
+            {/* Tags */}
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {post.data.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tags/${slugger(tag)}`}
+                    className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </header>
+
+          {/* Post Content */}
+          <div className="mt-8">
+            <MDX />
+          </div>
+
+          {/* Back to Blog Link */}
+          <div className="mt-12 pt-8 border-t not-prose">
+            <Link
+              href="/blog"
+              className="inline-flex items-center text-primary hover:underline font-medium"
+            >
+              ← ወደ ብሎግ ተመለስ
+            </Link>
+          </div>
+        </article>
+      </main>
+    </>
   );
 }
