@@ -15,6 +15,13 @@ import { ReadingTime } from "@/components/blog/reading-time";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { PostNavigation } from "@/components/blog/post-navigation";
 import { ShareButtons } from "@/components/blog/share-buttons";
+import { TableOfContents } from "@/components/blog/table-of-contents";
+import { AuthorBio } from "@/components/blog/author-bio";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
+import { Comments } from "@/components/blog/comments";
+import { Newsletter } from "@/components/blog/newsletter";
+import { BookmarkButton } from "@/components/blog/bookmark-button";
+import { ViewCounter } from "@/components/blog/view-counter";
 import { Calendar, User } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -95,8 +102,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <>
       <ReadingProgress />
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
-        <article className="prose prose-slate dark:prose-invert max-w-none">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="flex gap-8">
+          {/* Main Content */}
+          <main className="flex-1 min-w-0 max-w-4xl">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              category={post.data.category}
+              postTitle={post.data.title}
+            />
+
+            <article className="prose prose-slate dark:prose-invert max-w-none">
           {/* Cover Image */}
           {post.data.cover && (
             <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
@@ -144,6 +160,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               )}
 
               <ReadingTime minutes={readingTime.minutes} />
+              <ViewCounter postUrl={post.url} />
+            </div>
+
+            {/* Bookmark Button */}
+            <div className="mb-6">
+              <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
             </div>
 
             {/* Tags */}
@@ -176,6 +198,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </div>
 
+          {/* Author Bio */}
+          <AuthorBio author={post.data.author} />
+
           {/* Post Navigation */}
           <div className="not-prose">
             <PostNavigation previous={previous} next={next} />
@@ -184,6 +209,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Related Posts */}
           <div className="not-prose">
             <RelatedPosts posts={relatedPosts} />
+          </div>
+
+          {/* Newsletter */}
+          <div className="not-prose">
+            <Newsletter />
+          </div>
+
+          {/* Comments */}
+          <div className="not-prose">
+            <Comments />
           </div>
 
           {/* Back to Blog Link */}
@@ -197,6 +232,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
       </main>
+
+      {/* Table of Contents Sidebar */}
+      <aside className="hidden xl:block">
+        <TableOfContents />
+      </aside>
+    </div>
+  </div>
     </>
   );
 }

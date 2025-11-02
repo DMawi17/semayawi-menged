@@ -4,6 +4,8 @@ import { source } from "@/lib/source";
 import { sortPosts } from "@/lib/utils";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
+import { calculateReadingTime } from "@/lib/reading-time";
+import { Clock } from "lucide-react";
 
 const POSTS_PER_PAGE = 9;
 
@@ -107,10 +109,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                   {post.data.title}
                 </h2>
                 {post.data.description && (
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                  <p className="text-muted-foreground text-sm mb-3 line-clamp-3">
                     {post.data.description}
                   </p>
                 )}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                  <Clock className="h-3 w-3" />
+                  <span>{calculateReadingTime(post.body.toString()).minutes} ደቂቃ</span>
+                </div>
                 {post.data.tags && post.data.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {post.data.tags.slice(0, 3).map((tag) => (

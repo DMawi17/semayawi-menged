@@ -2,6 +2,7 @@
 import type { MDXComponents } from "mdx/types";
 import Image, { ImageProps } from "next/image";
 import { ReactNode } from "react";
+import { Callout } from "@/components/mdx/callout";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
@@ -132,6 +133,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		em: ({ children }: { children?: ReactNode }) => (
 			<em className="italic">{children}</em>
 		),
+		// Custom components
+		Callout,
 		...components,
 	};
 }

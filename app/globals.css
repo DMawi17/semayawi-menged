@@ -81,3 +81,53 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Print Styles */
+@media print {
+  header,
+  footer,
+  nav,
+  aside,
+  .no-print,
+  button,
+  [role="navigation"] {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  a[href^="/"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+
+  pre,
+  code {
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+}
