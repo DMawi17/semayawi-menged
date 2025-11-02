@@ -59,7 +59,16 @@ export function getActiveCategories(): Category[] {
  */
 export async function getCategoryPostCount(categoryId: string): Promise<number> {
   const posts = await source.getPages();
-  return posts.filter((post) => post.category === categoryId && post.published).length;
+  const category = getCategory(categoryId);
+
+  if (!category) {
+    return 0;
+  }
+
+  return posts.filter((post) => {
+    const postCategory = getCategory(post.category);
+    return postCategory?.id === category.id && post.published;
+  }).length;
 }
 
 /**
@@ -67,8 +76,17 @@ export async function getCategoryPostCount(categoryId: string): Promise<number> 
  */
 export async function getPostsByCategory(categoryId: string) {
   const posts = await source.getPages();
+  const category = getCategory(categoryId);
+
+  if (!category) {
+    return [];
+  }
+
   return posts
-    .filter((post) => post.category === categoryId && post.published)
+    .filter((post) => {
+      const postCategory = getCategory(post.category);
+      return postCategory?.id === category.id && post.published;
+    })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

@@ -111,7 +111,7 @@ export default async function Home() {
                         alt={post.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform group-hover:scale-105"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   )}
@@ -126,7 +126,7 @@ export default async function Home() {
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                       {post.title}
                     </h3>
 
@@ -151,7 +151,7 @@ export default async function Home() {
         </p>
         <Link
           href="/about"
-          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
+          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
         >
           ተጨማሪ ያንብቡ
         </Link>

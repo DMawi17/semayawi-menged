@@ -1,4 +1,5 @@
 import type { BlogPost } from "@/types/blog";
+import { getCategory } from "./categories";
 
 /**
  * Get related posts based on shared tags and category
@@ -18,12 +19,16 @@ export function getRelatedPosts(
       post.url !== currentPost.url && post.data.published !== false
   );
 
+  // Get current post's category for comparison
+  const currentCategory = getCategory(currentPost.data.category);
+
   // Score each post based on similarity
   const scoredPosts = otherPosts.map((post) => {
     let score = 0;
 
     // Same category gets highest score
-    if (post.data.category === currentPost.data.category) {
+    const postCategory = getCategory(post.data.category);
+    if (currentCategory && postCategory && postCategory.id === currentCategory.id) {
       score += 10;
     }
 

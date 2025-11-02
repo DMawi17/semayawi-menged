@@ -88,7 +88,7 @@ export default async function WomenOfBiblePage() {
                         alt={post.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform group-hover:scale-105"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   )}
@@ -106,7 +106,7 @@ export default async function WomenOfBiblePage() {
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                       {post.title}
                     </h3>
 
