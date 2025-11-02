@@ -114,9 +114,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			</a>
 		),
 		// Image with Next.js Image component
-		img: (props: any) => (
+		img: (props: ImageProps & { alt?: string }) => (
 			<Image
-				{...(props as ImageProps)}
+				{...props}
 				alt={props.alt || ""}
 				width={800}
 				height={600}

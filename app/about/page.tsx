@@ -78,7 +78,7 @@ export default function AboutPage() {
         <div className="mt-12 p-6 bg-muted rounded-lg">
           <h3 className="mt-0">የማጋራት ግብ</h3>
           <p className="mb-0">
-            "በመጽሐፍ ቅዱስ የተጻፈው ነገር ሁሉ ትምህርትና ተስፋ እንድንቀሰም የተጻፈ ነው።" - ሮሜ 15:4
+            &ldquo;በመጽሐፍ ቅዱስ የተጻፈው ነገር ሁሉ ትምህርትና ተስፋ እንድንቀሰም የተጻፈ ነው።&rdquo; - ሮሜ 15:4
           </p>
         </div>
       </article>

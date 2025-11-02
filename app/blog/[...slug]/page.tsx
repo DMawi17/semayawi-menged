@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Category Badge */}
             {category && (
               <div className="mb-4">
-                <CategoryBadge category={category} showIcon />
+                <CategoryBadge categoryId={post.category} showIcon />
               </div>
             )}
 
