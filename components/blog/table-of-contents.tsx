@@ -15,18 +15,17 @@ export function TableOfContents() {
 
   useEffect(() => {
     // Extract headings from the page
-    const extractHeadings = () => {
-      const elements = Array.from(
-        document.querySelectorAll("article h2, article h3")
-      );
-      const headingData: Heading[] = elements.map((elem) => ({
-        id: elem.id,
-        text: elem.textContent || "",
-        level: Number(elem.tagName.charAt(1)),
-      }));
-      setHeadings(headingData);
-    };
-    extractHeadings();
+    const elements = Array.from(
+      document.querySelectorAll("article h2, article h3")
+    );
+
+    const headingData: Heading[] = elements.map((elem) => ({
+      id: elem.id,
+      text: elem.textContent || "",
+      level: Number(elem.tagName.charAt(1)),
+    }));
+
+    setHeadings(headingData);
 
     // Intersection Observer for active heading
     const observer = new IntersectionObserver(
