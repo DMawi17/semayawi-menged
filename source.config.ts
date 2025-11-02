@@ -1,9 +1,6 @@
 import { defineCollections, frontmatterSchema } from 'fumadocs-mdx/config';
 import { defineConfig } from 'fumadocs-mdx/config';
 import { z } from 'zod';
-import { Callout } from './components/mdx/callout';
-import { Quote } from './components/mdx/quote';
-import { Highlight } from './components/mdx/highlight';
 import rehypeSlug from 'rehype-slug';
 
 // Define blog post collection
@@ -28,12 +25,5 @@ export default defineConfig({
   mdxOptions: {
     rehypePlugins: [rehypeSlug],
     remarkPlugins: [],
-  },
-  global: {
-    components: {
-      Callout,
-      Quote,
-      Highlight,
-    },
   },
 });

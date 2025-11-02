@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCategoryById } from "@/lib/categories";
+import { getCategory } from "@/lib/categories";
 
 interface CategoryBadgeProps {
   categoryId: string;
@@ -8,7 +8,7 @@ interface CategoryBadgeProps {
 }
 
 export function CategoryBadge({ categoryId, showIcon = true, asLink = true }: CategoryBadgeProps) {
-  const category = getCategoryById(categoryId);
+  const category = getCategory(categoryId);
 
   if (!category) {
     return null;

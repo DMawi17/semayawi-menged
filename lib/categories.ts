@@ -23,6 +23,24 @@ export function getCategoryBySlug(slug: string): Category | undefined {
 }
 
 /**
+ * Get a category by its Amharic name
+ */
+export function getCategoryByAmharicName(nameAmharic: string): Category | undefined {
+  return categories.find((cat) => cat.nameAmharic === nameAmharic);
+}
+
+/**
+ * Get a category by ID, slug, or Amharic name (flexible lookup)
+ */
+export function getCategory(identifier: string): Category | undefined {
+  return (
+    getCategoryById(identifier) ||
+    getCategoryBySlug(identifier) ||
+    getCategoryByAmharicName(identifier)
+  );
+}
+
+/**
  * Get featured categories (shown on homepage)
  */
 export function getFeaturedCategories(): Category[] {

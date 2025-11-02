@@ -5,7 +5,7 @@ import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { slug as slugger } from "github-slugger";
-import { getCategoryById } from "@/lib/categories";
+import { getCategory } from "@/lib/categories";
 import { siteConfig } from "@/config/site";
 import { calculateReadingTime } from "@/lib/reading-time";
 import { getRelatedPosts, getAdjacentPosts } from "@/lib/related-posts";
@@ -54,7 +54,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const category = getCategoryById(post.category);
+  const category = getCategory(post.category);
   const postUrl = `${siteConfig.url}${post.url}`;
   const imageUrl = post.cover ? `${siteConfig.url}${post.cover}` : undefined;
 
@@ -95,7 +95,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const MDX = post.body;
-  const category = getCategoryById(post.category);
+  const category = getCategory(post.category);
   const readingTime = calculateReadingTime(post.body.toString());
 
   // Get all posts for related posts and navigation

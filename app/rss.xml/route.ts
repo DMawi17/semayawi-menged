@@ -1,6 +1,6 @@
 import { source } from "@/lib/source";
 import { siteConfig } from "@/config/site";
-import { getCategoryById } from "@/lib/categories";
+import { getCategory } from "@/lib/categories";
 
 export async function GET() {
   const posts = await source.getPages();
@@ -20,7 +20,7 @@ export async function GET() {
     <atom:link href="${siteConfig.url}/rss.xml" rel="self" type="application/rss+xml" />
     ${publishedPosts
       .map((post) => {
-        const category = getCategoryById(post.category);
+        const category = getCategory(post.category);
         const pubDate = new Date(post.date).toUTCString();
         const postUrl = `${siteConfig.url}${post.url}`;
 

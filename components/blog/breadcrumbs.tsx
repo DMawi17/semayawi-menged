@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
-import { getCategoryById } from "@/lib/categories";
+import { getCategory } from "@/lib/categories";
 
 interface BreadcrumbsProps {
   category?: string;
@@ -8,7 +8,7 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ category, postTitle }: BreadcrumbsProps) {
-  const categoryData = category ? getCategoryById(category) : null;
+  const categoryData = category ? getCategory(category) : null;
 
   return (
     <nav aria-label="Breadcrumb" className="mb-6">
