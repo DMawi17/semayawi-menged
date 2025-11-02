@@ -8,9 +8,13 @@ import { slug as slugger } from "github-slugger";
 import { getCategoryById } from "@/lib/categories";
 import { siteConfig } from "@/config/site";
 import { calculateReadingTime } from "@/lib/reading-time";
+import { getRelatedPosts, getAdjacentPosts } from "@/lib/related-posts";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { ReadingTime } from "@/components/blog/reading-time";
+import { RelatedPosts } from "@/components/blog/related-posts";
+import { PostNavigation } from "@/components/blog/post-navigation";
+import { ShareButtons } from "@/components/blog/share-buttons";
 import { Calendar, User } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -82,6 +86,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const MDX = post.body;
   const category = getCategoryById(post.category);
   const readingTime = calculateReadingTime(post.body.toString());
+
+  // Get all posts for related posts and navigation
+  const allPosts = await source.getPages();
+  const relatedPosts = getRelatedPosts(post, allPosts, 3);
+  const { previous, next } = getAdjacentPosts(post, allPosts);
 
   return (
     <>
@@ -156,6 +165,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Post Content */}
           <div className="mt-8">
             <MDX />
+          </div>
+
+          {/* Share Buttons */}
+          <div className="mt-12 pt-8 border-t not-prose">
+            <ShareButtons
+              title={post.data.title}
+              url={`${siteConfig.url}${post.url}`}
+              description={post.data.description}
+            />
+          </div>
+
+          {/* Post Navigation */}
+          <div className="not-prose">
+            <PostNavigation previous={previous} next={next} />
+          </div>
+
+          {/* Related Posts */}
+          <div className="not-prose">
+            <RelatedPosts posts={relatedPosts} />
           </div>
 
           {/* Back to Blog Link */}
