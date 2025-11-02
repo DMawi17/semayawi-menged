@@ -1,8 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { source } from "@/lib/source";
-import { getPostsByTagSlug, sortPosts, getAllTags } from "@/lib/utils";
-import { slug as slugger } from "github-slugger";
+import { sortPosts, getAllTags } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -18,7 +17,7 @@ export async function generateStaticParams() {
   const tags = getAllTags(publishedPosts);
 
   return Object.keys(tags).map((tag) => ({
-    tag: slugger(tag),
+    tag: encodeURIComponent(tag),
   }));
 }
 
@@ -26,40 +25,30 @@ export async function generateMetadata({
   params,
 }: TagPageProps): Promise<Metadata> {
   const { tag } = await params;
-  const allPosts = await source.getPages();
-  const publishedPosts = allPosts.filter(
-    (post) => post.data.published !== false
-  );
-  const tags = getAllTags(publishedPosts);
-
-  // Find original tag name
-  const originalTag = Object.keys(tags).find((t) => slugger(t) === tag);
-
-  if (!originalTag) {
-    return {};
-  }
+  const decodedTag = decodeURIComponent(tag);
 
   return {
-    title: `Posts tagged "${originalTag}"`,
-    description: `Browse all posts tagged with ${originalTag}`,
+    title: `Posts tagged "${decodedTag}"`,
+    description: `Browse all posts tagged with ${decodedTag}`,
   };
 }
 
 export default async function TagPage({ params }: TagPageProps) {
   const { tag } = await params;
+  const decodedTag = decodeURIComponent(tag);
+
   const allPosts = await source.getPages();
   const publishedPosts = allPosts.filter(
     (post) => post.data.published !== false
   );
 
-  const filteredPosts = getPostsByTagSlug(publishedPosts, tag);
+  // Filter posts by the decoded tag
+  const filteredPosts = publishedPosts.filter((post) =>
+    post.data.tags?.includes(decodedTag)
+  );
   const sortedPosts = sortPosts(filteredPosts);
 
-  // Find original tag name
-  const tags = getAllTags(publishedPosts);
-  const originalTag = Object.keys(tags).find((t) => slugger(t) === tag);
-
-  if (!originalTag || sortedPosts.length === 0) {
+  if (sortedPosts.length === 0) {
     notFound();
   }
 
@@ -72,7 +61,7 @@ export default async function TagPage({ params }: TagPageProps) {
         >
           ← ሁሉም መለያዎች
         </Link>
-        <h1 className="text-4xl font-bold mb-2">#{originalTag}</h1>
+        <h1 className="text-4xl font-bold mb-2">#{decodedTag}</h1>
         <p className="text-muted-foreground">
           {sortedPosts.length} ጽሑፍ{sortedPosts.length !== 1 ? "ች" : ""}
         </p>
@@ -92,12 +81,12 @@ export default async function TagPage({ params }: TagPageProps) {
                     alt={post.data.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
               )}
               <div className="p-5">
-                <h2 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                <h2 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                   {post.data.title}
                 </h2>
                 {post.data.description && (
@@ -111,7 +100,7 @@ export default async function TagPage({ params }: TagPageProps) {
                       <span
                         key={tagName}
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                          tagName === originalTag
+                          tagName === decodedTag
                             ? "bg-primary text-primary-foreground"
                             : "bg-secondary text-secondary-foreground"
                         }`}

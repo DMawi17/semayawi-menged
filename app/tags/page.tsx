@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { source } from "@/lib/source";
 import { getAllTags, sortTagsByCount } from "@/lib/utils";
-import { slug as slugger } from "github-slugger";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -28,7 +27,7 @@ export default async function TagsPage() {
         {sortedTags.map((tag) => (
           <Link
             key={tag}
-            href={`/tags/${slugger(tag)}`}
+            href={`/tags/${encodeURIComponent(tag)}`}
             className="group relative inline-flex items-center gap-2 rounded-lg border bg-card p-4 transition-all hover:shadow-lg"
           >
             <span className="text-lg font-medium group-hover:text-primary transition-colors">

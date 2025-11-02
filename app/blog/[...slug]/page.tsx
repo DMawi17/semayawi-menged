@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.data.tags.map((tag) => (
                   <Link
                     key={tag}
-                    href={`/tags/${slugger(tag)}`}
+                    href={`/tags/${encodeURIComponent(tag)}`}
                     className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
                   >
                     {tag}

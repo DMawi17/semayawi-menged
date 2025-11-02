@@ -5,6 +5,7 @@ import { sortPosts } from "@/lib/utils";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
 import { calculateReadingTime } from "@/lib/reading-time";
+import { getCategory } from "@/lib/categories";
 import { Clock } from "lucide-react";
 
 const POSTS_PER_PAGE = 9;
@@ -25,7 +26,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   // Filter by category
   let filteredPosts = categoryFilter !== "all"
-    ? publishedPosts.filter((post) => post.data.category === categoryFilter)
+    ? publishedPosts.filter((post) => {
+        const postCategory = getCategory(post.data.category);
+        return postCategory?.id === categoryFilter;
+      })
     : publishedPosts;
 
   // Filter by search query
@@ -58,8 +62,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const postCount = {
     all: publishedPosts.length,
     byCategory: publishedPosts.reduce((acc, post) => {
-      const cat = post.data.category || "uncategorized";
-      acc[cat] = (acc[cat] || 0) + 1;
+      const category = getCategory(post.data.category);
+      const categoryId = category?.id || "uncategorized";
+      acc[categoryId] = (acc[categoryId] || 0) + 1;
       return acc;
     }, {} as Record<string, number>),
   };
