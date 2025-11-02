@@ -91,6 +91,7 @@ export default async function TagPage({ params }: TagPageProps) {
                     src={post.data.cover}
                     alt={post.data.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform group-hover:scale-105"
                   />
                 </div>

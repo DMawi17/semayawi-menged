@@ -19,11 +19,13 @@ export function TableOfContents() {
       document.querySelectorAll("article h2, article h3")
     );
 
-    const headingData: Heading[] = elements.map((elem) => ({
-      id: elem.id,
-      text: elem.textContent || "",
-      level: Number(elem.tagName.charAt(1)),
-    }));
+    const headingData: Heading[] = elements
+      .map((elem) => ({
+        id: elem.id,
+        text: elem.textContent || "",
+        level: Number(elem.tagName.charAt(1)),
+      }))
+      .filter((heading) => heading.id); // Only include headings with IDs
 
     setHeadings(headingData);
 

@@ -23,6 +23,10 @@ import { Newsletter } from "@/components/blog/newsletter";
 import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { ViewCounter } from "@/components/blog/view-counter";
 import { Calendar, User } from "lucide-react";
+import { Callout } from "@/components/mdx/callout";
+import { Quote } from "@/components/mdx/quote";
+import { Highlight } from "@/components/mdx/highlight";
+import { useMDXComponents } from "@/mdx-components";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -99,13 +103,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const relatedPosts = getRelatedPosts(post, allPosts, 3);
   const { previous, next } = getAdjacentPosts(post, allPosts);
 
+  // Get all MDX components (including headings) and merge with custom components
+  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight });
+
   return (
     <>
       <ReadingProgress />
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex gap-8">
           {/* Main Content */}
-          <main className="flex-1 min-w-0 max-w-4xl">
+          <div className="flex-1 min-w-0 max-w-4xl">
             {/* Breadcrumbs */}
             <Breadcrumbs
               category={post.data.category}
@@ -120,6 +127,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 src={post.data.cover}
                 alt={post.data.title}
                 fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="object-cover"
                 priority
               />
@@ -186,7 +194,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Post Content */}
           <div className="mt-8">
-            <MDX />
+            <MDX components={mdxComponents} />
           </div>
 
           {/* Share Buttons */}
@@ -231,7 +239,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </Link>
           </div>
         </article>
-      </main>
+      </div>
 
       {/* Table of Contents Sidebar */}
       <aside className="hidden xl:block">

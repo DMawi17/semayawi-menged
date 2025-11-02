@@ -2,7 +2,10 @@
 import type { MDXComponents } from "mdx/types";
 import Image, { ImageProps } from "next/image";
 import { ReactNode } from "react";
+import { slug as slugger } from "github-slugger";
 import { Callout } from "@/components/mdx/callout";
+import { Quote } from "@/components/mdx/quote";
+import { Highlight } from "@/components/mdx/highlight";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
@@ -12,16 +15,24 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 				{children}
 			</h1>
 		),
-		h2: ({ children }: { children?: ReactNode }) => (
-			<h2 className="mt-8 mb-4 text-3xl font-semibold tracking-tight text-foreground border-b pb-2">
-				{children}
-			</h2>
-		),
-		h3: ({ children }: { children?: ReactNode }) => (
-			<h3 className="mt-6 mb-3 text-2xl font-semibold tracking-tight text-foreground">
-				{children}
-			</h3>
-		),
+		h2: ({ children }: { children?: ReactNode }) => {
+			const text = typeof children === 'string' ? children : String(children);
+			const id = slugger(text);
+			return (
+				<h2 id={id} className="mt-8 mb-4 text-3xl font-semibold tracking-tight text-foreground border-b pb-2">
+					{children}
+				</h2>
+			);
+		},
+		h3: ({ children }: { children?: ReactNode }) => {
+			const text = typeof children === 'string' ? children : String(children);
+			const id = slugger(text);
+			return (
+				<h3 id={id} className="mt-6 mb-3 text-2xl font-semibold tracking-tight text-foreground">
+					{children}
+				</h3>
+			);
+		},
 		h4: ({ children }: { children?: ReactNode }) => (
 			<h4 className="mt-4 mb-2 text-xl font-semibold tracking-tight text-foreground">
 				{children}
@@ -135,6 +146,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		),
 		// Custom components
 		Callout,
+		Quote,
+		Highlight,
 		...components,
 	};
 }

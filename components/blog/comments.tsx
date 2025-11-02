@@ -26,28 +26,52 @@ export function Comments() {
   useEffect(() => {
     // Check if Giscus is configured
     const configured = !!(GISCUS_CONFIG.repo && GISCUS_CONFIG.repoId && GISCUS_CONFIG.categoryId);
+
+    // Debug logging
+    console.log("Giscus Config:", {
+      repo: GISCUS_CONFIG.repo,
+      repoId: GISCUS_CONFIG.repoId,
+      categoryId: GISCUS_CONFIG.categoryId,
+      configured,
+      refCurrent: !!ref.current
+    });
+
     setIsConfigured(configured);
 
-    if (!configured || !ref.current || ref.current.hasChildNodes()) return;
+    if (!configured) return;
 
-    const scriptElem = document.createElement("script");
-    scriptElem.src = "https://giscus.app/client.js";
-    scriptElem.async = true;
-    scriptElem.crossOrigin = "anonymous";
+    // Wait for ref to be available
+    const timer = setTimeout(() => {
+      if (!ref.current) {
+        console.warn("Giscus ref.current is still null after timeout");
+        return;
+      }
 
-    scriptElem.setAttribute("data-repo", GISCUS_CONFIG.repo);
-    scriptElem.setAttribute("data-repo-id", GISCUS_CONFIG.repoId);
-    scriptElem.setAttribute("data-category", GISCUS_CONFIG.category);
-    scriptElem.setAttribute("data-category-id", GISCUS_CONFIG.categoryId);
-    scriptElem.setAttribute("data-mapping", GISCUS_CONFIG.mapping);
-    scriptElem.setAttribute("data-strict", GISCUS_CONFIG.strict);
-    scriptElem.setAttribute("data-reactions-enabled", GISCUS_CONFIG.reactionsEnabled);
-    scriptElem.setAttribute("data-emit-metadata", GISCUS_CONFIG.emitMetadata);
-    scriptElem.setAttribute("data-input-position", GISCUS_CONFIG.inputPosition);
-    scriptElem.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
-    scriptElem.setAttribute("data-lang", GISCUS_CONFIG.lang);
+      // Clear any existing children to prevent duplicate scripts
+      ref.current.innerHTML = '';
 
-    ref.current.appendChild(scriptElem);
+      const scriptElem = document.createElement("script");
+      scriptElem.src = "https://giscus.app/client.js";
+      scriptElem.async = true;
+      scriptElem.crossOrigin = "anonymous";
+
+      scriptElem.setAttribute("data-repo", GISCUS_CONFIG.repo);
+      scriptElem.setAttribute("data-repo-id", GISCUS_CONFIG.repoId);
+      scriptElem.setAttribute("data-category", GISCUS_CONFIG.category);
+      scriptElem.setAttribute("data-category-id", GISCUS_CONFIG.categoryId);
+      scriptElem.setAttribute("data-mapping", GISCUS_CONFIG.mapping);
+      scriptElem.setAttribute("data-strict", GISCUS_CONFIG.strict);
+      scriptElem.setAttribute("data-reactions-enabled", GISCUS_CONFIG.reactionsEnabled);
+      scriptElem.setAttribute("data-emit-metadata", GISCUS_CONFIG.emitMetadata);
+      scriptElem.setAttribute("data-input-position", GISCUS_CONFIG.inputPosition);
+      scriptElem.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+      scriptElem.setAttribute("data-lang", GISCUS_CONFIG.lang);
+
+      ref.current.appendChild(scriptElem);
+      console.log("Giscus script injected successfully");
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [resolvedTheme]);
 
   // Theme change handler
@@ -115,7 +139,7 @@ NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id`}
           </div>
         ) : (
           <>
-            <div ref={ref} />
+            <div ref={ref} className="giscus-container" style={{ minHeight: '200px', position: 'relative', zIndex: 1 }} />
             <noscript>
               <p className="text-sm text-muted-foreground">
                 Please enable JavaScript to view the comments powered by Giscus.

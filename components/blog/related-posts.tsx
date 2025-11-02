@@ -29,6 +29,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
                     src={post.data.cover || ""}
                     alt={post.data.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover transition-transform group-hover:scale-105"
                   />
                 </div>

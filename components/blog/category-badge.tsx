@@ -4,26 +4,40 @@ import { getCategoryById } from "@/lib/categories";
 interface CategoryBadgeProps {
   categoryId: string;
   showIcon?: boolean;
+  asLink?: boolean;
 }
 
-export function CategoryBadge({ categoryId, showIcon = true }: CategoryBadgeProps) {
+export function CategoryBadge({ categoryId, showIcon = true, asLink = true }: CategoryBadgeProps) {
   const category = getCategoryById(categoryId);
 
   if (!category) {
     return null;
   }
 
-  return (
-    <Link
-      href={`/${category.slug}`}
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors hover:opacity-80"
-      style={{
-        backgroundColor: `${category.color}20`,
-        color: category.color,
-      }}
-    >
+  const className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors hover:opacity-80";
+  const style = {
+    backgroundColor: `${category.color}20`,
+    color: category.color,
+  };
+
+  const content = (
+    <>
       {showIcon && <span>{category.icon}</span>}
       <span>{category.nameAmharic}</span>
+    </>
+  );
+
+  if (!asLink) {
+    return (
+      <span className={className} style={style}>
+        {content}
+      </span>
+    );
+  }
+
+  return (
+    <Link href={`/${category.slug}`} className={className} style={style}>
+      {content}
     </Link>
   );
 }

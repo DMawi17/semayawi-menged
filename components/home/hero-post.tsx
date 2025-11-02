@@ -33,11 +33,12 @@ export function HeroPost({ post }: HeroPostProps) {
             src={post.cover}
             alt={post.title}
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             priority
           />
           <div className="absolute top-4 left-4">
-            <CategoryBadge categoryId={post.category} />
+            <CategoryBadge categoryId={post.category} asLink={false} />
           </div>
         </div>
 

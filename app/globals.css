@@ -131,3 +131,15 @@
     page-break-inside: avoid;
   }
 }
+
+/* Giscus Comments Styles */
+.giscus-container {
+  width: 100%;
+}
+
+.giscus-container iframe.giscus-frame {
+  width: 100% !important;
+  border: none !important;
+  pointer-events: auto !important;
+  z-index: 1 !important;
+}
