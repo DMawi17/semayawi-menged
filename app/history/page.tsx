@@ -1,0 +1,162 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { History, Trash2, X, Eye } from "lucide-react";
+import {
+  getReadingHistory,
+  removeFromHistory,
+  clearAllHistory,
+  formatRelativeTime,
+  type HistoryItem,
+} from "@/lib/localStorage-utils";
+
+export default function HistoryPage() {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setHistory(getReadingHistory());
+    setLoading(false);
+  }, []);
+
+  const handleRemove = (url: string) => {
+    removeFromHistory(url);
+    setHistory(getReadingHistory());
+  };
+
+  const handleClearAll = () => {
+    if (window.confirm("እርግጠኛ ነዎት ሁሉንም ታሪክ መሰረዝ ይፈልጋሉ? (Are you sure you want to clear all history?)")) {
+      clearAllHistory();
+      setHistory([]);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-muted-foreground">በመጫን ላይ...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-12 max-w-4xl">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <History className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">የንባብ ታሪክ</h1>
+            <p className="text-muted-foreground">
+              {history.length} {history.length === 1 ? "ጽሁፍ" : "ጽሑፎች"}
+            </p>
+          </div>
+        </div>
+
+        {history.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive text-destructive bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors text-sm font-medium cursor-pointer"
+          >
+            <Trash2 className="h-4 w-4" />
+            ሁሉንም ሰርዝ
+          </button>
+        )}
+      </div>
+
+      {/* Empty State */}
+      {history.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 px-4 border-2 border-dashed rounded-lg">
+          <History className="h-16 w-16 text-muted-foreground/50 mb-4" />
+          <h2 className="text-xl font-semibold mb-2">ምንም የንባብ ታሪክ የለም</h2>
+          <p className="text-muted-foreground text-center max-w-md mb-6">
+            የብሎግ ጽሑፎችን ማንበብ ሲጀምሩ የንባብ ታሪክዎ እዚህ ይታያል።
+          </p>
+          <Link
+            href="/blog"
+            className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
+          >
+            ጽሑፎችን ያስሱ
+          </Link>
+        </div>
+      )}
+
+      {/* History List */}
+      {history.length > 0 && (
+        <div className="grid gap-6">
+          {history.map((item) => (
+            <div
+              key={item.url}
+              className="group relative rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <Link
+                  href={item.url}
+                  className="flex-1 min-w-0"
+                >
+                  <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                    {item.title}
+                  </h2>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+                    <div className="flex items-center gap-1.5">
+                      <History className="h-3.5 w-3.5" />
+                      <span>{formatRelativeTime(item.timestamp)}</span>
+                    </div>
+                    {item.readCount > 1 && (
+                      <>
+                        <span>•</span>
+                        <div className="flex items-center gap-1.5">
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>
+                            {item.readCount} {item.readCount === 1 ? "ጊዜ" : "ጊዜያት"} ተነብቧል
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Link>
+
+                <button
+                  onClick={() => handleRemove(item.url)}
+                  className="flex-shrink-0 h-11 w-11 rounded-lg border border-destructive text-destructive bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center justify-center cursor-pointer"
+                  aria-label="Remove from history"
+                  title="ከታሪክ አስወግድ"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Back to Blog Link */}
+      <div className="mt-12 pt-8 border-t">
+        <Link
+          href="/blog"
+          className="text-primary font-medium flex items-center gap-1 group/link hover:opacity-80 transition-opacity"
+        >
+          <svg
+            className="w-4 h-4 group-hover/link:-translate-x-1 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          ወደ ብሎግ ተመለስ
+        </Link>
+      </div>
+    </div>
+  );
+}

@@ -2,6 +2,13 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { categories } from "@/config/categories";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface FilterBarProps {
   postCount: {
@@ -40,7 +47,7 @@ export function FilterBar({ postCount }: FilterBarProps) {
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => handleCategoryChange("all")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
             currentCategory === "all"
               ? "bg-primary text-primary-foreground"
               : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -54,7 +61,7 @@ export function FilterBar({ postCount }: FilterBarProps) {
             <button
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 currentCategory === category.id
                   ? "text-white"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -74,16 +81,17 @@ export function FilterBar({ postCount }: FilterBarProps) {
       {/* Sort Options */}
       <div className="flex items-center gap-3">
         <span className="text-sm text-muted-foreground">ቅደም ተከተል:</span>
-        <select
-          value={currentSort}
-          onChange={(e) => handleSortChange(e.target.value)}
-          className="h-9 px-3 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-        >
-          <option value="date-desc">የቅርብ ጊዜ</option>
-          <option value="date-asc">የቆየ</option>
-          <option value="title-asc">ርዕስ (ሀ-ፐ)</option>
-          <option value="title-desc">ርዕስ (ፐ-ሀ)</option>
-        </select>
+        <Select value={currentSort} onValueChange={handleSortChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="የቅርብ ጊዜ" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="date-desc">የቅርብ ጊዜ</SelectItem>
+            <SelectItem value="date-asc">የቆየ</SelectItem>
+            <SelectItem value="title-asc">ርዕስ (ሀ-ፐ)</SelectItem>
+            <SelectItem value="title-desc">ርዕስ (ፐ-ሀ)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

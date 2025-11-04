@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { List } from "lucide-react";
+import { MobileToc } from "./mobile-toc";
 
-interface Heading {
+export interface Heading {
   id: string;
   text: string;
   level: number;
@@ -65,31 +66,37 @@ export function TableOfContents() {
   }
 
   return (
-    <nav className="sticky top-24 hidden xl:block">
-      <div className="w-64 p-4 rounded-lg border bg-card">
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b">
-          <List className="h-4 w-4 text-muted-foreground" />
-          <h2 className="font-semibold text-sm">የጽሁፉ ይዘት</h2>
+    <>
+      {/* Desktop TOC - Sidebar */}
+      <nav className="sticky top-24 hidden xl:block">
+        <div className="w-64 p-4 rounded-lg border bg-card">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b">
+            <List className="h-4 w-4 text-muted-foreground" />
+            <h2 className="font-semibold text-sm">የጽሁፉ ይዘት</h2>
+          </div>
+          <ul className="space-y-2 text-sm">
+            {headings.map((heading) => (
+              <li key={heading.id}>
+                <button
+                  onClick={() => handleClick(heading.id)}
+                  className={`block w-full text-left py-1 px-2 rounded transition-colors ${
+                    heading.level === 3 ? "pl-4" : ""
+                  } ${
+                    activeId === heading.id
+                      ? "text-primary bg-primary/10 font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  {heading.text}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="space-y-2 text-sm">
-          {headings.map((heading) => (
-            <li key={heading.id}>
-              <button
-                onClick={() => handleClick(heading.id)}
-                className={`block w-full text-left py-1 px-2 rounded transition-colors ${
-                  heading.level === 3 ? "pl-4" : ""
-                } ${
-                  activeId === heading.id
-                    ? "text-primary bg-primary/10 font-medium"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`}
-              >
-                {heading.text}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile TOC - Floating Drawer */}
+      <MobileToc headings={headings} />
+    </>
   );
 }

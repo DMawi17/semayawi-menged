@@ -4,12 +4,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Menu } from "lucide-react";
-import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md">
@@ -18,6 +35,7 @@ export function Header() {
         <Link
           href="/"
           className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+          style={{ fontFamily: "var(--font-agbalumo)" }}
         >
           {siteConfig.name}
         </Link>
@@ -48,38 +66,92 @@ export function Header() {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Toggle menu"
+            className="relative h-11 w-11 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
+            aria-label={mobileMenuOpen ? "ሜኑ ዝጋ" : "ሜኑ ክፈት"}
+            aria-expanded={mobileMenuOpen}
           >
-            <Menu className="h-5 w-5" />
+            {/* Animated Hamburger Icon */}
+            <div className="relative h-5 w-5 flex flex-col items-center justify-center">
+              <span
+                className={`absolute h-0.5 w-5 bg-current transform transition-all duration-300 ease-in-out ${
+                  mobileMenuOpen ? "rotate-45 translate-y-0" : "-translate-y-1.5"
+                }`}
+              />
+              <span
+                className={`absolute h-0.5 w-5 bg-current transition-all duration-300 ease-in-out ${
+                  mobileMenuOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
+                }`}
+              />
+              <span
+                className={`absolute h-0.5 w-5 bg-current transform transition-all duration-300 ease-in-out ${
+                  mobileMenuOpen ? "-rotate-45 translate-y-0" : "translate-y-1.5"
+                }`}
+              />
+            </div>
           </button>
         </div>
       </nav>
 
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-          <div className="container mx-auto px-4 py-4 flex flex-col gap-3">
-            {siteConfig.navigation.map((item) => {
+      {/* Mobile Navigation - Animated Drawer */}
+      <div
+        className={`md:hidden fixed inset-0 top-16 z-40 transform transition-transform duration-300 ease-in-out ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
+            mobileMenuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Menu Content */}
+        <div
+          className={`absolute right-0 h-full w-64 max-w-[80vw] bg-white dark:bg-gray-950 border-l border-gray-200 dark:border-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <nav className="p-4 space-y-2">
+            {siteConfig.navigation.map((item, index) => {
               const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`text-sm font-medium py-2 px-3 rounded-lg transition-colors ${
+                  className={`block text-sm font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] ${
                     isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      ? "bg-primary/10 text-primary shadow-sm"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground"
                   }`}
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                    animation: mobileMenuOpen ? "slideIn 0.3s ease-out forwards" : "none",
+                  }}
                 >
                   {item.nameAmharic}
                 </Link>
               );
             })}
-          </div>
+          </nav>
         </div>
-      )}
+      </div>
+
+      {/* Animation keyframes */}
+      <style jsx>{`
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </header>
   );
 }

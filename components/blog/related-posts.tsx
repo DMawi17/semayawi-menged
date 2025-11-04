@@ -22,41 +22,39 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
             key={post.url}
             className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
           >
-            {post.data.cover && (
-              <Link href={post.url} className="block">
-                <div className="relative h-40 w-full overflow-hidden">
+            <Link href={post.url}>
+              {post.data.cover && (
+                <div className="relative h-48 w-full overflow-hidden">
                   <Image
                     src={post.data.cover || ""}
                     alt={post.data.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-              </Link>
-            )}
-            <div className="p-4">
-              {post.data.category && (
-                <div className="mb-2">
-                  <CategoryBadge categoryId={post.data.category} />
-                </div>
               )}
-              <Link href={post.url}>
-                <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+              <div className="p-5">
+                {post.data.category && (
+                  <div className="mb-2">
+                    <CategoryBadge categoryId={post.data.category} asLink={false} />
+                  </div>
+                )}
+                <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                   {post.data.title}
                 </h3>
-              </Link>
-              {post.data.description && (
-                <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                  {post.data.description}
-                </p>
-              )}
-              {post.data.date && (
-                <time className="text-xs text-muted-foreground">
-                  {formatDate(String(post.data.date))}
-                </time>
-              )}
-            </div>
+                {post.data.description && (
+                  <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
+                    {post.data.description}
+                  </p>
+                )}
+                {post.data.date && (
+                  <time className="text-xs text-muted-foreground">
+                    {formatDate(String(post.data.date))}
+                  </time>
+                )}
+              </div>
+            </Link>
           </article>
         ))}
       </div>

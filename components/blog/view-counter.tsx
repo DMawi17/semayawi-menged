@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
+import { track } from "@vercel/analytics";
 
 interface ViewCounterProps {
   postUrl: string;
@@ -11,15 +12,17 @@ export function ViewCounter({ postUrl }: ViewCounterProps) {
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
-    // Increment view count
+    // Track page view with Vercel Analytics
+    track("blog_post_view", {
+      post_url: postUrl,
+    });
+
+    // Keep local view count for display (localStorage for privacy-friendly local tracking)
     const viewsKey = `views_${postUrl}`;
     const currentViews = parseInt(localStorage.getItem(viewsKey) || "0");
     const newViews = currentViews + 1;
     localStorage.setItem(viewsKey, newViews.toString());
     setViews(newViews);
-
-    // TODO: In production, you'd want to send this to an analytics service
-    // or your own API endpoint to track views across users
   }, [postUrl]);
 
   if (views === null) {

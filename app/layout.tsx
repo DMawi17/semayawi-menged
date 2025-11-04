@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_Ethiopic } from "next/font/google";
+import { Inter, Noto_Sans_Ethiopic, Agbalumo } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { siteConfig } from "@/config/site";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,6 +19,13 @@ const notoSansEthiopic = Noto_Sans_Ethiopic({
   subsets: ["ethiopic"],
   variable: "--font-ethiopic",
   weight: ["400", "600", "700", "900"],
+  display: "swap",
+});
+
+const agbalumo = Agbalumo({
+  subsets: ["latin"],
+  variable: "--font-agbalumo",
+  weight: "400",
   display: "swap",
 });
 
@@ -57,8 +67,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="am" suppressHydrationWarning>
+      <head>
+        {/* Resource hints for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://giscus.app" />
+
+        {/* RSS Feed */}
+        <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS Feed`} href="/feed.xml" />
+      </head>
       <body
-        className={`${inter.variable} ${notoSansEthiopic.variable} font-sans antialiased`}
+        className={`${inter.variable} ${notoSansEthiopic.variable} ${agbalumo.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -72,6 +91,13 @@ export default function RootLayout({
             <Footer />
           </div>
         </ThemeProvider>
+
+        {/* Global Structured Data */}
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

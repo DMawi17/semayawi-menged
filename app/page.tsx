@@ -68,11 +68,11 @@ export default async function Home() {
           <h2 className="text-3xl font-bold">የቅርብ ጊዜ ጽሑፎች</h2>
           <Link
             href="/blog"
-            className="text-primary hover:underline font-medium flex items-center gap-1"
+            className="text-primary font-medium flex items-center gap-1 group/link hover:opacity-80 transition-opacity"
           >
             ሁሉንም ተመልከት
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 group-hover/link:translate-x-1 transition-transform"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -101,7 +101,7 @@ export default async function Home() {
             return (
               <article
                 key={post.url}
-                className="group overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 transition-all hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700"
+                className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
               >
                 <Link href={post.url}>
                   {post.cover && (
@@ -117,8 +117,8 @@ export default async function Home() {
                   )}
                   <div className="p-5">
                     <div className="flex items-center gap-3 mb-3">
-                      <CategoryBadge categoryId={post.category} showIcon={false} />
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                      <CategoryBadge categoryId={post.category} showIcon={false} asLink={false} />
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         <time dateTime={new Date(post.date).toISOString()}>
                           {formattedDate}
@@ -131,7 +131,7 @@ export default async function Home() {
                     </h3>
 
                     {post.description && (
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
                         {post.description}
                       </p>
                     )}

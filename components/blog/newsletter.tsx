@@ -11,19 +11,37 @@ export function Newsletter() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
+    setMessage("");
 
-    // TODO: Integrate with your newsletter service (e.g., Mailchimp, ConvertKit, etc.)
-    // This is a placeholder implementation
     try {
-      // Simulated API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      setStatus("success");
-      setMessage("አመሰግናለሁ! የደብዳቤ መላኪያ ዝርዝራችን ተቀላቅለዋል።");
-      setEmail("");
-    } catch {
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus("success");
+        setMessage(data.message || "አመሰግናለሁ! የተመዘገቡ ናቸው።");
+        setEmail("");
+
+        // Reset status after 5 seconds
+        setTimeout(() => {
+          setStatus("idle");
+          setMessage("");
+        }, 5000);
+      } else {
+        setStatus("error");
+        setMessage(data.error || "የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
       setStatus("error");
-      setMessage("የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+      setMessage("የተጠበቀ ስህተት አጋጥሟል። እባክዎ እንደገና ይሞክሩ።");
     }
   };
 
@@ -45,13 +63,13 @@ export function Newsletter() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ኢሜልዎን ያስገቡ"
               required
-              className="flex-1 h-10 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="flex-1 h-11 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               disabled={status === "loading"}
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="h-10 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-11 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
             </button>

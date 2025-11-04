@@ -24,7 +24,7 @@ export function HeroPost({ post }: HeroPostProps) {
   return (
     <Link
       href={post.url}
-      className="group block overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-all bg-white dark:bg-gray-950"
+      className="group block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
     >
       <div className="grid md:grid-cols-2 gap-0">
         {/* Image */}
@@ -44,7 +44,7 @@ export function HeroPost({ post }: HeroPostProps) {
 
         {/* Content */}
         <div className="p-8 md:p-12 flex flex-col justify-center">
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
             <Calendar className="h-4 w-4" />
             <time dateTime={new Date(post.date).toISOString()}>{formattedDate}</time>
           </div>
@@ -54,7 +54,7 @@ export function HeroPost({ post }: HeroPostProps) {
           </h2>
 
           {post.description && (
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
+            <p className="text-muted-foreground leading-relaxed line-clamp-3">
               {post.description}
             </p>
           )}

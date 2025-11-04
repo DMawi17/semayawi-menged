@@ -29,6 +29,8 @@ export const siteConfig = {
     { name: "Home", nameAmharic: "ዋና ገጽ", href: "/" },
     { name: "Blog", nameAmharic: "ጽሁፎች", href: "/blog" },
     { name: "Women of Bible", nameAmharic: "የመጽሐፍ ቅዱስ ሴቶች", href: "/women-of-bible" },
+    { name: "Bookmarks", nameAmharic: "የተቀመጡ", href: "/bookmarks" },
+    { name: "History", nameAmharic: "ታሪክ", href: "/history" },
     { name: "About", nameAmharic: "ስለ እኛ", href: "/about" },
   ],
 };

@@ -22,11 +22,16 @@ import { Comments } from "@/components/blog/comments";
 import { Newsletter } from "@/components/blog/newsletter";
 import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { ViewCounter } from "@/components/blog/view-counter";
+import { HistoryTracker } from "@/components/blog/history-tracker";
 import { Calendar, User } from "lucide-react";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
 import { useMDXComponents } from "@/mdx-components";
+import {
+  ArticleJsonLd,
+  BreadcrumbJsonLd,
+} from "@/components/seo/json-ld";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -62,15 +67,34 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     authors: post.author ? [{ name: post.author }] : [{ name: siteConfig.author }],
+    alternates: {
+      canonical: postUrl,
+      languages: {
+        'am-ET': postUrl,
+        'en-US': postUrl,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
       publishedTime: new Date(post.date).toISOString(),
+      modifiedTime: new Date(post.date).toISOString(), // TODO: Track actual modification time
       authors: [post.author || siteConfig.author],
       tags: post.tags,
-      images: imageUrl ? [{ url: imageUrl, alt: post.title }] : undefined,
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              alt: post.title,
+              width: 1200,
+              height: 630,
+            },
+          ]
+        : undefined,
       url: postUrl,
+      locale: "am-ET",
+      alternateLocale: ["en-US"],
     },
     twitter: {
       card: "summary_large_image",
@@ -106,20 +130,56 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Get all MDX components (including headings) and merge with custom components
   const mdxComponents = useMDXComponents({ Callout, Quote, Highlight });
 
+  // Prepare data for JSON-LD structured data
+  const postUrl = `${siteConfig.url}${post.url}`;
+  const imageUrl = post.data.cover
+    ? `${siteConfig.url}${post.data.cover}`
+    : `${siteConfig.url}/logo.png`;
+  const breadcrumbItems = [
+    { name: "መነሻ", url: siteConfig.url },
+    { name: "ብሎግ", url: `${siteConfig.url}/blog` },
+  ];
+
+  if (category) {
+    breadcrumbItems.push({
+      name: category.nameAmharic,
+      url: `${siteConfig.url}/blog?category=${category.id}`,
+    });
+  }
+
+  breadcrumbItems.push({ name: post.data.title, url: postUrl });
+
   return (
     <>
+      {/* JSON-LD Structured Data */}
+      <ArticleJsonLd
+        title={post.data.title}
+        description={post.data.description || ""}
+        datePublished={new Date(post.data.date).toISOString()}
+        dateModified={new Date(post.data.date).toISOString()}
+        authorName={post.data.author || siteConfig.author}
+        authorUrl={siteConfig.links.personalSite}
+        images={[imageUrl]}
+        url={postUrl}
+        keywords={post.data.tags || []}
+      />
+      <BreadcrumbJsonLd items={breadcrumbItems} />
+
+      {/* Track reading history */}
+      <HistoryTracker postUrl={post.url} postTitle={post.data.title} />
+
       <ReadingProgress />
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex gap-8">
-          {/* Main Content */}
-          <div className="flex-1 min-w-0 max-w-4xl">
+          {/* Main Content - Optimized for readability (max-w-3xl for 65-75 chars/line) */}
+          <div className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
             {/* Breadcrumbs */}
             <Breadcrumbs
               category={post.data.category}
               postTitle={post.data.title}
             />
 
-            <article className="prose prose-slate dark:prose-invert max-w-none">
+            <article className="prose prose-slate dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-li:leading-relaxed">
           {/* Cover Image */}
           {post.data.cover && (
             <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
@@ -233,9 +293,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mt-12 pt-8 border-t not-prose">
             <Link
               href="/blog"
-              className="inline-flex items-center text-primary hover:underline font-medium"
+              className="text-primary font-medium flex items-center gap-1 group/link hover:opacity-80 transition-opacity"
             >
-              ← ወደ ብሎግ ተመለስ
+              <svg
+                className="w-4 h-4 group-hover/link:-translate-x-1 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              ወደ ብሎግ ተመለስ
             </Link>
           </div>
         </article>

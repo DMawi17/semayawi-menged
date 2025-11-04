@@ -39,16 +39,12 @@ export function BookmarkButton({ postUrl, postTitle }: BookmarkButtonProps) {
   return (
     <button
       onClick={toggleBookmark}
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-        isBookmarked
-          ? "bg-primary text-primary-foreground border-primary"
-          : "bg-background hover:bg-accent border-border"
-      }`}
+      className="inline-flex items-center gap-2 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer"
       aria-label={isBookmarked ? "የተቀመጠውን ያስወግዱ" : "አስቀምጥ"}
       title={isBookmarked ? "የተቀመጠውን ያስወግዱ" : "ወደኋላ ለማንበብ አስቀምጥ"}
     >
       <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`} />
-      <span className="text-sm font-medium">
+      <span>
         {isBookmarked ? "ተቀምጧል" : "አስቀምጥ"}
       </span>
     </button>
