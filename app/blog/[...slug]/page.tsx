@@ -184,6 +184,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               author={post.data.author || siteConfig.author}
               publishedAt={String(post.data.date)}
               readingTime={`${readingTime.minutes} min read`}
+              coverImage={post.data.cover}
             />
           </div>
 
