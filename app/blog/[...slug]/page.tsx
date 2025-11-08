@@ -1,17 +1,12 @@
 import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
-import { slug as slugger } from "github-slugger";
 import { getCategory } from "@/lib/categories";
 import { siteConfig } from "@/config/site";
 import { calculateReadingTime } from "@/lib/reading-time";
 import { getRelatedPosts, getAdjacentPosts } from "@/lib/related-posts";
 import { ReadingProgress } from "@/components/blog/reading-progress";
-import { CategoryBadge } from "@/components/blog/category-badge";
-import { ReadingTime } from "@/components/blog/reading-time";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { PostNavigation } from "@/components/blog/post-navigation";
 import { ShareButtons } from "@/components/blog/share-buttons";
@@ -21,13 +16,14 @@ import { Breadcrumbs } from "@/components/blog/breadcrumbs";
 import { Comments } from "@/components/blog/comments";
 import { Newsletter } from "@/components/blog/newsletter";
 import { BookmarkButton } from "@/components/blog/bookmark-button";
-import { ViewCounter } from "@/components/blog/view-counter";
 import { HistoryTracker } from "@/components/blog/history-tracker";
-import { Calendar, User } from "lucide-react";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
 import { useMDXComponents } from "@/mdx-components";
+import { ArticleHero } from "@/components/blog/ArticleHero";
+import { SectionDivider } from "@/components/blog/SectionDivider";
+import { DropCap } from "@/components/blog/DropCap";
 import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
@@ -128,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { previous, next } = getAdjacentPosts(post, allPosts);
 
   // Get all MDX components (including headings) and merge with custom components
-  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight });
+  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight, SectionDivider, DropCap });
 
   // Prepare data for JSON-LD structured data
   const postUrl = `${siteConfig.url}${post.url}`;
@@ -180,77 +176,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             <article className="prose prose-slate dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-li:leading-relaxed">
-          {/* Cover Image */}
-          {post.data.cover && (
-            <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
-              <Image
-                src={post.data.cover}
-                alt={post.data.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                className="object-cover"
-                priority
-              />
+          {/* Article Hero */}
+          <div className="not-prose">
+            <ArticleHero
+              title={post.data.title}
+              category={post.category}
+              author={post.data.author || siteConfig.author}
+              publishedAt={String(post.data.date)}
+              readingTime={`${readingTime.minutes} min read`}
+            />
+          </div>
+
+          {/* Bookmark Button */}
+          <div className="not-prose mb-8">
+            <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
+          </div>
+
+          {/* Tags */}
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8 not-prose">
+              {post.data.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/tags/${encodeURIComponent(tag)}`}
+                  className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                >
+                  {tag}
+                </Link>
+              ))}
             </div>
           )}
-
-          {/* Post Header */}
-          <header className="mb-8 not-prose">
-            {/* Category Badge */}
-            {category && (
-              <div className="mb-4">
-                <CategoryBadge categoryId={post.category} showIcon />
-              </div>
-            )}
-
-            <h1 className="text-4xl font-bold mb-4">{post.data.title}</h1>
-
-            {post.data.description && (
-              <p className="text-xl text-muted-foreground mb-6">
-                {post.data.description}
-              </p>
-            )}
-
-            {/* Post Metadata */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
-                <time dateTime={String(post.data.date)}>
-                  {formatDate(String(post.data.date))}
-                </time>
-              </div>
-
-              {post.data.author && (
-                <div className="flex items-center gap-1.5">
-                  <User className="h-4 w-4" />
-                  <span>{post.data.author}</span>
-                </div>
-              )}
-
-              <ReadingTime minutes={readingTime.minutes} />
-              <ViewCounter postUrl={post.url} />
-            </div>
-
-            {/* Bookmark Button */}
-            <div className="my-8">
-              <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
-            </div>
-
-            {/* Tags */}
-            {post.data.tags && post.data.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                {post.data.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                  >
-                    {tag}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </header>
 
           {/* Post Content */}
           <div className="mt-8">
