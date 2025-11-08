@@ -1,27 +1,24 @@
-import { Quote as QuoteIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 interface QuoteProps {
-  author?: string;
-  children: ReactNode;
+  text: string;
+  reference: string;
+  highlight?: boolean;
+  children?: ReactNode;
 }
 
-export function Quote({ author, children }: QuoteProps) {
+export function Quote({ text, reference, highlight = false, children }: QuoteProps) {
+  // Support both text prop and children
+  const content = text || children;
+
   return (
-    <blockquote className="my-6 border-l-4 border-primary/50 bg-muted/30 pl-6 pr-4 py-4 rounded-r-lg">
-      <div className="flex gap-3">
-        <QuoteIcon className="h-5 w-5 flex-shrink-0 mt-1 text-primary/60" />
-        <div className="flex-1">
-          <div className="text-base italic leading-relaxed text-foreground/90">
-            {children}
-          </div>
-          {author && (
-            <footer className="mt-3 text-sm font-medium text-muted-foreground">
-              — {author}
-            </footer>
-          )}
-        </div>
-      </div>
-    </blockquote>
+    <div className={`my-8 ${highlight ? 'p-8 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl border-2 border-purple-300 shadow-lg' : 'p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700'}`}>
+      <blockquote className={`${highlight ? 'text-2xl' : 'text-xl'} font-serif leading-relaxed text-gray-800 dark:text-gray-100 mb-4`}>
+        {content}
+      </blockquote>
+      <cite className={`${highlight ? 'text-base font-bold' : 'text-sm font-semibold'} text-purple-700 dark:text-purple-400 not-italic block`}>
+        — {reference}
+      </cite>
+    </div>
   );
 }

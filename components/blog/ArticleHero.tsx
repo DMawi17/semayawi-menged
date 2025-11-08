@@ -34,46 +34,47 @@ export function ArticleHero({
             className="object-cover"
             priority
           />
-          {/* Dark gradient overlay - top to bottom like the example */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/70 to-slate-900/90" />
+          {/* Gradient overlay - starts from middle, darker at bottom for text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% via-slate-900/20 via-50% to-slate-900/95 to-100%" />
         </>
       ) : (
         <>
-          {/* Dark gradient background - top to bottom */}
+          {/* Dark gradient background */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900" />
         </>
       )}
 
       {/* Content - Positioned at bottom */}
-      <div className="absolute inset-x-0 bottom-0 px-8 py-10 md:px-12 md:py-12">
+      <div className="absolute inset-x-0 bottom-0 px-6 py-6 md:px-10 md:py-8">
         {/* Category Badge */}
         {categoryData && (
-          <div className="mb-6">
+          <div className="mb-3">
             <Badge
-              className="bg-amber-500 hover:bg-amber-600 text-white border-0 px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full"
+              variant="outline"
+              className="bg-slate-800/80 border-slate-700 text-white hover:bg-slate-800 px-3 py-1 text-xs font-bold uppercase tracking-wider"
             >
-              {categoryData.name}
+              {categoryData.nameAmharic}
             </Badge>
           </div>
         )}
 
-        {/* Title */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight max-w-4xl">
+        {/* Title - Smaller */}
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight max-w-4xl">
           {title}
         </h1>
 
         {/* Metadata */}
-        <div className="flex flex-wrap items-center gap-6 text-slate-200">
+        <div className="flex flex-wrap items-center gap-4 md:gap-6 text-slate-200 text-sm">
           {/* Author */}
-          <div className="flex items-center gap-2">
-            <User className="w-4 h-4" />
-            <span className="text-sm font-medium">{author}</span>
+          <div className="flex items-center gap-1.5">
+            <User className="h-4 w-4" />
+            <span className="font-medium">{author}</span>
           </div>
 
           {/* Date */}
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            <time className="text-sm" dateTime={publishedAt}>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="h-4 w-4" />
+            <time dateTime={publishedAt}>
               {new Date(publishedAt).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -83,9 +84,9 @@ export function ArticleHero({
           </div>
 
           {/* Reading Time */}
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm">{readingTime}</span>
+          <div className="flex items-center gap-1.5">
+            <Clock className="h-4 w-4" />
+            <span>{readingTime}</span>
           </div>
         </div>
       </div>

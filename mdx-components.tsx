@@ -6,6 +6,14 @@ import { slug as slugger } from "github-slugger";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
+import { SectionDivider } from "@/components/blog/SectionDivider";
+import { BibleVerse } from "@/components/mdx/bible-verse";
+import { PrayerPrompt } from "@/components/mdx/prayer-prompt";
+import { NumberedList, ListItem } from "@/components/mdx/numbered-list";
+import { FinalReflection } from "@/components/mdx/final-reflection";
+import { RelatedVerses } from "@/components/mdx/related-verses";
+import { ArticleFooter } from "@/components/mdx/article-footer";
+import { ScrollToTop } from "@/components/mdx/scroll-to-top";
 
 // Helper function to remove numbers from the beginning of text
 function removeLeadingNumbers(text: string): string {
@@ -20,7 +28,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const text = typeof children === 'string' ? children : String(children);
 			const cleanText = removeLeadingNumbers(text);
 			return (
-				<h1 className="mt-16 mb-4 text-4xl font-bold tracking-tight text-foreground">
+				<h1 className="mt-16 mb-4 text-4xl font-bold tracking-tight text-[#575175] dark:text-purple-300">
 					{cleanText}
 				</h1>
 			);
@@ -29,10 +37,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const text = typeof children === 'string' ? children : String(children);
 			const cleanText = removeLeadingNumbers(text);
 			const id = slugger(cleanText);
+
 			return (
-				<h2 id={id} className="mt-16 mb-4 text-3xl font-semibold tracking-tight text-foreground">
-					{cleanText}
-				</h2>
+				<>
+					<SectionDivider />
+					<h2 id={id} className="mt-16 mb-4 text-3xl font-semibold tracking-tight text-[#575175] dark:text-purple-300">
+						{cleanText}
+					</h2>
+				</>
 			);
 		},
 		h3: ({ children }: { children?: ReactNode }) => {
@@ -40,16 +52,19 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const cleanText = removeLeadingNumbers(text);
 			const id = slugger(cleanText);
 			return (
-				<h3 id={id} className="mt-12 mb-3 text-2xl font-semibold tracking-tight text-foreground">
-					{cleanText}
-				</h3>
+				<>
+					<SectionDivider />
+					<h3 id={id} className="mt-12 mb-3 text-2xl font-semibold tracking-tight text-[#575175] dark:text-purple-300">
+						{cleanText}
+					</h3>
+				</>
 			);
 		},
 		h4: ({ children }: { children?: ReactNode }) => {
 			const text = typeof children === 'string' ? children : String(children);
 			const cleanText = removeLeadingNumbers(text);
 			return (
-				<h4 className="mt-10 mb-2 text-xl font-semibold tracking-tight text-foreground">
+				<h4 className="mt-10 mb-2 text-xl font-semibold tracking-tight text-[#575175] dark:text-purple-300">
 					{cleanText}
 				</h4>
 			);
@@ -58,7 +73,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const text = typeof children === 'string' ? children : String(children);
 			const cleanText = removeLeadingNumbers(text);
 			return (
-				<h5 className="mt-8 mb-2 text-lg font-semibold tracking-tight text-foreground">
+				<h5 className="mt-8 mb-2 text-lg font-semibold tracking-tight text-[#575175] dark:text-purple-300">
 					{cleanText}
 				</h5>
 			);
@@ -67,7 +82,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const text = typeof children === 'string' ? children : String(children);
 			const cleanText = removeLeadingNumbers(text);
 			return (
-				<h6 className="mt-8 mb-2 text-base font-semibold tracking-tight text-foreground">
+				<h6 className="mt-8 mb-2 text-base font-semibold tracking-tight text-[#575175] dark:text-purple-300">
 					{cleanText}
 				</h6>
 			);
@@ -78,19 +93,22 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 				{children}
 			</p>
 		),
-		// Lists with proper styling
+		// Lists with emoji styling
 		ul: ({ children }: { children?: ReactNode }) => (
-			<ul className="my-6 ml-6 list-disc [&>li]:mt-2 text-foreground">
+			<ul className="my-6 space-y-3 text-foreground">
 				{children}
 			</ul>
 		),
 		ol: ({ children }: { children?: ReactNode }) => (
-			<ol className="my-6 ml-6 list-decimal [&>li]:mt-2 text-foreground">
+			<ol className="my-6 space-y-3 text-foreground">
 				{children}
 			</ol>
 		),
 		li: ({ children }: { children?: ReactNode }) => (
-			<li className="leading-7">{children}</li>
+			<li className="flex items-start gap-3 leading-7">
+				<span className="text-lg mt-0.5 flex-shrink-0">⭐</span>
+				<span className="flex-1">{children}</span>
+			</li>
 		),
 		// Blockquote styling
 		blockquote: ({ children }: { children?: ReactNode }) => (
@@ -172,6 +190,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		Callout,
 		Quote,
 		Highlight,
+		BibleVerse,
+		PrayerPrompt,
+		NumberedList,
+		ListItem,
+		FinalReflection,
+		RelatedVerses,
+		ArticleFooter,
+		ScrollToTop,
 		...components,
 	};
 }

@@ -22,8 +22,8 @@ import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
 import { useMDXComponents } from "@/mdx-components";
 import { ArticleHero } from "@/components/blog/ArticleHero";
-import { SectionDivider } from "@/components/blog/SectionDivider";
 import { DropCap } from "@/components/blog/DropCap";
+import { ScrollToTop } from "@/components/mdx/scroll-to-top";
 import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { previous, next } = getAdjacentPosts(post, allPosts);
 
   // Get all MDX components (including headings) and merge with custom components
-  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight, SectionDivider, DropCap });
+  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight, DropCap });
 
   // Prepare data for JSON-LD structured data
   const postUrl = `${siteConfig.url}${post.url}`;
@@ -167,8 +167,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <ReadingProgress />
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex gap-8">
-          {/* Main Content - Optimized for readability (max-w-3xl for 65-75 chars/line) */}
-          <div className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
+          {/* Main Content - Optimized for readability */}
+          <div className="flex-1 min-w-0 max-w-4xl mx-auto xl:mx-0">
             {/* Breadcrumbs */}
             <Breadcrumbs
               category={post.data.category}
@@ -188,25 +188,50 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </div>
 
-          {/* Bookmark Button */}
-          <div className="not-prose mb-8">
-            <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
-          </div>
+          {/* Tags and Actions Row */}
+          <div className="flex items-center justify-between gap-4 mb-8 not-prose">
+            {/* Tags - Last 5 only */}
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 flex-1">
+                {post.data.tags.slice(-5).map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tags/${encodeURIComponent(tag)}`}
+                    className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+            )}
 
-          {/* Tags */}
-          {post.data.tags && post.data.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8 not-prose">
-              {post.data.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/tags/${encodeURIComponent(tag)}`}
-                  className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+            {/* Actions - Sound and Bookmark */}
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Sound Button - TODO: Implement text-to-speech */}
+              <button
+                className="inline-flex items-center justify-center rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                aria-label="Listen to article"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {tag}
-                </Link>
-              ))}
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+              </button>
+
+              <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
             </div>
-          )}
+          </div>
 
           {/* Post Content */}
           <div className="mt-8">
@@ -214,16 +239,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Share Buttons */}
-          <div className="mt-12 pt-8 border-t not-prose">
+          <div className="mt-12 not-prose">
             <ShareButtons
               title={post.data.title}
               url={`${siteConfig.url}${post.url}`}
               description={post.data.description}
             />
           </div>
-
-          {/* Author Bio */}
-          <AuthorBio author={post.data.author} />
 
           {/* Post Navigation */}
           <div className="not-prose">
@@ -276,6 +298,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </aside>
     </div>
   </div>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </>
   );
 }
