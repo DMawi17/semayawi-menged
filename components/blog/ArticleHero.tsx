@@ -1,6 +1,6 @@
 import { Calendar, Clock, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { getCategoryConfig } from '@/lib/categories';
+import { getCategory } from '@/lib/categories';
 
 interface ArticleHeroProps {
   title: string;
@@ -17,7 +17,7 @@ export function ArticleHero({
   publishedAt,
   readingTime,
 }: ArticleHeroProps) {
-  const categoryConfig = getCategoryConfig(category);
+  const categoryData = getCategory(category);
 
   return (
     <header className="relative overflow-hidden rounded-lg mb-12">
@@ -32,14 +32,16 @@ export function ArticleHero({
       {/* Content */}
       <div className="relative px-8 py-12 md:px-12 md:py-16">
         {/* Category Badge */}
-        <div className="mb-6">
-          <Badge
-            variant="outline"
-            className="bg-amber-500/10 border-amber-500 text-amber-500 hover:bg-amber-500/20 px-4 py-1.5 text-sm font-semibold uppercase tracking-wider"
-          >
-            {categoryConfig.title.en}
-          </Badge>
-        </div>
+        {categoryData && (
+          <div className="mb-6">
+            <Badge
+              variant="outline"
+              className="bg-amber-500/10 border-amber-500 text-amber-500 hover:bg-amber-500/20 px-4 py-1.5 text-sm font-semibold uppercase tracking-wider"
+            >
+              {categoryData.name}
+            </Badge>
+          </div>
+        )}
 
         {/* Title */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
