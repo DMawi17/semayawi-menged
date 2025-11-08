@@ -1,24 +1,16 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { slug } from "github-slugger";
+import { formatEthiopianDate } from "./ethiopian-date";
 
 // Merge class names with tailwind-merge for conflict resolution
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Format a date into a human-readable format
+// Format a date into a human-readable format (Ethiopian calendar)
 export function formatDate(input: string | number): string {
-  const date = new Date(input);
-  if (isNaN(date.getTime())) {
-    console.error("Invalid date:", input);
-    return "Invalid Date";
-  }
-  return date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  return formatEthiopianDate(input);
 }
 
 // Sort posts by date in descending order

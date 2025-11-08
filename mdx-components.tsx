@@ -19,7 +19,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const text = typeof children === 'string' ? children : String(children);
 			const id = slugger(text);
 			return (
-				<h2 id={id} className="mt-8 mb-4 text-3xl font-semibold tracking-tight text-foreground border-b pb-2">
+				<h2 id={id} className="mt-8 mb-4 text-3xl font-semibold tracking-tight text-foreground">
 					{children}
 				</h2>
 			);

@@ -80,30 +80,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Send welcome email using Resend
-    const { data, error } = await resend.emails.send({
-      from: `${siteConfig.name} <onboarding@resend.dev>`, // Update this in production with your verified domain
-      to: [normalizedEmail],
-      subject: `እንኳን ደህና መጡ ወደ ${siteConfig.name}! (Welcome to ${siteConfig.name}!)`,
-      html: getWelcomeEmailHtml(normalizedEmail),
-      text: getWelcomeEmailText(normalizedEmail),
-    });
-
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json(
-        {
-          error: "ኢሜይል መላክ አልተሳካም። እባክዎ እንደገና ይሞክሩ። (Failed to send email. Please try again.)",
-        },
-        { status: 500 }
-      );
-    }
-
-    // Add to subscribers set (in production, save to database)
+    // Add to subscribers set first (in production, save to database)
     subscribers.add(normalizedEmail);
 
-    // Log success (in production, use proper logging service)
-    console.log(`Newsletter subscription successful: ${normalizedEmail}`, data);
+    // Try to send welcome email using Resend (non-blocking)
+    // If email sending fails (e.g., unverified recipient in Resend), subscription still succeeds
+    try {
+      const { data, error } = await resend.emails.send({
+        from: `${siteConfig.name} <onboarding@resend.dev>`, // Update this in production with your verified domain
+        to: [normalizedEmail],
+        subject: `እንኳን ደህና መጡ ወደ ${siteConfig.name}! (Welcome to ${siteConfig.name}!)`,
+        html: getWelcomeEmailHtml(normalizedEmail),
+        text: getWelcomeEmailText(normalizedEmail),
+      });
+
+      if (error) {
+        // Log the error but don't fail the subscription
+        console.warn("Resend email error (subscription still successful):", error);
+        console.log(`Newsletter subscription successful (email failed): ${normalizedEmail}`);
+      } else {
+        // Log success
+        console.log(`Newsletter subscription successful with email: ${normalizedEmail}`, data);
+      }
+    } catch (emailError) {
+      // Catch any email sending errors but don't fail the subscription
+      console.warn("Email sending failed (subscription still successful):", emailError);
+      console.log(`Newsletter subscription successful (email exception): ${normalizedEmail}`);
+    }
 
     return NextResponse.json(
       {

@@ -232,7 +232,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             {/* Bookmark Button */}
-            <div className="mb-6">
+            <div className="my-8">
               <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
             </div>
 

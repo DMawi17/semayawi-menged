@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { Github, Twitter } from "lucide-react";
+import { Github, Twitter, Globe } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -37,16 +37,27 @@ export function Footer() {
           {/* Social Links */}
           <div>
             <h4 className="font-semibold mb-3">Connect</h4>
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-3">
               {siteConfig.links.github && (
                 <a
                   href={siteConfig.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="GitHub"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Github className="h-5 w-5" />
+                  <Github className="h-4 w-4" />
+                  <span>GitHub</span>
+                </a>
+              )}
+              {siteConfig.links.personalSite && (
+                <a
+                  href={siteConfig.links.personalSite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Globe className="h-4 w-4" />
+                  <span>Website</span>
                 </a>
               )}
               {siteConfig.links.twitter && (
@@ -54,10 +65,10 @@ export function Footer() {
                   href={siteConfig.links.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="Twitter"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Twitter className="h-5 w-5" />
+                  <Twitter className="h-4 w-4" />
+                  <span>Twitter</span>
                 </a>
               )}
             </div>
