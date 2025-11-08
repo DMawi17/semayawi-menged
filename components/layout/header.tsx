@@ -34,8 +34,7 @@ export function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
-          style={{ fontFamily: "var(--font-agbalumo)" }}
+          className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white bg-clip-text text-transparent"
         >
           {siteConfig.name}
         </Link>

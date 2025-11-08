@@ -5,6 +5,7 @@ import { getCategoryBySlug, getPostsByCategory } from "@/lib/categories";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
+import { formatEthiopianDate } from "@/lib/ethiopian-date";
 
 export async function generateMetadata(): Promise<Metadata> {
   const category = getCategoryBySlug("women-of-bible");
@@ -66,14 +67,7 @@ export default async function WomenOfBiblePage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => {
-            const formattedDate = new Date(post.date).toLocaleDateString(
-              "am-ET",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }
-            );
+            const formattedDate = formatEthiopianDate(post.date);
 
             return (
               <article

@@ -69,7 +69,6 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold text-muted-foreground">ያጋሩ</h3>
       <div className="flex flex-wrap gap-2">
         {/* Native Share Button (mobile-first) */}
         {supportsNativeShare && (

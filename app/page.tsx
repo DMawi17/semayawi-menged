@@ -8,6 +8,7 @@ import { HeroPost } from "@/components/home/hero-post";
 import { CategoryShowcase } from "@/components/home/category-showcase";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { Calendar } from "lucide-react";
+import { formatEthiopianDate } from "@/lib/ethiopian-date";
 
 export default async function Home() {
   const posts = await source.getPages();
@@ -89,14 +90,7 @@ export default async function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recentPosts.map((post) => {
-            const formattedDate = new Date(post.date).toLocaleDateString(
-              "am-ET",
-              {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              }
-            );
+            const formattedDate = formatEthiopianDate(post.date);
 
             return (
               <article

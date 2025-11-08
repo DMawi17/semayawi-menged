@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { Calendar } from "lucide-react";
+import { formatEthiopianDate } from "@/lib/ethiopian-date";
 
 interface HeroPostProps {
   post: {
@@ -15,11 +16,7 @@ interface HeroPostProps {
 }
 
 export function HeroPost({ post }: HeroPostProps) {
-  const formattedDate = new Date(post.date).toLocaleDateString("am-ET", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formattedDate = formatEthiopianDate(post.date);
 
   return (
     <Link
