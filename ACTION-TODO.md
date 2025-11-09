@@ -166,16 +166,16 @@
 - [x] **ARCH-4:** Create PostService class for data fetching
   📁 `services/post.service.ts` (new file)
 
-- [ ] **ARCH-5:** Refactor BlogPostPage - extract PostHeader component
+- [x] **ARCH-5:** Refactor BlogPostPage - extract PostHeader component
   📁 `components/blog/post/post-header.tsx` (new file)
 
-- [ ] **ARCH-6:** Refactor BlogPostPage - extract PostContent component
+- [x] **ARCH-6:** Refactor BlogPostPage - extract PostContent component
   📁 `components/blog/post/post-content.tsx` (new file)
 
-- [ ] **ARCH-7:** Refactor BlogPostPage - extract PostFooter component
+- [x] **ARCH-7:** Refactor BlogPostPage - extract PostFooter component
   📁 `components/blog/post/post-footer.tsx` (new file)
 
-- [ ] **ARCH-8:** Refactor BlogPostPage - create PostLayout wrapper
+- [x] **ARCH-8:** Refactor BlogPostPage - create PostLayout wrapper
   📁 `components/blog/post/post-layout.tsx` (new file)
 
 ---
