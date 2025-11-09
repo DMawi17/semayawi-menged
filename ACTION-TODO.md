@@ -160,7 +160,7 @@
 - [ ] **ARCH-2:** Create useFilteredPosts custom hook
   📁 `hooks/useFilteredPosts.ts` (new file)
 
-- [ ] **ARCH-3:** Create usePagination custom hook
+- [x] **ARCH-3:** Create usePagination custom hook
   📁 `hooks/usePagination.ts` (new file)
 
 - [ ] **ARCH-4:** Create PostService class for data fetching

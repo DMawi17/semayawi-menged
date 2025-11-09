@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { source } from "@/lib/source";
 import { sortPostsByOption, type SortOption } from "@/lib/posts/sorting";
+import { usePagination, generatePageNumbers } from "@/hooks/usePagination";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
 import { calculateReadingTime } from "@/lib/reading-time";
@@ -12,37 +13,6 @@ const POSTS_PER_PAGE = 9;
 
 interface BlogPageProps {
   searchParams: Promise<{ page?: string; q?: string; category?: string; sort?: string }>;
-}
-
-// Generate smart page numbers for pagination (show only relevant pages with ellipsis)
-function generatePageNumbers(currentPage: number, totalPages: number): (number | string)[] {
-  const delta = 2; // Number of pages to show before and after current page
-  const range: (number | string)[] = [];
-
-  // Always show first page
-  range.push(1);
-
-  // Calculate range around current page
-  for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-    // Add ellipsis before range if needed
-    if (i === Math.max(2, currentPage - delta) && i > 2) {
-      range.push('...');
-    }
-
-    range.push(i);
-
-    // Add ellipsis after range if needed
-    if (i === Math.min(totalPages - 1, currentPage + delta) && i < totalPages - 1) {
-      range.push('...');
-    }
-  }
-
-  // Always show last page (if more than 1 page)
-  if (totalPages > 1) {
-    range.push(totalPages);
-  }
-
-  return range;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
@@ -89,10 +59,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     }, {} as Record<string, number>),
   };
 
-  const totalPages = Math.ceil(finalPosts.length / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const endIndex = startIndex + POSTS_PER_PAGE;
-  const paginatedPosts = finalPosts.slice(startIndex, endIndex);
+  // Use pagination hook
+  const { paginatedItems: paginatedPosts, totalPages } = usePagination({
+    items: finalPosts,
+    itemsPerPage: POSTS_PER_PAGE,
+    currentPage,
+  });
 
   return (
     <main className="container mx-auto px-4 py-12 max-w-7xl">
