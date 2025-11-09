@@ -1,5 +1,8 @@
 // Utility functions for managing localStorage data
 
+// Constants
+const MAX_HISTORY_ITEMS = 50; // Maximum number of reading history items to keep
+
 export interface Bookmark {
   url: string;
   title: string;
@@ -89,8 +92,8 @@ export function addToHistory(url: string, title: string): void {
     });
   }
 
-  // Keep only last 50 items
-  const trimmed = history.slice(0, 50);
+  // Keep only last N items
+  const trimmed = history.slice(0, MAX_HISTORY_ITEMS);
   localStorage.setItem("reading_history", JSON.stringify(trimmed));
 }
 

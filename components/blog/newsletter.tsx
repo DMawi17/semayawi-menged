@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 
-// Email validation regex
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Constants
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
+const NOTIFICATION_TIMEOUT_MS = 5000; // Auto-hide notification after 5 seconds
 
 function isValidEmail(email: string): boolean {
   return EMAIL_REGEX.test(email);
@@ -21,7 +22,7 @@ export function Newsletter() {
       const timer = setTimeout(() => {
         setStatus("idle");
         setMessage("");
-      }, 5000);
+      }, NOTIFICATION_TIMEOUT_MS);
 
       return () => clearTimeout(timer);
     }

@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { List } from "lucide-react";
 import { MobileToc } from "./mobile-toc";
 
+// Constants
+const TOC_ROOT_MARGIN = "-100px 0px -80% 0px"; // Intersection Observer margin for TOC
+const HEADER_OFFSET_PX = 80; // Offset for sticky header when scrolling to heading
+
 export interface Heading {
   id: string;
   text: string;
@@ -39,7 +43,7 @@ export function TableOfContents() {
           }
         });
       },
-      { rootMargin: "-100px 0px -80% 0px" }
+      { rootMargin: TOC_ROOT_MARGIN }
     );
 
     elements.forEach((elem) => observer.observe(elem));
@@ -50,9 +54,8 @@ export function TableOfContents() {
   const handleClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; // Account for sticky header
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
+      const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET_PX;
 
       window.scrollTo({
         top: offsetPosition,

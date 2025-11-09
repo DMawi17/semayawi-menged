@@ -113,18 +113,18 @@
 - [x] **PERF-8:** Add useMemo for URL construction in FilterBar
   📁 `components/blog/filter-bar.tsx:28-55`
 
-- [ ] **PERF-9:** Memoize heading extraction in TableOfContents
-  📁 `components/blog/table-of-contents.tsx:17-31`
+- [x] **PERF-9:** Memoize heading extraction in TableOfContents (already optimized)
+  📁 `components/blog/table-of-contents.tsx:17-48`
 
 ### Code Quality
-- [ ] **QUAL-6:** Extract magic numbers to named constants
-  📁 `lib/localStorage-utils.ts:93` (MAX_HISTORY_ITEMS)
+- [x] **QUAL-6:** Extract magic numbers to named constants
+  📁 `lib/localStorage-utils.ts:4,96` (MAX_HISTORY_ITEMS)
 
-- [ ] **QUAL-7:** Extract magic numbers in Newsletter timeout
-  📁 `components/blog/newsletter.tsx:33` (NOTIFICATION_TIMEOUT_MS)
+- [x] **QUAL-7:** Extract magic numbers in Newsletter timeout
+  📁 `components/blog/newsletter.tsx:8,25` (NOTIFICATION_TIMEOUT_MS)
 
-- [ ] **QUAL-8:** Extract magic numbers in TableOfContents
-  📁 `components/blog/table-of-contents.tsx:42,53` (TOC_ROOT_MARGIN, HEADER_OFFSET_PX)
+- [x] **QUAL-8:** Extract magic numbers in TableOfContents
+  📁 `components/blog/table-of-contents.tsx:8-9,46,58` (TOC_ROOT_MARGIN, HEADER_OFFSET_PX)
 
 - [ ] **QUAL-9:** Create centralized logger utility (remove console.log)
   📁 `lib/logger.ts` (new file)
