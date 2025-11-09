@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_Ethiopic, Agbalumo } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ViewTransitionProvider } from "@/components/view-transition-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { siteConfig } from "@/config/site";
@@ -94,13 +93,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ViewTransitionProvider>
-            <div className="flex min-h-screen flex-col bg-background">
-              <Header />
-              <main id="main-content" className="flex-1 bg-background" style={{ viewTransitionName: 'main-content' } as React.CSSProperties}>{children}</main>
-              <Footer />
-            </div>
-          </ViewTransitionProvider>
+          <div className="flex min-h-screen flex-col bg-background">
+            <Header />
+            <main id="main-content" className="flex-1 bg-background" style={{ viewTransitionName: 'main-content' } as React.CSSProperties}>{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
 
         {/* Global Structured Data */}
