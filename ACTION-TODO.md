@@ -100,7 +100,7 @@
 - [x] **SEC-5:** Add HTML escaping to email templates
   📁 `lib/email-templates.ts:71,74`
 
-- [ ] **SEC-6:** Improve email validation (use robust library)
+- [x] **SEC-6:** Improve email validation (use robust library)
   📁 `app/api/newsletter/route.ts:52-59`
 
 ### Performance
@@ -110,72 +110,72 @@
 - [x] **PERF-7:** Add useMemo for share URLs in ShareButtons
   📁 `components/blog/share-buttons.tsx:24-31`
 
-- [ ] **PERF-8:** Add useMemo for URL construction in FilterBar
-  📁 `components/blog/filter-bar.tsx:26-34`
+- [x] **PERF-8:** Add useMemo for URL construction in FilterBar
+  📁 `components/blog/filter-bar.tsx:28-55`
 
-- [ ] **PERF-9:** Memoize heading extraction in TableOfContents
-  📁 `components/blog/table-of-contents.tsx:17-31`
+- [x] **PERF-9:** Memoize heading extraction in TableOfContents (already optimized)
+  📁 `components/blog/table-of-contents.tsx:17-48`
 
 ### Code Quality
-- [ ] **QUAL-6:** Extract magic numbers to named constants
-  📁 `lib/localStorage-utils.ts:93` (MAX_HISTORY_ITEMS)
+- [x] **QUAL-6:** Extract magic numbers to named constants
+  📁 `lib/localStorage-utils.ts:4,96` (MAX_HISTORY_ITEMS)
 
-- [ ] **QUAL-7:** Extract magic numbers in Newsletter timeout
-  📁 `components/blog/newsletter.tsx:33` (NOTIFICATION_TIMEOUT_MS)
+- [x] **QUAL-7:** Extract magic numbers in Newsletter timeout
+  📁 `components/blog/newsletter.tsx:8,25` (NOTIFICATION_TIMEOUT_MS)
 
-- [ ] **QUAL-8:** Extract magic numbers in TableOfContents
-  📁 `components/blog/table-of-contents.tsx:42,53` (TOC_ROOT_MARGIN, HEADER_OFFSET_PX)
+- [x] **QUAL-8:** Extract magic numbers in TableOfContents
+  📁 `components/blog/table-of-contents.tsx:8-9,46,58` (TOC_ROOT_MARGIN, HEADER_OFFSET_PX)
 
-- [ ] **QUAL-9:** Create centralized logger utility (remove console.log)
+- [x] **QUAL-9:** Create centralized logger utility (remove console.log)
   📁 `lib/logger.ts` (new file)
 
-- [ ] **QUAL-10:** Remove console logs from Comments component
-  📁 `components/blog/comments.tsx:31,46,71`
+- [x] **QUAL-10:** Remove console logs from Comments component
+  📁 `components/blog/comments.tsx:33,51,76`
 
-- [ ] **QUAL-11:** Remove console logs from ShareButtons component
-  📁 `components/blog/share-buttons.tsx:39,54`
+- [x] **QUAL-11:** Remove console logs from ShareButtons component
+  📁 `components/blog/share-buttons.tsx:48,63`
 
-- [ ] **QUAL-12:** Remove console logs from Newsletter component
-  📁 `components/blog/newsletter.tsx:42`
+- [x] **QUAL-12:** Remove console logs from Newsletter component
+  📁 `components/blog/newsletter.tsx:71`
 
-- [ ] **QUAL-13:** Remove console logs from localStorage-utils
-  📁 `lib/localStorage-utils.ts:24,66`
+- [x] **QUAL-13:** Remove console logs from localStorage-utils
+  📁 `lib/localStorage-utils.ts:28,70,123,137,147`
 
-- [ ] **QUAL-14:** Extract sortPostsByOption utility function
+- [x] **QUAL-14:** Extract sortPostsByOption utility function
   📁 `lib/posts/sorting.ts` (new file)
 
-- [ ] **QUAL-15:** Fix type safety - replace 'unknown' type in blog.ts
-  📁 `types/blog.ts:15,17`
+- [x] **QUAL-15:** Fix type safety - replace 'unknown' type in blog.ts
+  📁 `types/blog.ts:15-18`
 
-- [ ] **QUAL-16:** Add proper type for View Transitions API
+- [x] **QUAL-16:** Add proper type for View Transitions API
   📁 `types/view-transitions.d.ts` (new file)
 
-- [ ] **QUAL-17:** Fix naming inconsistency - rename MDX variable in blog post page
-  📁 `app/blog/[...slug]/page.tsx:121`
+- [x] **QUAL-17:** Fix naming inconsistency - rename MDX variable in blog post page
+  📁 `app/blog/[...slug]/page.tsx:127,238` (MDX → MdxContent)
 
 ### Architecture
-- [ ] **ARCH-1:** Create usePostFilters custom hook
+- [x] **ARCH-1:** Create usePostFilters custom hook
   📁 `hooks/usePostFilters.ts` (new file)
 
-- [ ] **ARCH-2:** Create useFilteredPosts custom hook
+- [x] **ARCH-2:** Create useFilteredPosts custom hook
   📁 `hooks/useFilteredPosts.ts` (new file)
 
-- [ ] **ARCH-3:** Create usePagination custom hook
+- [x] **ARCH-3:** Create usePagination custom hook
   📁 `hooks/usePagination.ts` (new file)
 
-- [ ] **ARCH-4:** Create PostService class for data fetching
+- [x] **ARCH-4:** Create PostService class for data fetching
   📁 `services/post.service.ts` (new file)
 
-- [ ] **ARCH-5:** Refactor BlogPostPage - extract PostHeader component
+- [x] **ARCH-5:** Refactor BlogPostPage - extract PostHeader component
   📁 `components/blog/post/post-header.tsx` (new file)
 
-- [ ] **ARCH-6:** Refactor BlogPostPage - extract PostContent component
+- [x] **ARCH-6:** Refactor BlogPostPage - extract PostContent component
   📁 `components/blog/post/post-content.tsx` (new file)
 
-- [ ] **ARCH-7:** Refactor BlogPostPage - extract PostFooter component
+- [x] **ARCH-7:** Refactor BlogPostPage - extract PostFooter component
   📁 `components/blog/post/post-footer.tsx` (new file)
 
-- [ ] **ARCH-8:** Refactor BlogPostPage - create PostLayout wrapper
+- [x] **ARCH-8:** Refactor BlogPostPage - create PostLayout wrapper
   📁 `components/blog/post/post-layout.tsx` (new file)
 
 ---

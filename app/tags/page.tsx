@@ -15,7 +15,7 @@ export default async function TagsPage() {
   const sortedTags = sortTagsByCount(tags);
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-4xl">
+    <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-12">
         <h1 className="text-4xl font-bold mb-4">መለያዎች</h1>
         <p className="text-muted-foreground">
@@ -45,6 +45,6 @@ export default async function TagsPage() {
           ምንም መለያዎች አልተገኙም።
         </p>
       )}
-    </main>
+    </div>
   );
 }

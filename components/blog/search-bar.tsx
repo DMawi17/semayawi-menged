@@ -2,28 +2,27 @@
 
 import { Search, X } from "lucide-react";
 import { useState, useTransition, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePostFilters } from "@/hooks/usePostFilters";
 
 export function SearchBar() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { searchQuery: currentQuery, setSearchQuery: updateSearchQuery } = usePostFilters();
   const [isPending, startTransition] = useTransition();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const [searchQuery, setSearchQuery] = useState(currentQuery);
 
   // Debounced search: wait 300ms after user stops typing
   useEffect(() => {
-    const timer = setTimeout(() => {
-      startTransition(() => {
-        if (searchQuery.trim()) {
-          router.push(`/blog?q=${encodeURIComponent(searchQuery.trim())}`);
-        } else {
-          router.push("/blog");
-        }
-      });
-    }, 300);
+    // Only update if the search query is different from current URL query
+    if (searchQuery !== currentQuery) {
+      const timer = setTimeout(() => {
+        startTransition(() => {
+          updateSearchQuery(searchQuery);
+        });
+      }, 300);
 
-    return () => clearTimeout(timer);
-  }, [searchQuery, router]);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, currentQuery]); // updateSearchQuery is stable from useCallback, safe to omit
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -32,7 +31,7 @@ export function SearchBar() {
   const clearSearch = () => {
     setSearchQuery("");
     startTransition(() => {
-      router.push("/blog");
+      updateSearchQuery("");
     });
   };
 

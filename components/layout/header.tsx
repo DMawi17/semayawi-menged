@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ViewTransitionLink } from "@/components/view-transition-link";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -30,31 +30,31 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md">
-      <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <nav className="container mx-auto px-4 h-16 flex items-center justify-between min-w-0">
         {/* Logo */}
-        <Link
+        <ViewTransitionLink
           href="/"
           className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white bg-clip-text text-transparent"
         >
           {siteConfig.name}
-        </Link>
+        </ViewTransitionLink>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-8">
           {siteConfig.navigation.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
             return (
-              <Link
+              <ViewTransitionLink
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                   isActive
                     ? "text-primary"
                     : "text-gray-600 dark:text-gray-400"
                 }`}
               >
                 {item.nameAmharic}
-              </Link>
+              </ViewTransitionLink>
             );
           })}
           <ThemeToggle />
@@ -116,7 +116,7 @@ export function Header() {
             {siteConfig.navigation.map((item, index) => {
               const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
               return (
-                <Link
+                <ViewTransitionLink
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
@@ -131,7 +131,7 @@ export function Header() {
                   }}
                 >
                   {item.nameAmharic}
-                </Link>
+                </ViewTransitionLink>
               );
             })}
           </nav>

@@ -20,9 +20,16 @@ import { AudioPlayer } from "@/components/blog/audio-player";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
-import { useMDXComponents } from "@/mdx-components";
+import { BibleVerse } from "@/components/mdx/bible-verse";
+import { PrayerPrompt } from "@/components/mdx/prayer-prompt";
+import { NumberedList, ListItem } from "@/components/mdx/numbered-list";
+import { FinalReflection } from "@/components/mdx/final-reflection";
+import { RelatedVerses } from "@/components/mdx/related-verses";
+import { ArticleFooter } from "@/components/mdx/article-footer";
+import { SectionDivider } from "@/components/blog/SectionDivider";
 import { ArticleHero } from "@/components/blog/ArticleHero";
 import { DropCap } from "@/components/blog/DropCap";
+import { getMDXComponents } from "@/lib/mdx-components";
 import { ScrollToTop } from "@/components/mdx/scroll-to-top";
 import { ErrorBoundary } from "@/components/error-boundary";
 import {
@@ -124,7 +131,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const MDX = post.body;
+  const MdxContent = post.body;
   const category = getCategory(post.category);
   const readingTime = calculateReadingTime(post.rawContent || "");
 
@@ -133,8 +140,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const relatedPosts = getRelatedPosts(post, allPosts, 3);
   const { previous, next } = getAdjacentPosts(post, allPosts);
 
-  // Get all MDX components (including headings) and merge with custom components
-  const mdxComponents = useMDXComponents({ Callout, Quote, Highlight, DropCap });
+  // Get MDX components with all custom components
+  const mdxComponents = getMDXComponents({
+    Callout,
+    Quote,
+    Highlight,
+    DropCap,
+    BibleVerse,
+    PrayerPrompt,
+    NumberedList,
+    ListItem,
+    FinalReflection,
+    RelatedVerses,
+    ArticleFooter,
+    SectionDivider,
+    ScrollToTop,
+  });
 
   // Prepare data for JSON-LD structured data
   const postUrl = `${siteConfig.url}${post.url}`;
@@ -235,7 +256,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Post Content */}
           <div className="mt-8">
             <ErrorBoundary>
-              <MDX components={mdxComponents} />
+              <MdxContent components={mdxComponents} />
             </ErrorBoundary>
           </div>
 

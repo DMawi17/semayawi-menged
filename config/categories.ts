@@ -34,7 +34,7 @@ export const categories: Category[] = [
     color: "#3B82F6", // Blue
     icon: "👨",
     featured: true,
-    comingSoon: true,
+    comingSoon: false,
   },
   {
     id: "church-history",

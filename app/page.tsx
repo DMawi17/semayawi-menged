@@ -40,14 +40,14 @@ export default async function Home() {
     : null;
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
       {/* Hero Section with Featured Post */}
       {featuredPost && featuredPost.cover && (
         <section className="mb-16">
           <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
             የተመረጠ ጽሁፍ
           </h2>
-          <div className="[&>a>header]:h-[350px] [&>a>header]:sm:h-[450px] [&>a>header]:md:h-[600px]">
+          <div className="[&>a>div]:h-[350px] [&>a>div]:sm:h-[450px] [&>a>div]:md:h-[600px]">
             <ArticleHero
               title={featuredPost.title}
               category={featuredPost.category}
@@ -171,6 +171,6 @@ export default async function Home() {
           ተጨማሪ ያንብቡ
         </Link>
       </section>
-    </main>
+    </div>
   );
 }

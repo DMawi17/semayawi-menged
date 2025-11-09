@@ -53,7 +53,7 @@ export default async function TagPage({ params }: TagPageProps) {
   }
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
       <div className="mb-12">
         <Link
           href="/tags"
@@ -115,6 +115,6 @@ export default async function TagPage({ params }: TagPageProps) {
           </article>
         ))}
       </div>
-    </main>
+    </div>
   );
 }

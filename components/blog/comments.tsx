@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { MessageSquare, ExternalLink } from "lucide-react";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { logDebug, logWarn } from "@/lib/logger";
 
 // Giscus configuration - Replace with your own values
 const GISCUS_CONFIG = {
@@ -29,12 +30,15 @@ export function Comments() {
     const configured = !!(GISCUS_CONFIG.repo && GISCUS_CONFIG.repoId && GISCUS_CONFIG.categoryId);
 
     // Debug logging
-    console.log("Giscus Config:", {
-      repo: GISCUS_CONFIG.repo,
-      repoId: GISCUS_CONFIG.repoId,
-      categoryId: GISCUS_CONFIG.categoryId,
-      configured,
-      refCurrent: !!ref.current
+    logDebug("Giscus configuration loaded", {
+      context: "Comments",
+      data: {
+        repo: GISCUS_CONFIG.repo,
+        repoId: GISCUS_CONFIG.repoId,
+        categoryId: GISCUS_CONFIG.categoryId,
+        configured,
+        refCurrent: !!ref.current
+      }
     });
 
     setIsConfigured(configured);
@@ -44,7 +48,7 @@ export function Comments() {
     // Wait for ref to be available
     const timer = setTimeout(() => {
       if (!ref.current) {
-        console.warn("Giscus ref.current is still null after timeout");
+        logWarn("Giscus ref.current is still null after timeout", { context: "Comments" });
         return;
       }
 
@@ -69,7 +73,7 @@ export function Comments() {
       scriptElem.setAttribute("data-lang", GISCUS_CONFIG.lang);
 
       ref.current.appendChild(scriptElem);
-      console.log("Giscus script injected successfully");
+      logDebug("Giscus script injected successfully", { context: "Comments" });
     }, 100);
 
     return () => clearTimeout(timer);

@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
+import { logError } from "@/lib/logger";
 
-// Email validation regex
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Constants
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
+const NOTIFICATION_TIMEOUT_MS = 5000; // Auto-hide notification after 5 seconds
 
 function isValidEmail(email: string): boolean {
   return EMAIL_REGEX.test(email);
@@ -21,7 +23,7 @@ export function Newsletter() {
       const timer = setTimeout(() => {
         setStatus("idle");
         setMessage("");
-      }, 5000);
+      }, NOTIFICATION_TIMEOUT_MS);
 
       return () => clearTimeout(timer);
     }
@@ -66,7 +68,7 @@ export function Newsletter() {
         setMessage(data.error || "የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
       }
     } catch (error) {
-      console.error("Newsletter subscription error:", error);
+      logError("Newsletter subscription error", { context: "Newsletter", data: error });
       setStatus("error");
       setMessage("የተጠበቀ ስህተት አጋጥሟል። እባክዎ እንደገና ይሞክሩ።");
     }

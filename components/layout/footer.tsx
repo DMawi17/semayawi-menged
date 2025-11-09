@@ -15,6 +15,9 @@ export function Footer() {
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
               {siteConfig.descriptionAmharic}
             </p>
+            <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+              {siteConfig.work} - {siteConfig.author}
+            </p>
           </div>
 
           {/* Navigation Links */}
@@ -72,9 +75,6 @@ export function Footer() {
                 </a>
               )}
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-500 mt-6">
-              {siteConfig.work} - {siteConfig.author}
-            </p>
           </div>
         </div>
 

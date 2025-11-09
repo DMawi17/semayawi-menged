@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="container mx-auto px-4 py-12 max-w-4xl">
+    <div className="container mx-auto px-4 py-12 max-w-4xl">
       {/* Hero Section */}
       <div className="mb-12 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">ስለ ብሎግ</h1>
@@ -115,6 +115,6 @@ export default function AboutPage() {
           <p className="text-sm text-muted-foreground mt-4">- ሮሜ 15:4</p>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

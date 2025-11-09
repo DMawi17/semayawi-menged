@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { getCategoryBySlug, getPostsByCategory } from "@/lib/categories";
+import { getCategoryBySlug } from "@/lib/categories";
+import { getPostsByCategory } from "@/lib/categories.server";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -37,7 +38,7 @@ export default async function WomenOfBiblePage() {
 	const posts = await getPostsByCategory(category.id);
 
 	return (
-		<main className="container mx-auto px-4 py-12 max-w-7xl">
+		<div className="container mx-auto px-4 py-12 max-w-7xl">
 			{/* Category Header */}
 			<div className="mb-12 text-center">
 				<div className="inline-flex items-center justify-center mb-4">
@@ -123,6 +124,6 @@ export default async function WomenOfBiblePage() {
 					})}
 				</div>
 			)}
-		</main>
+		</div>
 	);
 }

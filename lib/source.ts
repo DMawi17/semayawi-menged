@@ -1,6 +1,6 @@
+import "server-only";
 import { blog } from "@/.source";
 import fs from "fs";
-import path from "path";
 
 /**
  * Get raw MDX content from a blog post file

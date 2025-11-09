@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { source } from "@/lib/source";
-import { sortPosts } from "@/lib/utils";
+import { PostService } from "@/services/post.service";
+import type { SortOption } from "@/lib/posts/sorting";
+import { generatePageNumbers } from "@/hooks/usePagination";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
 import { calculateReadingTime } from "@/lib/reading-time";
-import { getCategory } from "@/lib/categories";
 import { Clock } from "lucide-react";
 
 const POSTS_PER_PAGE = 9;
@@ -14,99 +14,24 @@ interface BlogPageProps {
   searchParams: Promise<{ page?: string; q?: string; category?: string; sort?: string }>;
 }
 
-// Generate smart page numbers for pagination (show only relevant pages with ellipsis)
-function generatePageNumbers(currentPage: number, totalPages: number): (number | string)[] {
-  const delta = 2; // Number of pages to show before and after current page
-  const range: (number | string)[] = [];
-
-  // Always show first page
-  range.push(1);
-
-  // Calculate range around current page
-  for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-    // Add ellipsis before range if needed
-    if (i === Math.max(2, currentPage - delta) && i > 2) {
-      range.push('...');
-    }
-
-    range.push(i);
-
-    // Add ellipsis after range if needed
-    if (i === Math.min(totalPages - 1, currentPage + delta) && i < totalPages - 1) {
-      range.push('...');
-    }
-  }
-
-  // Always show last page (if more than 1 page)
-  if (totalPages > 1) {
-    range.push(totalPages);
-  }
-
-  return range;
-}
-
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
-  const searchQuery = params.q?.toLowerCase() || "";
+  const searchQuery = params.q || "";
   const categoryFilter = params.category || "all";
-  const sortOption = params.sort || "date-desc";
+  const sortOption = (params.sort || "date-desc") as SortOption;
 
-  const posts = await source.getPages();
-  const publishedPosts = posts.filter((post) => post.data.published !== false);
-
-  // Filter by category
-  let filteredPosts = categoryFilter !== "all"
-    ? publishedPosts.filter((post) => {
-        const postCategory = getCategory(post.data.category);
-        return postCategory?.id === categoryFilter;
-      })
-    : publishedPosts;
-
-  // Filter by search query
-  filteredPosts = searchQuery
-    ? filteredPosts.filter(
-        (post) =>
-          post.data.title.toLowerCase().includes(searchQuery) ||
-          post.data.description?.toLowerCase().includes(searchQuery) ||
-          post.data.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchQuery)
-          )
-      )
-    : filteredPosts;
-
-  // Sort posts
-  const sortedPosts = sortOption.startsWith("date")
-    ? sortPosts(filteredPosts)
-    : filteredPosts.sort((a, b) => {
-        if (sortOption === "title-asc") {
-          return a.data.title.localeCompare(b.data.title);
-        } else {
-          return b.data.title.localeCompare(a.data.title);
-        }
-      });
-
-  // Reverse if descending date sort is not default
-  const finalPosts = sortOption === "date-asc" ? [...sortedPosts].reverse() : sortedPosts;
-
-  // Calculate post counts for filters
-  const postCount = {
-    all: publishedPosts.length,
-    byCategory: publishedPosts.reduce((acc, post) => {
-      const category = getCategory(post.data.category);
-      const categoryId = category?.id || "uncategorized";
-      acc[categoryId] = (acc[categoryId] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>),
-  };
-
-  const totalPages = Math.ceil(finalPosts.length / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const endIndex = startIndex + POSTS_PER_PAGE;
-  const paginatedPosts = finalPosts.slice(startIndex, endIndex);
+  // Fetch filtered, sorted, and paginated posts using PostService
+  const { posts: paginatedPosts, totalPages, totalPosts, postCount } = await PostService.getFilteredPosts({
+    searchQuery,
+    categoryFilter,
+    sortOption,
+    page: currentPage,
+    itemsPerPage: POSTS_PER_PAGE,
+  });
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
       <div className="mb-12">
         <h1 className="text-4xl font-bold mb-4">ብሎግ ጽሑፎች</h1>
         <p className="text-muted-foreground mb-6">
@@ -115,7 +40,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         <SearchBar />
         {searchQuery && (
           <p className="mt-4 text-sm text-muted-foreground">
-            {finalPosts.length} ውጤት{finalPosts.length !== 1 ? "ዎች" : ""} ለ &ldquo;{params.q}&rdquo;
+            {totalPosts} ውጤት{totalPosts !== 1 ? "ዎች" : ""} ለ &ldquo;{searchQuery}&rdquo;
           </p>
         )}
       </div>
@@ -223,6 +148,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           )}
         </div>
       )}
-    </main>
+    </div>
   );
 }

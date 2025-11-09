@@ -29,7 +29,7 @@ export function ArticleHero({
   const formattedDate = formatEthiopianDate(publishedAt);
 
   const content = (
-    <header className="relative overflow-hidden rounded-lg mb-12 h-[250px] sm:h-[300px] md:h-[450px]">
+    <div className="relative overflow-hidden rounded-lg mb-12 h-[250px] sm:h-[300px] md:h-[450px]">
       {/* Background Image or Gradient */}
       {coverImage ? (
         <>
@@ -37,6 +37,7 @@ export function ArticleHero({
             src={coverImage}
             alt={title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1280px"
             className="object-cover"
             priority
           />
@@ -102,7 +103,7 @@ export function ArticleHero({
           </div>
         </div>
       </div>
-    </header>
+    </div>
   );
 
   if (href) {

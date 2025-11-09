@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Link2, Mail, Share2 } from "lucide-react";
+import { logError } from "@/lib/logger";
 
 interface ShareButtonsProps {
   title: string;
@@ -44,7 +45,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logError("Failed to copy link to clipboard", { context: "ShareButtons", data: err });
     }
   };
 
@@ -59,7 +60,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
       } catch (err) {
         // User cancelled or error occurred
         if ((err as Error).name !== "AbortError") {
-          console.error("Error sharing:", err);
+          logError("Error using native share", { context: "ShareButtons", data: err });
         }
       }
     }
@@ -78,23 +79,22 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center flex-wrap gap-3">
-        {/* Share Badge/Label */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#fe640b] dark:bg-amber-600 text-white rounded-lg font-semibold h-9">
-          <Share2 className="h-4 w-4" />
-          <span>ያጋሩ</span>
-        </div>
-
-        {/* Native Share Button (mobile-first) */}
-        {supportsNativeShare && (
+        {/* Share Badge/Button - clickable on supported browsers, static label otherwise */}
+        {supportsNativeShare ? (
           <button
             onClick={handleNativeShare}
-            className="inline-flex items-center justify-center h-9 px-4 rounded-lg border bg-primary text-primary-foreground hover:bg-primary/90 transition-colors gap-2 cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#fe640b] dark:bg-amber-600 text-white rounded-lg font-semibold h-9 hover:opacity-90 transition-opacity cursor-pointer"
             aria-label="Share"
             title="Share"
           >
             <Share2 className="h-4 w-4" />
-            <span className="text-sm font-medium">ያጋሩ</span>
+            <span>ያጋሩ</span>
           </button>
+        ) : (
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#fe640b] dark:bg-amber-600 text-white rounded-lg font-semibold h-9">
+            <Share2 className="h-4 w-4" />
+            <span>ያጋሩ</span>
+          </div>
         )}
 
         <button
