@@ -190,6 +190,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </div>
 
+          {/* Audio Player - Full width below hero */}
+          {post.data.audio && (
+            <div className="mb-8 not-prose">
+              <AudioPlayer
+                audioUrl={post.data.audio}
+                title={post.data.title}
+              />
+            </div>
+          )}
+
           {/* Tags and Actions Row */}
           <div className="flex items-center justify-between gap-4 mb-8 not-prose">
             {/* Tags - Last 5 only */}
@@ -207,16 +217,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             )}
 
-            {/* Actions - Sound and Bookmark */}
-            <div className="flex items-center gap-2 shrink-0">
-              {/* Audio Player - Only show if audio is available */}
-              {post.data.audio && (
-                <AudioPlayer
-                  audioUrl={post.data.audio}
-                  title={post.data.title}
-                />
-              )}
-
+            {/* Bookmark Button */}
+            <div className="shrink-0">
               <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
             </div>
           </div>
