@@ -1,61 +1,62 @@
-import { AlertCircle, Info, AlertTriangle, CheckCircle, Lightbulb } from "lucide-react";
 import { ReactNode } from "react";
 
 interface CalloutProps {
-  type?: "info" | "warning" | "error" | "success" | "tip";
+  type?: "info" | "warning" | "danger" | "success" | "spiritual";
   title?: string;
   children: ReactNode;
 }
 
 const calloutConfig = {
   info: {
-    icon: Info,
-    bg: "bg-blue-50 dark:bg-blue-950/30",
-    border: "border-blue-200 dark:border-blue-800",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    title: "መረጃ",
+    emoji: "ℹ️",
+    bgColor: "bg-gradient-to-r from-blue-50/80 to-sky-50/80 dark:from-blue-900/20 dark:to-sky-900/20",
+    borderColor: "border-blue-500 dark:border-blue-400",
+    titleColor: "text-blue-800 dark:text-blue-300",
   },
   warning: {
-    icon: AlertTriangle,
-    bg: "bg-yellow-50 dark:bg-yellow-950/30",
-    border: "border-yellow-200 dark:border-yellow-800",
-    iconColor: "text-yellow-600 dark:text-yellow-400",
-    title: "ማስጠንቀቂያ",
+    emoji: "⚠️",
+    bgColor: "bg-gradient-to-r from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20",
+    borderColor: "border-yellow-500 dark:border-yellow-400",
+    titleColor: "text-yellow-800 dark:text-yellow-300",
   },
-  error: {
-    icon: AlertCircle,
-    bg: "bg-red-50 dark:bg-red-950/30",
-    border: "border-red-200 dark:border-red-800",
-    iconColor: "text-red-600 dark:text-red-400",
-    title: "ስህተት",
+  danger: {
+    emoji: "🚨",
+    bgColor: "bg-gradient-to-r from-red-50/80 to-rose-50/80 dark:from-red-900/20 dark:to-rose-900/20",
+    borderColor: "border-red-500 dark:border-red-400",
+    titleColor: "text-red-800 dark:text-red-300",
   },
   success: {
-    icon: CheckCircle,
-    bg: "bg-green-50 dark:bg-green-950/30",
-    border: "border-green-200 dark:border-green-800",
-    iconColor: "text-green-600 dark:text-green-400",
-    title: "ስኬት",
+    emoji: "✅",
+    bgColor: "bg-gradient-to-r from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20",
+    borderColor: "border-green-500 dark:border-green-400",
+    titleColor: "text-green-800 dark:text-green-300",
   },
-  tip: {
-    icon: Lightbulb,
-    bg: "bg-purple-50 dark:bg-purple-950/30",
-    border: "border-purple-200 dark:border-purple-800",
-    iconColor: "text-purple-600 dark:text-purple-400",
-    title: "ምክር",
+  spiritual: {
+    emoji: "🔥",
+    bgColor: "bg-gradient-to-r from-purple-50/80 to-violet-50/80 dark:from-purple-900/20 dark:to-violet-900/20",
+    borderColor: "border-purple-500 dark:border-purple-400",
+    titleColor: "text-purple-800 dark:text-purple-300",
   },
 };
 
 export function Callout({ type = "info", title, children }: CalloutProps) {
   const config = calloutConfig[type];
-  const Icon = config.icon;
 
   return (
-    <div className={`my-6 rounded-lg border-l-4 p-4 ${config.bg} ${config.border}`}>
-      <div className="flex gap-3">
-        <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${config.iconColor}`} />
+    <div className={`my-6 p-6 ${config.bgColor} border-l-4 ${config.borderColor} rounded-r-xl`}>
+      <div className="flex items-start gap-4">
+        <div className="flex items-center h-full">
+          <span className="text-2xl flex-shrink-0">{config.emoji}</span>
+        </div>
         <div className="flex-1">
-          {title && <p className="font-semibold mb-2">{title}</p>}
-          <div className="text-sm [&>p]:my-0">{children}</div>
+          {title && (
+            <h4 className={`font-bold text-lg mb-2 ${config.titleColor}`}>
+              {title}
+            </h4>
+          )}
+          <div className="text-[#4c4f69] dark:text-gray-200 leading-7">
+            {children}
+          </div>
         </div>
       </div>
     </div>

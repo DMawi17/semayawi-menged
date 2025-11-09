@@ -65,7 +65,7 @@ export function Header() {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="relative h-11 w-11 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
+            className="relative h-12 w-12 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
             aria-label={mobileMenuOpen ? "ሜኑ ዝጋ" : "ሜኑ ክፈት"}
             aria-expanded={mobileMenuOpen}
           >
@@ -120,7 +120,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block text-sm font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] ${
+                  className={`block text-sm font-medium py-4 px-4 min-h-[44px] flex items-center rounded-lg transition-all duration-200 transform hover:scale-[1.02] ${
                     isActive
                       ? "bg-primary/10 text-primary shadow-sm"
                       : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground"

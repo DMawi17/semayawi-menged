@@ -121,7 +121,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 )}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                   <Clock className="h-3 w-3" />
-                  <span>{calculateReadingTime(post.body.toString()).minutes} ደቂቃ</span>
+                  <span>{calculateReadingTime(post.rawContent || "").minutes} ደቂቃ</span>
                 </div>
                 {post.data.tags && post.data.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
