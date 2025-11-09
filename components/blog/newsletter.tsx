@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 
+// Email validation regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email);
+}
+
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -22,6 +29,20 @@ export function Newsletter() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate email format
+    if (!email.trim()) {
+      setStatus("error");
+      setMessage("እባክዎ ኢሜል አድራሻዎን ያስገቡ።");
+      return;
+    }
+
+    if (!isValidEmail(email.trim())) {
+      setStatus("error");
+      setMessage("እባክዎ ትክክለኛ ኢሜል አድራሻ ያስገቡ።");
+      return;
+    }
+
     setStatus("loading");
     setMessage("");
 
@@ -31,7 +52,7 @@ export function Newsletter() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.trim() }),
       });
 
       const data = await response.json();
