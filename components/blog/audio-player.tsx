@@ -12,7 +12,7 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   const [error, setError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(10); // 0-10 scale
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -26,14 +26,25 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
       setError("Failed to load audio");
       setIsPlaying(false);
     };
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleTimeUpdate = () => {
+      if (audio) setCurrentTime(audio.currentTime);
+    };
+    const handleLoadedMetadata = () => {
+      if (audio) setDuration(audio.duration);
+    };
 
+    // Add event listeners
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("error", handleError);
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
 
+    // Defensive check for cached audio
+    if (audio.readyState > 0) {
+      handleLoadedMetadata();
+    }
+
+    // Cleanup
     return () => {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
@@ -73,9 +84,10 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current;
     if (!audio) return;
-    const newVolume = parseFloat(e.target.value);
-    audio.volume = newVolume;
-    setVolume(newVolume);
+    const volumeValue = parseFloat(e.target.value);
+    const normalizedVolume = volumeValue / 10; // Convert 0-10 to 0-1
+    audio.volume = normalizedVolume;
+    setVolume(volumeValue);
   };
 
   const skip = (seconds: number) => {
@@ -102,189 +114,130 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   };
 
   return (
-    <div className="w-full bg-card border border-border rounded-lg p-4 shadow-sm">
+    <div className="w-full max-w-2xl bg-card border border-border rounded-lg p-3 shadow-sm">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
 
-      {/* Title */}
-      {title && (
-        <div className="mb-3 text-sm font-medium text-foreground line-clamp-1">
-          {title}
-        </div>
-      )}
+      {/* Controls Row */}
+      <div className="flex items-center gap-3">
+        {/* Play/Pause */}
+        <button
+          onClick={togglePlayPause}
+          className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90 p-2 transition-colors cursor-pointer shrink-0"
+          aria-label={isPlaying ? "Pause" : "Play"}
+          title={error || (isPlaying ? "Pause" : "Play")}
+        >
+          {isPlaying ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+          )}
+        </button>
 
-      {/* Progress Bar */}
-      <div className="mb-3">
-        <input
-          type="range"
-          min="0"
-          max={duration || 0}
-          value={currentTime}
-          onChange={handleProgressChange}
-          className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
-          aria-label="Audio progress"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
+        {/* Skip Backward */}
+        <button
+          onClick={() => skip(-5)}
+          className="inline-flex items-center justify-center hover:bg-secondary rounded p-1.5 transition-colors cursor-pointer shrink-0"
+          aria-label="Skip backward 5 seconds"
+          title="Skip backward 5s"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2.5 2v6h6" />
+            <path d="M2.66 15.57a10 10 0 1 0 .57-8.38" />
+            <text x="11" y="15" fontSize="9" fill="currentColor" fontWeight="bold">5</text>
+          </svg>
+        </button>
 
-      {/* Controls */}
-      <div className="flex items-center justify-between gap-2">
-        {/* Left: Playback controls */}
-        <div className="flex items-center gap-1">
-          {/* Skip backward */}
+        {/* Progress Bar */}
+        <div className="flex-1 min-w-0">
+          <input
+            type="range"
+            min="0"
+            max={duration || 0}
+            step="0.1"
+            value={currentTime || 0}
+            onChange={handleProgressChange}
+            className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
+            aria-label="Audio progress"
+          />
+        </div>
+
+        {/* Skip Forward */}
+        <button
+          onClick={() => skip(5)}
+          className="inline-flex items-center justify-center hover:bg-secondary rounded p-1.5 transition-colors cursor-pointer shrink-0"
+          aria-label="Skip forward 5 seconds"
+          title="Skip forward 5s"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21.5 2v6h-6" />
+            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
+            <text x="7" y="15" fontSize="9" fill="currentColor" fontWeight="bold">5</text>
+          </svg>
+        </button>
+
+        {/* Time Display */}
+        <div className="text-xs text-muted-foreground shrink-0 min-w-[80px] text-right">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </div>
+
+        {/* Playback Speed */}
+        <button
+          onClick={cyclePlaybackSpeed}
+          className="inline-flex items-center justify-center hover:bg-secondary rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer shrink-0 min-w-[38px]"
+          aria-label={`Playback speed: ${playbackRate}x`}
+          title="Change playback speed"
+        >
+          {playbackRate}x
+        </button>
+
+        {/* Volume Control */}
+        <div className="relative shrink-0">
           <button
-            onClick={() => skip(-5)}
-            className="inline-flex items-center justify-center rounded-md hover:bg-secondary p-2 transition-colors cursor-pointer"
-            aria-label="Skip backward 5 seconds"
-            title="Skip backward 5s"
+            onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+            className="inline-flex items-center justify-center hover:bg-secondary rounded p-1.5 transition-colors cursor-pointer"
+            aria-label="Volume control"
+            title={`Volume: ${volume}`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M11 19a8 8 0 1 0 0-14" />
-              <path d="M11 5 5 5 5 11" />
-              <text x="12" y="16" fontSize="10" fill="currentColor" fontWeight="bold">5</text>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              {volume > 5 && <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />}
+              {volume > 0 && volume <= 5 && <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />}
+              {volume === 0 && (
+                <>
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </>
+              )}
             </svg>
           </button>
 
-          {/* Play/Pause */}
-          <button
-            onClick={togglePlayPause}
-            className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 p-2.5 transition-colors cursor-pointer"
-            aria-label={isPlaying ? "Pause" : "Play"}
-            title={error || (isPlaying ? "Pause" : "Play")}
-          >
-            {isPlaying ? (
-              // Pause icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="6" y="4" width="4" height="16" />
-                <rect x="14" y="4" width="4" height="16" />
-              </svg>
-            ) : (
-              // Play icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-            )}
-          </button>
-
-          {/* Skip forward */}
-          <button
-            onClick={() => skip(5)}
-            className="inline-flex items-center justify-center rounded-md hover:bg-secondary p-2 transition-colors cursor-pointer"
-            aria-label="Skip forward 5 seconds"
-            title="Skip forward 5s"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M13 19a8 8 0 1 0 0-14" />
-              <path d="M13 5 19 5 19 11" />
-              <text x="6" y="16" fontSize="10" fill="currentColor" fontWeight="bold">5</text>
-            </svg>
-          </button>
-        </div>
-
-        {/* Right: Volume and Speed */}
-        <div className="flex items-center gap-1">
-          {/* Playback speed */}
-          <button
-            onClick={cyclePlaybackSpeed}
-            className="inline-flex items-center justify-center rounded-md hover:bg-secondary px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-w-[42px]"
-            aria-label={`Playback speed: ${playbackRate}x`}
-            title="Change playback speed"
-          >
-            {playbackRate}x
-          </button>
-
-          {/* Volume control */}
-          <div className="relative">
-            <button
-              onClick={() => setShowVolumeSlider(!showVolumeSlider)}
-              className="inline-flex items-center justify-center rounded-md hover:bg-secondary p-2 transition-colors cursor-pointer"
-              aria-label="Volume control"
-              title={`Volume: ${Math.round(volume * 100)}%`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                {volume > 0.5 && <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />}
-                {volume > 0.7 && <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />}
-                {volume === 0 && <line x1="23" y1="9" x2="17" y2="15" />}
-                {volume === 0 && <line x1="17" y1="9" x2="23" y2="15" />}
-              </svg>
-            </button>
-
-            {/* Volume slider popup */}
-            {showVolumeSlider && (
-              <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg p-3 shadow-lg">
-                <div className="flex flex-col items-center gap-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={volume}
-                    onChange={handleVolumeChange}
-                    className="h-20 w-2 bg-secondary rounded-lg appearance-none cursor-pointer [writing-mode:vertical-lr] [direction:rtl] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
-                    aria-label="Volume"
-                  />
-                  <span className="text-xs text-muted-foreground">{Math.round(volume * 100)}%</span>
-                </div>
+          {/* Volume Slider Popup */}
+          {showVolumeSlider && (
+            <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg p-2 shadow-lg z-10">
+              <div className="flex flex-col items-center gap-2">
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="1"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="h-16 w-1.5 bg-secondary rounded-lg appearance-none cursor-pointer [writing-mode:vertical-lr] [direction:rtl] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
+                  aria-label="Volume"
+                />
+                <span className="text-[10px] text-muted-foreground w-4 text-center">{volume}</span>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Error message */}
+      {/* Error Message */}
       {error && (
         <div className="mt-2 text-xs text-destructive">
           {error}
