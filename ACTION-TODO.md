@@ -87,10 +87,10 @@
 ## 🟠 MEDIUM PRIORITY (Fix This Month)
 
 ### Bugs
-- [ ] **BUG-8:** Fix missing IntersectionObserver cleanup in MobileTOC
+- [x] **BUG-8:** Fix missing IntersectionObserver cleanup in MobileTOC
   📁 `components/blog/mobile-toc.tsx:37-39`
 
-- [ ] **BUG-9:** Replace deprecated window.pageYOffset with window.scrollY
+- [x] **BUG-9:** Replace deprecated window.pageYOffset with window.scrollY
   📁 `components/blog/table-of-contents.tsx:55`
 
 - [ ] **BUG-10:** Fix potential array index out of bounds in Ethiopian date

@@ -52,7 +52,7 @@ export function TableOfContents() {
     if (element) {
       const offset = 80; // Account for sticky header
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      const offsetPosition = elementPosition + window.scrollY - offset;
 
       window.scrollTo({
         top: offsetPosition,
