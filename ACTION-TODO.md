@@ -97,7 +97,7 @@
   📁 `lib/ethiopian-date.ts:103`
 
 ### Security
-- [ ] **SEC-5:** Add HTML escaping to email templates
+- [x] **SEC-5:** Add HTML escaping to email templates
   📁 `lib/email-templates.ts:71,74`
 
 - [ ] **SEC-6:** Improve email validation (use robust library)
