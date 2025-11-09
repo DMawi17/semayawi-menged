@@ -23,7 +23,7 @@ export function HeroPost({ post }: HeroPostProps) {
       href={post.url}
       className="group block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
     >
-      <div className="grid md:grid-cols-2 gap-0">
+      <div className="grid md:grid-cols-2 gap-0 md:min-h-[600px]">
         {/* Image */}
         <div className="relative aspect-[16/9] md:aspect-auto md:h-full overflow-hidden">
           <Image

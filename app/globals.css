@@ -23,11 +23,11 @@
 
 /* Catppuccin Latte (Light Mode) */
 :root {
-  --background: #eff1f5; /* Base */
+  --background: #fafafa; /* Light gray matching header/footer */
   --foreground: #4c4f69; /* Text */
-  --card: #e6e9ef; /* Mantle */
+  --card: #ffffff; /* White cards for contrast */
   --card-foreground: #4c4f69; /* Text */
-  --popover: #e6e9ef; /* Mantle */
+  --popover: #ffffff; /* White */
   --popover-foreground: #4c4f69; /* Text */
   --primary: #1e66f5; /* Blue */
   --primary-foreground: #eff1f5; /* Base */
@@ -39,33 +39,33 @@
   --accent-foreground: #4c4f69; /* Text */
   --destructive: #d20f39; /* Red */
   --destructive-foreground: #eff1f5; /* Base */
-  --border: #bcc0cc; /* Surface1 */
-  --input: #bcc0cc; /* Surface1 */
+  --border: #e5e7eb; /* Light border */
+  --input: #e5e7eb; /* Light input */
   --ring: #1e66f5; /* Blue */
   --radius: 0.5rem;
 }
 
-/* Modern 2025 Dark Theme - Consistent Hierarchy */
+/* Catppuccin Mocha (Dark Mode) */
 .dark {
-  --background: #0f1419; /* Rich charcoal base */
-  --foreground: #e6edf3; /* Soft white text */
-  --card: #1a1f26; /* Elevated surface - subtle lift */
-  --card-foreground: #e6edf3; /* Soft white text */
-  --popover: #1a1f26; /* Consistent with cards */
-  --popover-foreground: #e6edf3; /* Soft white text */
-  --primary: #3b82f6; /* Modern blue accent - 2025 trend */
-  --primary-foreground: #ffffff; /* Pure white for contrast */
-  --secondary: #1e2530; /* Secondary surface */
-  --secondary-foreground: #e6edf3; /* Soft white text */
-  --muted: #1e2530; /* Muted background */
-  --muted-foreground: #8b92a0; /* Desaturated text - better readability */
-  --accent: #1e2530; /* Accent background */
-  --accent-foreground: #e6edf3; /* Soft white text */
-  --destructive: #ef4444; /* Modern red */
-  --destructive-foreground: #ffffff; /* Pure white */
-  --border: #2d3748; /* Subtle border - not too bright */
-  --input: #2d3748; /* Consistent input border */
-  --ring: #3b82f6; /* Modern blue accent */
+  --background: #030712; /* Dark gray matching header/footer */
+  --foreground: #cdd6f4; /* Text */
+  --card: #0f172a; /* Slightly lighter dark cards */
+  --card-foreground: #cdd6f4; /* Text */
+  --popover: #0f172a; /* Slightly lighter */
+  --popover-foreground: #cdd6f4; /* Text */
+  --primary: #89b4fa; /* Blue */
+  --primary-foreground: #1e1e2e; /* Base */
+  --secondary: #313244; /* Surface0 */
+  --secondary-foreground: #cdd6f4; /* Text */
+  --muted: #313244; /* Surface0 */
+  --muted-foreground: #a6adc8; /* Subtext0 */
+  --accent: #313244; /* Surface0 */
+  --accent-foreground: #cdd6f4; /* Text */
+  --destructive: #f38ba8; /* Red */
+  --destructive-foreground: #1e1e2e; /* Base */
+  --border: #1e293b; /* Dark border */
+  --input: #1e293b; /* Dark input */
+  --ring: #89b4fa; /* Blue */
 }
 
 @theme inline {
@@ -116,13 +116,19 @@
     transition-duration: 0.2s;
   }
 
-  /* Remove focus borders from inputs and selects */
-  input:focus,
-  textarea:focus,
-  select:focus,
-  [role="combobox"]:focus {
-    outline: none !important;
-    box-shadow: none !important;
+  /* Enhanced focus indicators for accessibility */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Custom focus styles for specific elements */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role="combobox"]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
