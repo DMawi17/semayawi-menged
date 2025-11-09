@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const MDX = post.body;
+  const MdxContent = post.body;
   const category = getCategory(post.category);
   const readingTime = calculateReadingTime(post.rawContent || "");
 
@@ -235,7 +235,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Post Content */}
           <div className="mt-8">
             <ErrorBoundary>
-              <MDX components={mdxComponents} />
+              <MdxContent components={mdxComponents} />
             </ErrorBoundary>
           </div>
 

@@ -144,14 +144,14 @@
 - [ ] **QUAL-14:** Extract sortPostsByOption utility function
   📁 `lib/posts/sorting.ts` (new file)
 
-- [ ] **QUAL-15:** Fix type safety - replace 'unknown' type in blog.ts
-  📁 `types/blog.ts:15,17`
+- [x] **QUAL-15:** Fix type safety - replace 'unknown' type in blog.ts
+  📁 `types/blog.ts:15-18`
 
-- [ ] **QUAL-16:** Add proper type for View Transitions API
+- [x] **QUAL-16:** Add proper type for View Transitions API
   📁 `types/view-transitions.d.ts` (new file)
 
-- [ ] **QUAL-17:** Fix naming inconsistency - rename MDX variable in blog post page
-  📁 `app/blog/[...slug]/page.tsx:121`
+- [x] **QUAL-17:** Fix naming inconsistency - rename MDX variable in blog post page
+  📁 `app/blog/[...slug]/page.tsx:127,238` (MDX → MdxContent)
 
 ### Architecture
 - [ ] **ARCH-1:** Create usePostFilters custom hook

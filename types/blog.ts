@@ -12,7 +12,8 @@ export interface BlogPost {
     featured: boolean;
     author: string | undefined;
   };
-  body: unknown;
-  // Include other properties from the page if needed
-  [key: string]: unknown;
+  body: string; // MDX content as string
+  rawContent?: string; // Raw markdown content
+  // Index signature for additional dynamic properties
+  [key: string]: string | number | boolean | object | undefined;
 }
