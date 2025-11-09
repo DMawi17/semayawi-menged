@@ -100,7 +100,7 @@
 - [x] **SEC-5:** Add HTML escaping to email templates
   📁 `lib/email-templates.ts:71,74`
 
-- [ ] **SEC-6:** Improve email validation (use robust library)
+- [x] **SEC-6:** Improve email validation (use robust library)
   📁 `app/api/newsletter/route.ts:52-59`
 
 ### Performance

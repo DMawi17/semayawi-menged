@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { getWelcomeEmailHtml, getWelcomeEmailText } from "@/lib/email-templates";
+import { validateEmail } from "@/lib/email-validation";
 import { siteConfig } from "@/config/site";
 
 // TypeScript declaration for global cleanup interval
@@ -81,25 +82,22 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email } = body;
 
-    // Validate email
-    if (!email || typeof email !== "string") {
+    // Validate email using robust validation utility
+    const validation = validateEmail(email, {
+      blockDisposable: false, // Set to true in production to block disposable emails
+    });
+
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: "ኢሜይል ያስፈልጋል። (Email is required.)" },
+        { error: validation.error },
         { status: 400 }
       );
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "እባክዎ ትክክለኛ የኢሜይል አድራሻ ያስገቡ። (Please enter a valid email address.)" },
-        { status: 400 }
-      );
-    }
+    // Use normalized email from validation
+    const normalizedEmail = validation.normalizedEmail!;
 
     // Check for duplicate subscription (in production, check database)
-    const normalizedEmail = email.toLowerCase().trim();
     if (subscribers.has(normalizedEmail)) {
       return NextResponse.json(
         {
