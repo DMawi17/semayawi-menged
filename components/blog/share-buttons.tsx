@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Link2, Mail, Share2 } from "lucide-react";
+import { logError } from "@/lib/logger";
 
 interface ShareButtonsProps {
   title: string;
@@ -44,7 +45,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logError("Failed to copy link to clipboard", { context: "ShareButtons", data: err });
     }
   };
 
@@ -59,7 +60,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
       } catch (err) {
         // User cancelled or error occurred
         if ((err as Error).name !== "AbortError") {
-          console.error("Error sharing:", err);
+          logError("Error using native share", { context: "ShareButtons", data: err });
         }
       }
     }

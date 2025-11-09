@@ -126,14 +126,14 @@
 - [x] **QUAL-8:** Extract magic numbers in TableOfContents
   📁 `components/blog/table-of-contents.tsx:8-9,46,58` (TOC_ROOT_MARGIN, HEADER_OFFSET_PX)
 
-- [ ] **QUAL-9:** Create centralized logger utility (remove console.log)
+- [x] **QUAL-9:** Create centralized logger utility (remove console.log)
   📁 `lib/logger.ts` (new file)
 
-- [ ] **QUAL-10:** Remove console logs from Comments component
-  📁 `components/blog/comments.tsx:31,46,71`
+- [x] **QUAL-10:** Remove console logs from Comments component
+  📁 `components/blog/comments.tsx:33,51,76`
 
-- [ ] **QUAL-11:** Remove console logs from ShareButtons component
-  📁 `components/blog/share-buttons.tsx:39,54`
+- [x] **QUAL-11:** Remove console logs from ShareButtons component
+  📁 `components/blog/share-buttons.tsx:48,63`
 
 - [ ] **QUAL-12:** Remove console logs from Newsletter component
   📁 `components/blog/newsletter.tsx:42`
