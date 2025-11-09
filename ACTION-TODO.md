@@ -135,11 +135,11 @@
 - [x] **QUAL-11:** Remove console logs from ShareButtons component
   📁 `components/blog/share-buttons.tsx:48,63`
 
-- [ ] **QUAL-12:** Remove console logs from Newsletter component
-  📁 `components/blog/newsletter.tsx:42`
+- [x] **QUAL-12:** Remove console logs from Newsletter component
+  📁 `components/blog/newsletter.tsx:71`
 
-- [ ] **QUAL-13:** Remove console logs from localStorage-utils
-  📁 `lib/localStorage-utils.ts:24,66`
+- [x] **QUAL-13:** Remove console logs from localStorage-utils
+  📁 `lib/localStorage-utils.ts:28,70,123,137,147`
 
 - [ ] **QUAL-14:** Extract sortPostsByOption utility function
   📁 `lib/posts/sorting.ts` (new file)

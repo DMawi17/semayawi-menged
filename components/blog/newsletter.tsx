@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
+import { logError } from "@/lib/logger";
 
 // Constants
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
@@ -67,7 +68,7 @@ export function Newsletter() {
         setMessage(data.error || "የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
       }
     } catch (error) {
-      console.error("Newsletter subscription error:", error);
+      logError("Newsletter subscription error", { context: "Newsletter", data: error });
       setStatus("error");
       setMessage("የተጠበቀ ስህተት አጋጥሟል። እባክዎ እንደገና ይሞክሩ።");
     }

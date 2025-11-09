@@ -1,4 +1,5 @@
 // Utility functions for managing localStorage data
+import { logError } from "@/lib/logger";
 
 // Constants
 const MAX_HISTORY_ITEMS = 50; // Maximum number of reading history items to keep
@@ -24,7 +25,7 @@ export function getBookmarks(): Bookmark[] {
     const bookmarks = localStorage.getItem("bookmarks");
     return bookmarks ? JSON.parse(bookmarks) : [];
   } catch (error) {
-    console.error("Error reading bookmarks:", error);
+    logError("Error reading bookmarks", { context: "localStorage-utils", data: error });
     return [];
   }
 }
@@ -66,7 +67,7 @@ export function getReadingHistory(): HistoryItem[] {
     const history = localStorage.getItem("reading_history");
     return history ? JSON.parse(history) : [];
   } catch (error) {
-    console.error("Error reading history:", error);
+    logError("Error reading history", { context: "localStorage-utils", data: error });
     return [];
   }
 }
@@ -119,7 +120,7 @@ export function getViewCount(postUrl: string): number {
     // Prevent NaN from corrupted localStorage data
     return isNaN(currentViews) ? 0 : currentViews;
   } catch (error) {
-    console.error("Error reading view count:", error);
+    logError("Error reading view count", { context: "localStorage-utils", data: error });
     return 0;
   }
 }
@@ -133,7 +134,7 @@ export function incrementViewCount(postUrl: string): number {
     localStorage.setItem(viewsKey, newViews.toString());
     return newViews;
   } catch (error) {
-    console.error("Error incrementing view count:", error);
+    logError("Error incrementing view count", { context: "localStorage-utils", data: error });
     return currentViews;
   }
 }
@@ -143,7 +144,7 @@ export function resetViewCount(postUrl: string): void {
     const viewsKey = `views_${postUrl}`;
     localStorage.removeItem(viewsKey);
   } catch (error) {
-    console.error("Error resetting view count:", error);
+    logError("Error resetting view count", { context: "localStorage-utils", data: error });
   }
 }
 
