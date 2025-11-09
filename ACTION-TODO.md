@@ -107,7 +107,7 @@
 - [x] **PERF-6:** Optimize pagination rendering (smart page numbers)
   📁 `app/blog/page.tsx:157-169`
 
-- [ ] **PERF-7:** Add useMemo for share URLs in ShareButtons
+- [x] **PERF-7:** Add useMemo for share URLs in ShareButtons
   📁 `components/blog/share-buttons.tsx:24-31`
 
 - [ ] **PERF-8:** Add useMemo for URL construction in FilterBar
