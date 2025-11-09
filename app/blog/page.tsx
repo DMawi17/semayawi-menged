@@ -1,12 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { source } from "@/lib/source";
-import { sortPostsByOption, type SortOption } from "@/lib/posts/sorting";
-import { usePagination, generatePageNumbers } from "@/hooks/usePagination";
+import { PostService } from "@/services/post.service";
+import type { SortOption } from "@/lib/posts/sorting";
+import { generatePageNumbers } from "@/hooks/usePagination";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
 import { calculateReadingTime } from "@/lib/reading-time";
-import { getCategory } from "@/lib/categories";
 import { Clock } from "lucide-react";
 
 const POSTS_PER_PAGE = 9;
@@ -18,52 +17,17 @@ interface BlogPageProps {
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
-  const searchQuery = params.q?.toLowerCase() || "";
+  const searchQuery = params.q || "";
   const categoryFilter = params.category || "all";
-  const sortOption = params.sort || "date-desc";
+  const sortOption = (params.sort || "date-desc") as SortOption;
 
-  const posts = await source.getPages();
-  const publishedPosts = posts.filter((post) => post.data.published !== false);
-
-  // Filter by category
-  let filteredPosts = categoryFilter !== "all"
-    ? publishedPosts.filter((post) => {
-        const postCategory = getCategory(post.data.category);
-        return postCategory?.id === categoryFilter;
-      })
-    : publishedPosts;
-
-  // Filter by search query
-  filteredPosts = searchQuery
-    ? filteredPosts.filter(
-        (post) =>
-          post.data.title.toLowerCase().includes(searchQuery) ||
-          post.data.description?.toLowerCase().includes(searchQuery) ||
-          post.data.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchQuery)
-          )
-      )
-    : filteredPosts;
-
-  // Sort posts using centralized sorting utility
-  const finalPosts = sortPostsByOption(filteredPosts, sortOption as SortOption);
-
-  // Calculate post counts for filters
-  const postCount = {
-    all: publishedPosts.length,
-    byCategory: publishedPosts.reduce((acc, post) => {
-      const category = getCategory(post.data.category);
-      const categoryId = category?.id || "uncategorized";
-      acc[categoryId] = (acc[categoryId] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>),
-  };
-
-  // Use pagination hook
-  const { paginatedItems: paginatedPosts, totalPages } = usePagination({
-    items: finalPosts,
+  // Fetch filtered, sorted, and paginated posts using PostService
+  const { posts: paginatedPosts, totalPages, totalPosts, postCount } = await PostService.getFilteredPosts({
+    searchQuery,
+    categoryFilter,
+    sortOption,
+    page: currentPage,
     itemsPerPage: POSTS_PER_PAGE,
-    currentPage,
   });
 
   return (
@@ -76,7 +40,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         <SearchBar />
         {searchQuery && (
           <p className="mt-4 text-sm text-muted-foreground">
-            {finalPosts.length} ውጤት{finalPosts.length !== 1 ? "ዎች" : ""} ለ &ldquo;{params.q}&rdquo;
+            {totalPosts} ውጤት{totalPosts !== 1 ? "ዎች" : ""} ለ &ldquo;{searchQuery}&rdquo;
           </p>
         )}
       </div>

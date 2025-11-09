@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { categories } from "@/config/categories";
+import { usePostFilters } from "@/hooks/usePostFilters";
+import type { SortOption } from "@/lib/posts/sorting";
 import {
   Select,
   SelectContent,
@@ -19,10 +20,7 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ postCount }: FilterBarProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentCategory = searchParams.get("category") || "all";
-  const currentSort = searchParams.get("sort") || "date-desc";
+  const { categoryFilter, sortOption, setCategoryFilter, setSortOption } = usePostFilters();
 
   // Memoize available categories (filter out coming soon)
   const availableCategories = useMemo(
@@ -30,36 +28,8 @@ export function FilterBar({ postCount }: FilterBarProps) {
     []
   );
 
-  // Memoize URL construction for category changes
-  const buildCategoryUrl = useMemo(() => {
-    return (category: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (category === "all") {
-        params.delete("category");
-      } else {
-        params.set("category", category);
-      }
-      params.delete("page"); // Reset to first page
-      return `/blog?${params.toString()}`;
-    };
-  }, [searchParams]);
-
-  // Memoize URL construction for sort changes
-  const buildSortUrl = useMemo(() => {
-    return (sort: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("sort", sort);
-      params.delete("page"); // Reset to first page
-      return `/blog?${params.toString()}`;
-    };
-  }, [searchParams]);
-
-  const handleCategoryChange = (category: string) => {
-    router.push(buildCategoryUrl(category));
-  };
-
   const handleSortChange = (sort: string) => {
-    router.push(buildSortUrl(sort));
+    setSortOption(sort as SortOption);
   };
 
   return (
@@ -67,9 +37,9 @@ export function FilterBar({ postCount }: FilterBarProps) {
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => handleCategoryChange("all")}
+          onClick={() => setCategoryFilter("all")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-            currentCategory === "all"
+            categoryFilter === "all"
               ? "bg-primary text-primary-foreground"
               : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
           }`}
@@ -79,14 +49,14 @@ export function FilterBar({ postCount }: FilterBarProps) {
         {availableCategories.map((category) => (
             <button
               key={category.id}
-              onClick={() => handleCategoryChange(category.id)}
+              onClick={() => setCategoryFilter(category.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                currentCategory === category.id
+                categoryFilter === category.id
                   ? "text-white"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
               style={
-                currentCategory === category.id
+                categoryFilter === category.id
                   ? { backgroundColor: category.color }
                   : undefined
               }
@@ -100,7 +70,7 @@ export function FilterBar({ postCount }: FilterBarProps) {
       {/* Sort Options */}
       <div className="flex items-center gap-3">
         <span className="text-sm text-muted-foreground">ቅደም ተከተል:</span>
-        <Select value={currentSort} onValueChange={handleSortChange}>
+        <Select value={sortOption} onValueChange={handleSortChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="የቅርብ ጊዜ" />
           </SelectTrigger>

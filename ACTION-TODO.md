@@ -154,16 +154,16 @@
   📁 `app/blog/[...slug]/page.tsx:127,238` (MDX → MdxContent)
 
 ### Architecture
-- [ ] **ARCH-1:** Create usePostFilters custom hook
+- [x] **ARCH-1:** Create usePostFilters custom hook
   📁 `hooks/usePostFilters.ts` (new file)
 
-- [ ] **ARCH-2:** Create useFilteredPosts custom hook
+- [x] **ARCH-2:** Create useFilteredPosts custom hook
   📁 `hooks/useFilteredPosts.ts` (new file)
 
 - [x] **ARCH-3:** Create usePagination custom hook
   📁 `hooks/usePagination.ts` (new file)
 
-- [ ] **ARCH-4:** Create PostService class for data fetching
+- [x] **ARCH-4:** Create PostService class for data fetching
   📁 `services/post.service.ts` (new file)
 
 - [ ] **ARCH-5:** Refactor BlogPostPage - extract PostHeader component
