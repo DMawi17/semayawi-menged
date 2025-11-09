@@ -1,4 +1,4 @@
-import { ReactNode, Children } from "react";
+import { ReactNode } from "react";
 import { BibleVerse } from "./bible-verse";
 
 interface QuoteProps {
