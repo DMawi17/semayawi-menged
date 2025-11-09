@@ -33,12 +33,10 @@ import {
 // Lazy load heavy components that are below the fold
 const Newsletter = dynamic(() => import("@/components/blog/newsletter").then(mod => ({ default: mod.Newsletter })), {
   loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" />,
-  ssr: false,
 });
 
 const Comments = dynamic(() => import("@/components/blog/comments").then(mod => ({ default: mod.Comments })), {
   loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
-  ssr: false,
 });
 
 interface BlogPostPageProps {
