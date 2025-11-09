@@ -3,8 +3,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { BlogPost } from "@/types/blog";
 
 interface PostNavigationProps {
-  previous: BlogPost | null;
-  next: BlogPost | null;
+  previous: BlogPost | null | undefined;
+  next: BlogPost | null | undefined;
 }
 
 export function PostNavigation({ previous, next }: PostNavigationProps) {

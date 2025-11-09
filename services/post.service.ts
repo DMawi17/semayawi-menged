@@ -1,6 +1,6 @@
 import { source } from "@/lib/source";
 import { sortPostsByOption, type SortOption } from "@/lib/posts/sorting";
-import { filterPosts } from "@/hooks/useFilteredPosts";
+import { filterPosts } from "@/lib/filter-posts";
 import type { BlogPost } from "@/types/blog";
 
 /**

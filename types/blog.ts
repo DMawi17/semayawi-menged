@@ -1,3 +1,6 @@
+// MDX Content type from fumadocs
+export type MDXContent = React.ComponentType<Record<string, never>>;
+
 // Custom blog post type based on our source structure
 export interface BlogPost {
   url: string;
@@ -11,9 +14,10 @@ export interface BlogPost {
     category: string;
     featured: boolean;
     author: string | undefined;
+    audio: string | undefined;
   };
-  body: string; // MDX content as string
-  rawContent?: string; // Raw markdown content
+  body: MDXContent; // MDX content component
+  rawContent?: string; // Raw markdown content for reading time calculation
   // Index signature for additional dynamic properties
-  [key: string]: string | number | boolean | object | undefined;
+  [key: string]: string | number | boolean | object | undefined | MDXContent;
 }

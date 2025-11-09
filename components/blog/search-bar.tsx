@@ -11,14 +11,18 @@ export function SearchBar() {
 
   // Debounced search: wait 300ms after user stops typing
   useEffect(() => {
-    const timer = setTimeout(() => {
-      startTransition(() => {
-        updateSearchQuery(searchQuery);
-      });
-    }, 300);
+    // Only update if the search query is different from current URL query
+    if (searchQuery !== currentQuery) {
+      const timer = setTimeout(() => {
+        startTransition(() => {
+          updateSearchQuery(searchQuery);
+        });
+      }, 300);
 
-    return () => clearTimeout(timer);
-  }, [searchQuery, updateSearchQuery]);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, currentQuery]); // updateSearchQuery is stable from useCallback, safe to omit
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

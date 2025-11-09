@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { getCategoryBySlug, getPostsByCategory } from "@/lib/categories";
+import { getCategoryBySlug } from "@/lib/categories";
+import { getPostsByCategory } from "@/lib/categories.server";
 import { CategoryBadge } from "@/components/blog/category-badge";
 import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
