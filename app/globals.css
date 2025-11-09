@@ -3,35 +3,44 @@
 @custom-variant dark (&:is(.dark *));
 
 /* View Transitions API - Smooth Fade & Slide Effect */
+/* Prevent header and footer from animating */
+header,
+footer {
+  view-transition-name: header-footer;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  /* Disable animation for header/footer */
+  ::view-transition-old(header-footer),
+  ::view-transition-new(header-footer) {
+    animation: none;
+  }
+
+  /* Animate only the main content */
   ::view-transition-old(root) {
-    animation: fade-out 0.3s ease-out;
+    animation: fade-out 0.25s ease-out;
   }
 
   ::view-transition-new(root) {
-    animation: fade-in 0.3s ease-in;
+    animation: fade-in 0.25s ease-in;
   }
 }
 
 @keyframes fade-out {
   from {
     opacity: 1;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-20px);
   }
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
