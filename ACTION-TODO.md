@@ -141,7 +141,7 @@
 - [x] **QUAL-13:** Remove console logs from localStorage-utils
   📁 `lib/localStorage-utils.ts:28,70,123,137,147`
 
-- [ ] **QUAL-14:** Extract sortPostsByOption utility function
+- [x] **QUAL-14:** Extract sortPostsByOption utility function
   📁 `lib/posts/sorting.ts` (new file)
 
 - [x] **QUAL-15:** Fix type safety - replace 'unknown' type in blog.ts

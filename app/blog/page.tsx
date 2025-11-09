@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { source } from "@/lib/source";
-import { sortPosts } from "@/lib/utils";
+import { sortPostsByOption, type SortOption } from "@/lib/posts/sorting";
 import { SearchBar } from "@/components/blog/search-bar";
 import { FilterBar } from "@/components/blog/filter-bar";
 import { calculateReadingTime } from "@/lib/reading-time";
@@ -75,19 +75,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       )
     : filteredPosts;
 
-  // Sort posts
-  const sortedPosts = sortOption.startsWith("date")
-    ? sortPosts(filteredPosts)
-    : filteredPosts.sort((a, b) => {
-        if (sortOption === "title-asc") {
-          return a.data.title.localeCompare(b.data.title);
-        } else {
-          return b.data.title.localeCompare(a.data.title);
-        }
-      });
-
-  // Reverse if descending date sort is not default
-  const finalPosts = sortOption === "date-asc" ? [...sortedPosts].reverse() : sortedPosts;
+  // Sort posts using centralized sorting utility
+  const finalPosts = sortPostsByOption(filteredPosts, sortOption as SortOption);
 
   // Calculate post counts for filters
   const postCount = {
