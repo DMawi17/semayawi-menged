@@ -95,7 +95,7 @@ export default function RootLayout({
         >
           <div className="flex min-h-screen flex-col bg-background">
             <Header />
-            <main id="main-content" className="flex-1 bg-background" style={{ viewTransitionName: 'main-content' } as React.CSSProperties}>{children}</main>
+            <main id="main-content" className="flex-1 bg-background">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>

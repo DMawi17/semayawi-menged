@@ -3,26 +3,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* View Transitions API - Smooth Fade Effect */
-/* Disable default root animations */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-}
-
-/* Prevent header and footer from animating */
-header,
-footer {
-  view-transition-name: none;
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  /* Animate only the main content */
-  ::view-transition-old(main-content) {
-    animation: fade-out 0.2s ease-out;
+  ::view-transition-old(root) {
+    animation: fade-out 0.25s ease-out;
   }
 
-  ::view-transition-new(main-content) {
-    animation: fade-in 0.2s ease-in;
+  ::view-transition-new(root) {
+    animation: fade-in 0.25s ease-in;
   }
 }
 
