@@ -37,8 +37,8 @@ export function ArticleHero({
             src={coverImage}
             alt={title}
             fill
-            sizes="100vw"
-            className="object-contain"
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1280px"
+            className="object-cover"
             priority
           />
           {/* Gradient overlay - starts from middle, darker at bottom for text visibility */}
