@@ -110,8 +110,8 @@
 - [x] **PERF-7:** Add useMemo for share URLs in ShareButtons
   📁 `components/blog/share-buttons.tsx:24-31`
 
-- [ ] **PERF-8:** Add useMemo for URL construction in FilterBar
-  📁 `components/blog/filter-bar.tsx:26-34`
+- [x] **PERF-8:** Add useMemo for URL construction in FilterBar
+  📁 `components/blog/filter-bar.tsx:28-55`
 
 - [ ] **PERF-9:** Memoize heading extraction in TableOfContents
   📁 `components/blog/table-of-contents.tsx:17-31`

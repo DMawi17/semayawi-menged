@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { categories } from "@/config/categories";
 import {
@@ -23,22 +24,42 @@ export function FilterBar({ postCount }: FilterBarProps) {
   const currentCategory = searchParams.get("category") || "all";
   const currentSort = searchParams.get("sort") || "date-desc";
 
+  // Memoize available categories (filter out coming soon)
+  const availableCategories = useMemo(
+    () => categories.filter((cat) => !cat.comingSoon),
+    []
+  );
+
+  // Memoize URL construction for category changes
+  const buildCategoryUrl = useMemo(() => {
+    return (category: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (category === "all") {
+        params.delete("category");
+      } else {
+        params.set("category", category);
+      }
+      params.delete("page"); // Reset to first page
+      return `/blog?${params.toString()}`;
+    };
+  }, [searchParams]);
+
+  // Memoize URL construction for sort changes
+  const buildSortUrl = useMemo(() => {
+    return (sort: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("sort", sort);
+      params.delete("page"); // Reset to first page
+      return `/blog?${params.toString()}`;
+    };
+  }, [searchParams]);
+
   const handleCategoryChange = (category: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (category === "all") {
-      params.delete("category");
-    } else {
-      params.set("category", category);
-    }
-    params.delete("page"); // Reset to first page
-    router.push(`/blog?${params.toString()}`);
+    router.push(buildCategoryUrl(category));
   };
 
   const handleSortChange = (sort: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("sort", sort);
-    params.delete("page"); // Reset to first page
-    router.push(`/blog?${params.toString()}`);
+    router.push(buildSortUrl(sort));
   };
 
   return (
@@ -55,9 +76,7 @@ export function FilterBar({ postCount }: FilterBarProps) {
         >
           ሁሉም ({postCount.all})
         </button>
-        {categories
-          .filter((cat) => !cat.comingSoon)
-          .map((category) => (
+        {availableCategories.map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
