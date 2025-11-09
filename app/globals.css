@@ -3,12 +3,35 @@
 @custom-variant dark (&:is(.dark *));
 
 /* View Transitions API - Smooth Fade Effect */
+/* Keep header and footer static */
+header {
+  view-transition-name: header-persist;
+}
+
+footer {
+  view-transition-name: footer-persist;
+}
+
+/* Give main content its own transition name */
+main {
+  view-transition-name: main-content;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root) {
+  /* Don't animate header and footer */
+  ::view-transition-old(header-persist),
+  ::view-transition-new(header-persist),
+  ::view-transition-old(footer-persist),
+  ::view-transition-new(footer-persist) {
+    animation: none;
+  }
+
+  /* Animate only main content */
+  ::view-transition-old(main-content) {
     animation: fade-out 0.25s ease-out;
   }
 
-  ::view-transition-new(root) {
+  ::view-transition-new(main-content) {
     animation: fade-in 0.25s ease-in;
   }
 }
