@@ -93,8 +93,8 @@
 - [x] **BUG-9:** Replace deprecated window.pageYOffset with window.scrollY
   📁 `components/blog/table-of-contents.tsx:55`
 
-- [ ] **BUG-10:** Fix potential array index out of bounds in Ethiopian date
-  📁 `lib/ethiopian-date.ts:103`
+- [x] **BUG-10:** Fix Ethiopian date conversion algorithm
+  📁 `lib/ethiopian-date.ts:49-116`
 
 ### Security
 - [x] **SEC-5:** Add HTML escaping to email templates
