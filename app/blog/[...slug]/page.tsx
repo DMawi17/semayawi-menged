@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getCategory } from "@/lib/categories";
 import { siteConfig } from "@/config/site";
-import { calculateReadingTime } from "@/lib/reading-time";
+import { calculateReadingTime, formatReadingTimeAmharic } from "@/lib/reading-time";
 import { getRelatedPosts, getAdjacentPosts } from "@/lib/related-posts";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { RelatedPosts } from "@/components/blog/related-posts";
@@ -17,6 +17,7 @@ import { Comments } from "@/components/blog/comments";
 import { Newsletter } from "@/components/blog/newsletter";
 import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { HistoryTracker } from "@/components/blog/history-tracker";
+import { AudioPlayer } from "@/components/blog/audio-player";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
 import { Highlight } from "@/components/mdx/highlight";
@@ -116,7 +117,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const MDX = post.body;
   const category = getCategory(post.category);
-  const readingTime = calculateReadingTime(post.body.toString());
+  const readingTime = calculateReadingTime(post.rawContent || "");
 
   // Get all posts for related posts and navigation
   const allPosts = await source.getPages();
@@ -183,8 +184,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               category={post.category}
               author={post.data.author || siteConfig.author}
               publishedAt={String(post.data.date)}
-              readingTime={`${readingTime.minutes} min read`}
+              readingTime={formatReadingTimeAmharic(readingTime.minutes)}
               coverImage={post.data.cover}
+              description={post.data.description}
             />
           </div>
 
@@ -207,27 +209,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Actions - Sound and Bookmark */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Sound Button - TODO: Implement text-to-speech */}
-              <button
-                className="inline-flex items-center justify-center rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                aria-label="Listen to article"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                </svg>
-              </button>
+              {/* Audio Player - Only show if audio is available */}
+              {post.data.audio && (
+                <AudioPlayer
+                  audioUrl={post.data.audio}
+                  title={post.data.title}
+                />
+              )}
 
               <BookmarkButton postUrl={post.url} postTitle={post.data.title} />
             </div>

@@ -4,11 +4,11 @@ import { source } from "@/lib/source";
 import { sortPosts } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 import { getFeaturedCategories, getCategoryPostCount } from "@/lib/categories";
-import { HeroPost } from "@/components/home/hero-post";
+import { ArticleHero } from "@/components/blog/ArticleHero";
 import { CategoryShowcase } from "@/components/home/category-showcase";
 import { CategoryBadge } from "@/components/blog/category-badge";
-import { Calendar } from "lucide-react";
 import { formatEthiopianDate } from "@/lib/ethiopian-date";
+import { calculateReadingTime, formatReadingTimeAmharic } from "@/lib/reading-time";
 
 export default async function Home() {
   const posts = await source.getPages();
@@ -31,24 +31,32 @@ export default async function Home() {
     postCounts[category.id] = await getCategoryPostCount(category.id);
   }
 
+  // Calculate reading time for featured post
+  const featuredPostReadingTime = featuredPost
+    ? calculateReadingTime(featuredPost.rawContent || "")
+    : null;
+
   return (
     <main className="container mx-auto px-4 py-12 max-w-7xl">
       {/* Hero Section with Featured Post */}
-      {featuredPost && (
+      {featuredPost && featuredPost.cover && (
         <section className="mb-16">
           <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
             የተመረጠ ጽሁፍ
           </h2>
-          <HeroPost
-            post={{
-              title: featuredPost.title,
-              description: featuredPost.description,
-              date: featuredPost.date,
-              cover: featuredPost.cover,
-              url: featuredPost.url,
-              category: featuredPost.category,
-            }}
-          />
+          <div className="[&>a>header]:h-[350px] [&>a>header]:sm:h-[450px] [&>a>header]:md:h-[600px]">
+            <ArticleHero
+              title={featuredPost.title}
+              category={featuredPost.category}
+              author={featuredPost.author || siteConfig.author}
+              publishedAt={String(featuredPost.date)}
+              readingTime={formatReadingTimeAmharic(featuredPostReadingTime?.minutes || 0)}
+              coverImage={featuredPost.cover}
+              description={featuredPost.description}
+              href={featuredPost.url}
+              disableCategoryLink={true}
+            />
+          </div>
         </section>
       )}
 
@@ -91,6 +99,7 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recentPosts.map((post) => {
             const formattedDate = formatEthiopianDate(post.date);
+            const readingTime = calculateReadingTime(post.rawContent || "");
 
             return (
               <article
@@ -106,17 +115,26 @@ export default async function Home() {
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
                       />
                     </div>
                   )}
                   <div className="p-5">
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
                       <CategoryBadge categoryId={post.category} showIcon={false} asLink={false} />
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
                         <time dateTime={new Date(post.date).toISOString()}>
                           {formattedDate}
                         </time>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{readingTime.minutes} ደቂቃ</span>
                       </div>
                     </div>
 
