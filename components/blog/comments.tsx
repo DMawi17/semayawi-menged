@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { MessageSquare, ExternalLink } from "lucide-react";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 // Giscus configuration - Replace with your own values
 const GISCUS_CONFIG = {
@@ -96,58 +97,60 @@ export function Comments() {
   }, [resolvedTheme, isConfigured]);
 
   return (
-    <div className="mt-12 pt-8 border-t">
-      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <MessageSquare className="h-6 w-6" />
-        አስተያየቶች
-      </h2>
-      <div className="rounded-lg border bg-card p-6">
-        {!isConfigured ? (
-          <div className="text-center py-8">
-            <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">የአስተያየት ክፍል አልተዋቀረም</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              To enable comments, you need to configure Giscus with your GitHub repository.
-            </p>
-            <div className="space-y-2 text-sm text-left max-w-2xl mx-auto bg-muted/50 p-4 rounded-lg">
-              <p className="font-semibold mb-2">Setup Instructions:</p>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                <li>Create a public GitHub repository (or use an existing one)</li>
-                <li>Enable Discussions in your repository settings</li>
-                <li>
-                  Visit{" "}
-                  <a
-                    href="https://giscus.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline inline-flex items-center gap-1"
-                  >
-                    giscus.app
-                    <ExternalLink className="h-3 w-3" />
-                  </a>{" "}
-                  to get your configuration
-                </li>
-                <li>Add the following to your <code className="bg-muted px-1 rounded">.env.local</code> file:</li>
-              </ol>
-              <pre className="bg-background p-3 rounded mt-2 text-xs overflow-x-auto">
+    <ErrorBoundary>
+      <div className="mt-12 pt-8 border-t">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <MessageSquare className="h-6 w-6" />
+          አስተያየቶች
+        </h2>
+        <div className="rounded-lg border bg-card p-6">
+          {!isConfigured ? (
+            <div className="text-center py-8">
+              <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">የአስተያየት ክፍል አልተዋቀረም</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                To enable comments, you need to configure Giscus with your GitHub repository.
+              </p>
+              <div className="space-y-2 text-sm text-left max-w-2xl mx-auto bg-muted/50 p-4 rounded-lg">
+                <p className="font-semibold mb-2">Setup Instructions:</p>
+                <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
+                  <li>Create a public GitHub repository (or use an existing one)</li>
+                  <li>Enable Discussions in your repository settings</li>
+                  <li>
+                    Visit{" "}
+                    <a
+                      href="https://giscus.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      giscus.app
+                      <ExternalLink className="h-3 w-3" />
+                    </a>{" "}
+                    to get your configuration
+                  </li>
+                  <li>Add the following to your <code className="bg-muted px-1 rounded">.env.local</code> file:</li>
+                </ol>
+                <pre className="bg-background p-3 rounded mt-2 text-xs overflow-x-auto">
 {`NEXT_PUBLIC_GISCUS_REPO=username/repo
 NEXT_PUBLIC_GISCUS_REPO_ID=your-repo-id
 NEXT_PUBLIC_GISCUS_CATEGORY=General
 NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id`}
-              </pre>
+                </pre>
+              </div>
             </div>
-          </div>
-        ) : (
-          <>
-            <div ref={ref} className="giscus-container" style={{ minHeight: '200px', position: 'relative', zIndex: 1 }} />
-            <noscript>
-              <p className="text-sm text-muted-foreground">
-                Please enable JavaScript to view the comments powered by Giscus.
-              </p>
-            </noscript>
-          </>
-        )}
+          ) : (
+            <>
+              <div ref={ref} className="giscus-container" style={{ minHeight: '200px', position: 'relative', zIndex: 1 }} />
+              <noscript>
+                <p className="text-sm text-muted-foreground">
+                  Please enable JavaScript to view the comments powered by Giscus.
+                </p>
+              </noscript>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

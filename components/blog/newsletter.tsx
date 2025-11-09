@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+
+  // Auto-reset status and message after success/error (with proper cleanup)
+  useEffect(() => {
+    if (status === "success" || status === "error") {
+      const timer = setTimeout(() => {
+        setStatus("idle");
+        setMessage("");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +40,6 @@ export function Newsletter() {
         setStatus("success");
         setMessage(data.message || "አመሰግናለሁ! የተመዘገቡ ናቸው።");
         setEmail("");
-
-        // Reset status after 5 seconds
-        setTimeout(() => {
-          setStatus("idle");
-          setMessage("");
-        }, 5000);
       } else {
         setStatus("error");
         setMessage(data.error || "የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");

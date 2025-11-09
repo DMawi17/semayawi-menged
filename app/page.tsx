@@ -3,7 +3,7 @@ import Image from "next/image";
 import { source } from "@/lib/source";
 import { sortPosts } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
-import { getFeaturedCategories, getCategoryPostCount } from "@/lib/categories";
+import { getFeaturedCategories } from "@/lib/categories";
 import { ArticleHero } from "@/components/blog/ArticleHero";
 import { CategoryShowcase } from "@/components/home/category-showcase";
 import { CategoryBadge } from "@/components/blog/category-badge";
@@ -24,11 +24,14 @@ export default async function Home() {
     .filter((post) => post.url !== featuredPost?.url)
     .slice(0, 6);
 
-  // Get categories and their post counts
+  // Get categories and their post counts (optimized: calculate from already-fetched posts)
   const categories = getFeaturedCategories();
   const postCounts: Record<string, number> = {};
   for (const category of categories) {
-    postCounts[category.id] = await getCategoryPostCount(category.id);
+    postCounts[category.id] = publishedPosts.filter((post) => {
+      const postCategory = post.category === category.id || post.category === category.slug;
+      return postCategory;
+    }).length;
   }
 
   // Calculate reading time for featured post

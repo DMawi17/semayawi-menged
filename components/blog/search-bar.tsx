@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function SearchBar() {
@@ -10,16 +10,23 @@ export function SearchBar() {
   const [isPending, startTransition] = useTransition();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
 
+  // Debounced search: wait 300ms after user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      startTransition(() => {
+        if (searchQuery.trim()) {
+          router.push(`/blog?q=${encodeURIComponent(searchQuery.trim())}`);
+        } else {
+          router.push("/blog");
+        }
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, router]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-
-    startTransition(() => {
-      if (query.trim()) {
-        router.push(`/blog?q=${encodeURIComponent(query.trim())}`);
-      } else {
-        router.push("/blog");
-      }
-    });
   };
 
   const clearSearch = () => {

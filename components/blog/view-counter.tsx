@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 import { track } from "@vercel/analytics";
+import { incrementViewCount } from "@/lib/localStorage-utils";
 
 interface ViewCounterProps {
   postUrl: string;
@@ -18,10 +19,7 @@ export function ViewCounter({ postUrl }: ViewCounterProps) {
     });
 
     // Keep local view count for display (localStorage for privacy-friendly local tracking)
-    const viewsKey = `views_${postUrl}`;
-    const currentViews = parseInt(localStorage.getItem(viewsKey) || "0");
-    const newViews = currentViews + 1;
-    localStorage.setItem(viewsKey, newViews.toString());
+    const newViews = incrementViewCount(postUrl);
     setViews(newViews);
   }, [postUrl]);
 

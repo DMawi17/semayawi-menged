@@ -32,11 +32,12 @@ export function getRelatedPosts(
       score += 10;
     }
 
-    // Shared tags
+    // Shared tags (optimized with Set for O(1) lookups)
     const currentTags = currentPost.data.tags || [];
     const postTags = post.data.tags || [];
-    const sharedTags = currentTags.filter((tag: string) => postTags.includes(tag));
-    score += sharedTags.length * 2;
+    const postTagsSet = new Set(postTags);
+    const sharedTagCount = currentTags.filter((tag: string) => postTagsSet.has(tag)).length;
+    score += sharedTagCount * 2;
 
     return { post, score };
   });
