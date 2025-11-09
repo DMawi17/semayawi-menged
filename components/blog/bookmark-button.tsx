@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Bookmark } from "lucide-react";
+import { isBookmarked as checkIsBookmarked, addBookmark, removeBookmark } from "@/lib/localStorage-utils";
 
 interface BookmarkButtonProps {
   postUrl: string;
@@ -12,26 +13,18 @@ export function BookmarkButton({ postUrl, postTitle }: BookmarkButtonProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    // Check if post is already bookmarked
-    const checkBookmark = () => {
-      const bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
-      setIsBookmarked(bookmarks.some((b: { url: string }) => b.url === postUrl));
-    };
-    checkBookmark();
+    // Check if post is already bookmarked using centralized utility
+    setIsBookmarked(checkIsBookmarked(postUrl));
   }, [postUrl]);
 
   const toggleBookmark = () => {
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
-
     if (isBookmarked) {
-      // Remove bookmark
-      const updated = bookmarks.filter((b: { url: string }) => b.url !== postUrl);
-      localStorage.setItem("bookmarks", JSON.stringify(updated));
+      // Remove bookmark using centralized utility
+      removeBookmark(postUrl);
       setIsBookmarked(false);
     } else {
-      // Add bookmark
-      const updated = [...bookmarks, { url: postUrl, title: postTitle, savedAt: new Date().toISOString() }];
-      localStorage.setItem("bookmarks", JSON.stringify(updated));
+      // Add bookmark using centralized utility
+      addBookmark(postUrl, postTitle);
       setIsBookmarked(true);
     }
   };

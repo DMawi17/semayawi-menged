@@ -1,7 +1,20 @@
 import { siteConfig } from "@/config/site";
 
+// HTML escape function to prevent XSS in email templates
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
 // Welcome email template (bilingual: Amharic/English)
 export function getWelcomeEmailHtml(subscriberEmail: string): string {
+  const safeEmail = escapeHtml(subscriberEmail);
   return `
 <!DOCTYPE html>
 <html lang="am" dir="ltr">
@@ -68,10 +81,10 @@ export function getWelcomeEmailHtml(subscriberEmail: string): string {
           <tr>
             <td style="padding: 30px 40px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
               <p style="margin: 0 0 10px; color: #6b7280; font-size: 12px; line-height: 1.5; text-align: center;">
-                ይህንን ኢሜይል በተቀበሉት ምክንያት ${subscriberEmail} ን በ ${siteConfig.name} ላይ ለደብዳቤ ዝርዝር ደንበኛ ሆነዋል።
+                ይህንን ኢሜይል በተቀበሉት ምክንያት ${safeEmail} ን በ ${siteConfig.name} ላይ ለደብዳቤ ዝርዝር ደንበኛ ሆነዋል።
               </p>
               <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                You received this email because ${subscriberEmail} was subscribed to the ${siteConfig.name} newsletter.
+                You received this email because ${safeEmail} was subscribed to the ${siteConfig.name} newsletter.
               </p>
               <div style="margin: 15px 0 0; text-align: center;">
                 <a href="${siteConfig.url}" style="color: #667eea; text-decoration: none; font-size: 12px; margin: 0 10px;">መነሻ (Home)</a>

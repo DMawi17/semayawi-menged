@@ -1,6 +1,7 @@
 import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { getCategory } from "@/lib/categories";
 import { siteConfig } from "@/config/site";
@@ -13,8 +14,6 @@ import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/table-of-contents";
 import { AuthorBio } from "@/components/blog/author-bio";
 import { Breadcrumbs } from "@/components/blog/breadcrumbs";
-import { Comments } from "@/components/blog/comments";
-import { Newsletter } from "@/components/blog/newsletter";
 import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { HistoryTracker } from "@/components/blog/history-tracker";
 import { AudioPlayer } from "@/components/blog/audio-player";
@@ -25,10 +24,20 @@ import { useMDXComponents } from "@/mdx-components";
 import { ArticleHero } from "@/components/blog/ArticleHero";
 import { DropCap } from "@/components/blog/DropCap";
 import { ScrollToTop } from "@/components/mdx/scroll-to-top";
+import { ErrorBoundary } from "@/components/error-boundary";
 import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+
+// Lazy load heavy components that are below the fold
+const Newsletter = dynamic(() => import("@/components/blog/newsletter").then(mod => ({ default: mod.Newsletter })), {
+  loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" />,
+});
+
+const Comments = dynamic(() => import("@/components/blog/comments").then(mod => ({ default: mod.Comments })), {
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
+});
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -225,7 +234,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Post Content */}
           <div className="mt-8">
-            <MDX components={mdxComponents} />
+            <ErrorBoundary>
+              <MDX components={mdxComponents} />
+            </ErrorBoundary>
           </div>
 
           {/* Share Buttons */}

@@ -44,6 +44,7 @@ function isEthiopianLeapYear(year: number): boolean {
 /**
  * Convert Gregorian date to Ethiopian date
  * Algorithm based on the standard conversion formulas
+ * Fixed: Corrected Ethiopian New Year day calculation
  */
 export function gregorianToEthiopian(date: Date): EthiopianDate {
   const year = date.getFullYear();
@@ -67,40 +68,50 @@ export function gregorianToEthiopian(date: Date): EthiopianDate {
     ethNewYearDay = 12;
   }
 
+  // Day of year for Ethiopian New Year (Sept 11 or 12)
+  const ethNewYearDayOfYear = 243 + ethNewYearDay; // 254 or 255
+
   // Calculate Ethiopian date
   let ethYear: number;
   let ethDayOfYear: number;
 
-  // Before Ethiopian New Year (roughly before Sept 11/12)
-  if (dayOfYear <= (243 + ethNewYearDay - 11)) {
+  // Before Ethiopian New Year (before Sept 11/12)
+  if (dayOfYear < ethNewYearDayOfYear) {
     ethYear = year - 8;
-    ethDayOfYear = dayOfYear + 365 - (243 + ethNewYearDay - 11);
-    if (isEthiopianLeapYear(ethYear)) {
-      ethDayOfYear++;
-    }
+    // Days remaining in previous Ethiopian year
+    const daysInEthYear = isEthiopianLeapYear(ethYear) ? 366 : 365;
+    ethDayOfYear = daysInEthYear - (ethNewYearDayOfYear - dayOfYear);
   } else {
+    // After or on Ethiopian New Year
     ethYear = year - 7;
-    ethDayOfYear = dayOfYear - (243 + ethNewYearDay - 11);
+    ethDayOfYear = dayOfYear - ethNewYearDayOfYear + 1;
   }
 
   // Convert day of year to month and day
-  let ethMonth = Math.floor((ethDayOfYear - 1) / 30) + 1;
-  let ethDay = ((ethDayOfYear - 1) % 30) + 1;
+  // Ethiopian months are 30 days each, except Pagumen (13th month) which has 5 or 6 days
+  let ethMonth: number;
+  let ethDay: number;
 
-  // Handle the 13th month (Pagumen)
-  if (ethMonth > 13) {
+  if (ethDayOfYear <= 360) {
+    // First 12 months (30 days each)
+    ethMonth = Math.floor((ethDayOfYear - 1) / 30) + 1;
+    ethDay = ((ethDayOfYear - 1) % 30) + 1;
+  } else {
+    // 13th month (Pagumen)
     ethMonth = 13;
+    ethDay = ethDayOfYear - 360;
   }
 
-  // Ensure month is valid
+  // Safety checks
   if (ethMonth < 1) ethMonth = 1;
   if (ethMonth > 13) ethMonth = 13;
+  if (ethDay < 1) ethDay = 1;
 
   return {
     year: ethYear,
     month: ethMonth,
     day: ethDay,
-    monthName: ETHIOPIAN_MONTHS[ethMonth - 1],
+    monthName: ETHIOPIAN_MONTHS[ethMonth - 1] || "ልክ ያልሆነ",
   };
 }
 

@@ -104,6 +104,46 @@ export function clearAllHistory(): void {
   localStorage.removeItem("reading_history");
 }
 
+// View count management
+export function getViewCount(postUrl: string): number {
+  if (typeof window === "undefined") return 0;
+
+  try {
+    const viewsKey = `views_${postUrl}`;
+    const storedValue = localStorage.getItem(viewsKey);
+    const currentViews = parseInt(storedValue || "0", 10);
+
+    // Prevent NaN from corrupted localStorage data
+    return isNaN(currentViews) ? 0 : currentViews;
+  } catch (error) {
+    console.error("Error reading view count:", error);
+    return 0;
+  }
+}
+
+export function incrementViewCount(postUrl: string): number {
+  const currentViews = getViewCount(postUrl);
+  const newViews = currentViews + 1;
+
+  try {
+    const viewsKey = `views_${postUrl}`;
+    localStorage.setItem(viewsKey, newViews.toString());
+    return newViews;
+  } catch (error) {
+    console.error("Error incrementing view count:", error);
+    return currentViews;
+  }
+}
+
+export function resetViewCount(postUrl: string): void {
+  try {
+    const viewsKey = `views_${postUrl}`;
+    localStorage.removeItem(viewsKey);
+  } catch (error) {
+    console.error("Error resetting view count:", error);
+  }
+}
+
 // Format timestamp to Amharic relative time
 export function formatRelativeTime(timestamp: number): string {
   const now = Date.now();

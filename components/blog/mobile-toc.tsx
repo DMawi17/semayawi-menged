@@ -36,6 +36,7 @@ export function MobileToc({ headings = [] }: MobileTocProps) {
 
     return () => {
       headingElements.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
     };
   }, [headings]);
 

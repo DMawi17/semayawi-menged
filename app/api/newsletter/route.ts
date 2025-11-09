@@ -3,19 +3,59 @@ import { Resend } from "resend";
 import { getWelcomeEmailHtml, getWelcomeEmailText } from "@/lib/email-templates";
 import { siteConfig } from "@/config/site";
 
+// TypeScript declaration for global cleanup interval
+declare global {
+  var rateLimitCleanupInterval: NodeJS.Timeout | undefined;
+}
+
 // Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Simple in-memory store for duplicate prevention (in production, use a database)
+// WARNING: In-memory storage - NOT suitable for production!
+// Use a database (PostgreSQL, MongoDB) or Vercel KV in production
+// Current limitations:
+// - Data lost on server restart
+// - No persistence across serverless function instances
+// - Memory leak potential if not cleaned up
 const subscribers = new Set<string>();
+const MAX_SUBSCRIBERS = 1000; // Prevent unbounded growth
 
 // Rate limiting: Track IP addresses and their request times
 const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3;
 
+// Cleanup function to prevent memory leaks
+function cleanupRateLimitMap() {
+  const now = Date.now();
+  for (const [ip, times] of rateLimitMap.entries()) {
+    const recentTimes = times.filter((time) => now - time < RATE_LIMIT_WINDOW);
+    if (recentTimes.length === 0) {
+      rateLimitMap.delete(ip);
+    } else {
+      rateLimitMap.set(ip, recentTimes);
+    }
+  }
+}
+
+// Run cleanup every 5 minutes
+if (typeof global.rateLimitCleanupInterval === 'undefined') {
+  global.rateLimitCleanupInterval = setInterval(cleanupRateLimitMap, 5 * 60 * 1000);
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // CSRF Protection: Verify origin header
+    const origin = req.headers.get("origin");
+    const host = req.headers.get("host");
+
+    if (origin && host && !origin.includes(host)) {
+      return NextResponse.json(
+        { error: "Invalid origin" },
+        { status: 403 }
+      );
+    }
+
     // Get client IP for rate limiting
     const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
 
@@ -81,6 +121,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Add to subscribers set first (in production, save to database)
+    // Check subscriber limit to prevent unbounded growth
+    if (subscribers.size >= MAX_SUBSCRIBERS) {
+      console.warn(`Subscriber limit reached (${MAX_SUBSCRIBERS}). Consider using persistent storage.`);
+      // Remove oldest entry (Set doesn't have "oldest" but we can clear some)
+      // In production, this should never happen with proper database
+      const firstEmail = subscribers.values().next().value;
+      if (firstEmail) subscribers.delete(firstEmail);
+    }
     subscribers.add(normalizedEmail);
 
     // Try to send welcome email using Resend (non-blocking)
@@ -132,7 +180,6 @@ export async function GET() {
     {
       status: "healthy",
       service: "newsletter",
-      configured: !!process.env.RESEND_API_KEY,
     },
     { status: 200 }
   );

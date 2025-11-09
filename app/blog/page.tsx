@@ -14,6 +14,37 @@ interface BlogPageProps {
   searchParams: Promise<{ page?: string; q?: string; category?: string; sort?: string }>;
 }
 
+// Generate smart page numbers for pagination (show only relevant pages with ellipsis)
+function generatePageNumbers(currentPage: number, totalPages: number): (number | string)[] {
+  const delta = 2; // Number of pages to show before and after current page
+  const range: (number | string)[] = [];
+
+  // Always show first page
+  range.push(1);
+
+  // Calculate range around current page
+  for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+    // Add ellipsis before range if needed
+    if (i === Math.max(2, currentPage - delta) && i > 2) {
+      range.push('...');
+    }
+
+    range.push(i);
+
+    // Add ellipsis after range if needed
+    if (i === Math.min(totalPages - 1, currentPage + delta) && i < totalPages - 1) {
+      range.push('...');
+    }
+  }
+
+  // Always show last page (if more than 1 page)
+  if (totalPages > 1) {
+    range.push(totalPages);
+  }
+
+  return range;
+}
+
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
@@ -154,19 +185,32 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           )}
 
           <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Link
-                key={page}
-                href={`/blog?page=${page}`}
-                className={`inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                  page === currentPage
-                    ? "bg-primary text-primary-foreground"
-                    : "border bg-background hover:bg-accent hover:text-accent-foreground"
-                }`}
-              >
-                {page}
-              </Link>
-            ))}
+            {generatePageNumbers(currentPage, totalPages).map((page, index) => {
+              if (page === '...') {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="inline-flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
+              return (
+                <Link
+                  key={page}
+                  href={`/blog?page=${page}`}
+                  className={`inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
+                    page === currentPage
+                      ? "bg-primary text-primary-foreground"
+                      : "border bg-background hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  {page}
+                </Link>
+              );
+            })}
           </div>
 
           {currentPage < totalPages && (
