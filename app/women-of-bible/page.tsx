@@ -38,7 +38,7 @@ export default async function WomenOfBiblePage() {
 	const posts = await getPostsByCategory(category.id);
 
 	return (
-		<main className="container mx-auto px-4 py-12 max-w-7xl">
+		<div className="container mx-auto px-4 py-12 max-w-7xl">
 			{/* Category Header */}
 			<div className="mb-12 text-center">
 				<div className="inline-flex items-center justify-center mb-4">
@@ -124,6 +124,6 @@ export default async function WomenOfBiblePage() {
 					})}
 				</div>
 			)}
-		</main>
+		</div>
 	);
 }

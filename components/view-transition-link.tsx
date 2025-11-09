@@ -48,10 +48,10 @@ export function ViewTransitionLink({
 
     // Check if browser supports View Transitions API and user doesn't prefer reduced motion
     if (
-      document.startViewTransition &&
+      "startViewTransition" in document &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      document.startViewTransition(() => {
+      (document as any).startViewTransition(() => {
         router.push(targetUrl);
       });
     } else {

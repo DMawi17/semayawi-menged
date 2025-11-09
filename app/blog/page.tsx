@@ -31,7 +31,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   });
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
       <div className="mb-12">
         <h1 className="text-4xl font-bold mb-4">ብሎግ ጽሑፎች</h1>
         <p className="text-muted-foreground mb-6">
@@ -148,6 +148,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           )}
         </div>
       )}
-    </main>
+    </div>
   );
 }

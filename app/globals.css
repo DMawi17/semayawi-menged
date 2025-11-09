@@ -17,23 +17,30 @@ main {
   view-transition-name: main-content;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  /* Don't animate header and footer */
-  ::view-transition-old(header-persist),
-  ::view-transition-new(header-persist),
-  ::view-transition-old(footer-persist),
-  ::view-transition-new(footer-persist) {
-    animation: none;
-  }
+/* View Transitions API animations for supported browsers */
+::view-transition-old(root) {
+  animation: fade-out 0.3s ease-out;
+}
 
-  /* Animate only main content */
-  ::view-transition-old(main-content) {
-    animation: fade-out 0.25s ease-out;
-  }
+::view-transition-new(root) {
+  animation: fade-in 0.3s ease-in;
+}
 
-  ::view-transition-new(main-content) {
-    animation: fade-in 0.25s ease-in;
-  }
+/* Don't animate header and footer */
+::view-transition-old(header-persist),
+::view-transition-new(header-persist),
+::view-transition-old(footer-persist),
+::view-transition-new(footer-persist) {
+  animation: none;
+}
+
+/* Animate main content */
+::view-transition-old(main-content) {
+  animation: fade-out 0.3s ease-out;
+}
+
+::view-transition-new(main-content) {
+  animation: fade-in 0.3s ease-in;
 }
 
 @keyframes fade-out {
@@ -131,6 +138,10 @@ main {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  html {
+    overflow-y: scroll; /* Force scrollbar to always be visible to prevent layout shift */
   }
 
   body {
