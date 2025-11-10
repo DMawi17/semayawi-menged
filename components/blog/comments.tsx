@@ -162,7 +162,11 @@ NEXT_PUBLIC_CUSDIS_HOST=https://your-cusdis-instance.com`}
               <div
                 ref={ref}
                 className="cusdis-container"
-                style={{ minHeight: "200px", position: "relative", zIndex: 1 }}
+                style={{
+                  minHeight: "300px",
+                  position: "relative",
+                  zIndex: 1,
+                }}
               />
               <noscript>
                 <p className="text-sm text-muted-foreground">
