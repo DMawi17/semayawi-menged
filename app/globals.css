@@ -226,14 +226,27 @@ main {
   }
 }
 
-/* Giscus Comments Styles */
-.giscus-container {
+/* Cusdis Comments Styles */
+.cusdis-container {
   width: 100%;
 }
 
-.giscus-container iframe.giscus-frame {
+#cusdis_thread {
+  width: 100% !important;
+}
+
+#cusdis_thread iframe {
   width: 100% !important;
   border: none !important;
-  pointer-events: auto !important;
-  z-index: 1 !important;
+  min-height: 200px;
+  background: transparent;
+}
+
+/* Ensure Cusdis widget matches theme */
+#cusdis_thread[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+#cusdis_thread[data-theme="light"] {
+  color-scheme: light;
 }
