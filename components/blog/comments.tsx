@@ -60,6 +60,21 @@ export function Comments() {
       cusdisDiv.setAttribute("data-page-title", document.title);
       cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
 
+      // Custom CSS for horizontal layout
+      const customCSS = `
+        .cusdis-input-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.75rem;
+        }
+        @media (max-width: 640px) {
+          .cusdis-input-row {
+            grid-template-columns: 1fr;
+          }
+        }
+      `;
+      cusdisDiv.setAttribute("data-custom-css", customCSS);
+
       ref.current.appendChild(cusdisDiv);
 
       // Load script if not already loaded
