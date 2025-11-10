@@ -33,8 +33,8 @@
 
 ## Phase 4: Implementation
 - [x] Create Cusdis comment component
-- [ ] Integrate Cusdis component into blog post layout
-- [ ] Add Cusdis configuration to environment variables
+- [x] Integrate Cusdis component into blog post layout (Already integrated)
+- [x] Add Cusdis configuration to environment variables
 
 ## Phase 5: Polish & Testing
 - [ ] Style Cusdis component to match blog theme

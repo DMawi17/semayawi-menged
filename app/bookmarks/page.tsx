@@ -141,7 +141,7 @@ export default function BookmarksPage() {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          ወደ ብሎግ ተመለስ
+          ወደ ብሎግ ይመለሱ
         </Link>
       </div>
     </div>
