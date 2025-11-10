@@ -35,7 +35,7 @@
 
 ### 🤝 Social & Engagement
 
-- 💬 **GitHub Discussions** integration (via Giscus)
+- 💬 **Comments** integration (via Cusdis)
 - 🔗 **Social sharing** (Facebook, Twitter, LinkedIn, WhatsApp, Telegram, Email)
 - 📬 **Newsletter subscription** (ready for integration)
 - ⬅️➡️ **Post navigation** (Previous/Next)
@@ -82,7 +82,7 @@ semayawi-menged-v2/
 │   │   ├── bookmark-button.tsx
 │   │   ├── breadcrumbs.tsx
 │   │   ├── category-badge.tsx
-│   │   ├── comments.tsx          # Giscus integration
+│   │   ├── comments.tsx          # Cusdis integration
 │   │   ├── filter-bar.tsx
 │   │   ├── image-zoom.tsx
 │   │   ├── newsletter.tsx
@@ -123,7 +123,6 @@ semayawi-menged-v2/
 │   └── images/
 │
 ├── .env.example                  # Environment variables template
-├── GISCUS_SETUP.md              # Giscus setup guide
 ├── eslint.config.mjs            # ESLint configuration
 ├── tailwind.config.ts           # Tailwind configuration
 ├── tsconfig.json                # TypeScript configuration
@@ -164,7 +163,7 @@ semayawi-menged-v2/
    cp .env.example .env.local
    ```
 
-   Edit `.env.local` with your Giscus configuration (see [GISCUS_SETUP.md](GISCUS_SETUP.md))
+   Edit `.env.local` with your Cusdis configuration (see Comments Setup section)
 
 4. **Start development server**
 
@@ -302,13 +301,17 @@ Add or modify categories in `config/categories.ts`:
 
 ## 💬 Comments Setup
 
-This blog uses **Giscus** for comments powered by GitHub Discussions.
+This blog uses **Cusdis** for comments - a lightweight, privacy-friendly alternative.
 
 ### Quick Setup
 
-1. Follow the detailed guide in [GISCUS_SETUP.md](GISCUS_SETUP.md)
-2. Add your configuration to `.env.local`
-3. Restart the dev server
+1. Sign up at [cusdis.com](https://cusdis.com) or self-host
+2. Create a website and get your App ID
+3. Add to `.env.local`:
+   ```bash
+   NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
+   ```
+4. Restart the dev server
 
 **Note**: Comments will show helpful setup instructions until configured.
 
@@ -342,7 +345,7 @@ npm run lint         # Run ESLint
 | **Components** | Radix UI |
 | **Icons** | Lucide React |
 | **Syntax Highlighting** | Shiki |
-| **Comments** | Giscus (GitHub Discussions) |
+| **Comments** | Cusdis |
 | **Build Tool** | Turbopack |
 
 ---
@@ -353,7 +356,7 @@ npm run lint         # Run ESLint
 
 1. Push your code to GitHub
 2. Import your repository on [Vercel](https://vercel.com)
-3. Add environment variables (if using Giscus)
+3. Add environment variables (if using Cusdis)
 4. Deploy!
 
 ### Other Platforms
@@ -426,7 +429,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible components
 - [Lucide](https://lucide.dev/) - Beautiful & consistent icons
-- [Giscus](https://giscus.app/) - Comments powered by GitHub Discussions
+- [Cusdis](https://cusdis.com/) - Lightweight, privacy-friendly comments
 - [Shiki](https://shiki.matsu.io/) - Beautiful syntax highlighter
 
 ---
