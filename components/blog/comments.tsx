@@ -81,21 +81,36 @@ export function Comments() {
 
     ref.current.appendChild(cusdisDiv);
 
-    // Load Cusdis script
-    const scriptElem = document.createElement("script");
-    scriptElem.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
-    scriptElem.async = true;
-    scriptElem.defer = true;
+    // Check if Cusdis script is already loaded
+    const existingScript = document.querySelector('script[src*="cusdis"]');
 
-    scriptElem.onload = () => {
-      logDebug("Cusdis script loaded successfully", { context: "Comments" });
-    };
+    if (existingScript) {
+      // Script already loaded, just render
+      logDebug("Cusdis script already loaded, rendering widget", { context: "Comments" });
+      if (typeof window !== "undefined" && (window as any).CUSDIS) {
+        (window as any).CUSDIS.renderTo(cusdisDiv);
+      }
+    } else {
+      // Load Cusdis script
+      const scriptElem = document.createElement("script");
+      scriptElem.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
+      scriptElem.async = true;
+      scriptElem.defer = true;
 
-    scriptElem.onerror = () => {
-      logWarn("Failed to load Cusdis script", { context: "Comments" });
-    };
+      scriptElem.onload = () => {
+        logDebug("Cusdis script loaded successfully", { context: "Comments" });
+        // Render after script loads
+        if (typeof window !== "undefined" && (window as any).CUSDIS) {
+          (window as any).CUSDIS.renderTo(cusdisDiv);
+        }
+      };
 
-    ref.current.appendChild(scriptElem);
+      scriptElem.onerror = () => {
+        logWarn("Failed to load Cusdis script", { context: "Comments" });
+      };
+
+      document.head.appendChild(scriptElem);
+    }
   }, [isConfigured, resolvedTheme, pageUrl, pageTitle]);
 
   // Theme change handler
