@@ -6,99 +6,116 @@ import { MessageSquare, ExternalLink } from "lucide-react";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { logDebug, logWarn } from "@/lib/logger";
 
-// Giscus configuration - Replace with your own values
-const GISCUS_CONFIG = {
-  repo: process.env.NEXT_PUBLIC_GISCUS_REPO || "",
-  repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID || "",
-  category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY || "General",
-  categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || "",
-  mapping: "pathname" as const,
-  strict: "0",
-  reactionsEnabled: "1",
-  emitMetadata: "0",
-  inputPosition: "bottom" as const,
-  lang: "en",
+// Cusdis configuration
+const CUSDIS_CONFIG = {
+  appId: process.env.NEXT_PUBLIC_CUSDIS_APP_ID || "",
+  host: process.env.NEXT_PUBLIC_CUSDIS_HOST || "https://cusdis.com",
 };
+
+interface CusdisAttributes {
+  "data-app-id": string;
+  "data-page-id": string;
+  "data-page-url": string;
+  "data-page-title": string;
+  "data-theme": string;
+  "data-host"?: string;
+}
 
 export function Comments() {
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const [isConfigured, setIsConfigured] = useState(false);
+  const [pageUrl, setPageUrl] = useState("");
+  const [pageTitle, setPageTitle] = useState("");
 
   useEffect(() => {
-    // Check if Giscus is configured
-    const configured = !!(GISCUS_CONFIG.repo && GISCUS_CONFIG.repoId && GISCUS_CONFIG.categoryId);
+    // Get page info on client side
+    if (typeof window !== "undefined") {
+      setPageUrl(window.location.href);
+      setPageTitle(document.title);
+    }
 
-    // Debug logging
-    logDebug("Giscus configuration loaded", {
+    // Check if Cusdis is configured
+    const configured = !!CUSDIS_CONFIG.appId;
+
+    logDebug("Cusdis configuration loaded", {
       context: "Comments",
       data: {
-        repo: GISCUS_CONFIG.repo,
-        repoId: GISCUS_CONFIG.repoId,
-        categoryId: GISCUS_CONFIG.categoryId,
+        appId: CUSDIS_CONFIG.appId ? "configured" : "missing",
+        host: CUSDIS_CONFIG.host,
         configured,
-        refCurrent: !!ref.current
-      }
+        refCurrent: !!ref.current,
+      },
     });
 
     setIsConfigured(configured);
+  }, []);
 
-    if (!configured) return;
+  useEffect(() => {
+    if (!isConfigured || !ref.current || !pageUrl) return;
 
-    // Wait for ref to be available
-    const timer = setTimeout(() => {
-      if (!ref.current) {
-        logWarn("Giscus ref.current is still null after timeout", { context: "Comments" });
-        return;
-      }
+    // Clear any existing children to prevent duplicates
+    ref.current.innerHTML = "";
 
-      // Clear any existing children to prevent duplicate scripts
-      ref.current.innerHTML = '';
+    // Create Cusdis container div
+    const cusdisDiv = document.createElement("div");
+    cusdisDiv.id = "cusdis_thread";
 
-      const scriptElem = document.createElement("script");
-      scriptElem.src = "https://giscus.app/client.js";
-      scriptElem.async = true;
-      scriptElem.crossOrigin = "anonymous";
+    const attrs: CusdisAttributes = {
+      "data-app-id": CUSDIS_CONFIG.appId,
+      "data-page-id": pageUrl,
+      "data-page-url": pageUrl,
+      "data-page-title": pageTitle,
+      "data-theme": resolvedTheme === "dark" ? "dark" : "light",
+    };
 
-      scriptElem.setAttribute("data-repo", GISCUS_CONFIG.repo);
-      scriptElem.setAttribute("data-repo-id", GISCUS_CONFIG.repoId);
-      scriptElem.setAttribute("data-category", GISCUS_CONFIG.category);
-      scriptElem.setAttribute("data-category-id", GISCUS_CONFIG.categoryId);
-      scriptElem.setAttribute("data-mapping", GISCUS_CONFIG.mapping);
-      scriptElem.setAttribute("data-strict", GISCUS_CONFIG.strict);
-      scriptElem.setAttribute("data-reactions-enabled", GISCUS_CONFIG.reactionsEnabled);
-      scriptElem.setAttribute("data-emit-metadata", GISCUS_CONFIG.emitMetadata);
-      scriptElem.setAttribute("data-input-position", GISCUS_CONFIG.inputPosition);
-      scriptElem.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
-      scriptElem.setAttribute("data-lang", GISCUS_CONFIG.lang);
+    // Add host attribute if using self-hosted instance
+    if (CUSDIS_CONFIG.host !== "https://cusdis.com") {
+      attrs["data-host"] = CUSDIS_CONFIG.host;
+    }
 
-      ref.current.appendChild(scriptElem);
-      logDebug("Giscus script injected successfully", { context: "Comments" });
-    }, 100);
+    // Set all attributes
+    Object.entries(attrs).forEach(([key, value]) => {
+      cusdisDiv.setAttribute(key, value);
+    });
 
-    return () => clearTimeout(timer);
-  }, [resolvedTheme]);
+    ref.current.appendChild(cusdisDiv);
+
+    // Load Cusdis script
+    const scriptElem = document.createElement("script");
+    scriptElem.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
+    scriptElem.async = true;
+    scriptElem.defer = true;
+
+    scriptElem.onload = () => {
+      logDebug("Cusdis script loaded successfully", { context: "Comments" });
+    };
+
+    scriptElem.onerror = () => {
+      logWarn("Failed to load Cusdis script", { context: "Comments" });
+    };
+
+    ref.current.appendChild(scriptElem);
+  }, [isConfigured, resolvedTheme, pageUrl, pageTitle]);
 
   // Theme change handler
   useEffect(() => {
-    if (!isConfigured) return;
+    if (!isConfigured || !pageUrl) return;
 
-    const iframe = document.querySelector<HTMLIFrameElement>(
-      "iframe.giscus-frame"
-    );
-    if (!iframe) return;
+    // Reload Cusdis when theme changes
+    const cusdisThread = document.getElementById("cusdis_thread");
+    if (cusdisThread) {
+      cusdisThread.setAttribute(
+        "data-theme",
+        resolvedTheme === "dark" ? "dark" : "light"
+      );
 
-    iframe.contentWindow?.postMessage(
-      {
-        giscus: {
-          setConfig: {
-            theme: resolvedTheme === "dark" ? "dark" : "light",
-          },
-        },
-      },
-      "https://giscus.app"
-    );
-  }, [resolvedTheme, isConfigured]);
+      // Trigger Cusdis reload
+      if (typeof window !== "undefined" && (window as any).CUSDIS) {
+        (window as any).CUSDIS.renderTo(cusdisThread);
+      }
+    }
+  }, [resolvedTheme, isConfigured, pageUrl]);
 
   return (
     <ErrorBoundary>
@@ -111,44 +128,54 @@ export function Comments() {
           {!isConfigured ? (
             <div className="text-center py-8">
               <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">የአስተያየት ክፍል አልተዋቀረም</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                የአስተያየት ክፍል አልተዋቀረም
+              </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                To enable comments, you need to configure Giscus with your GitHub repository.
+                To enable comments, you need to configure Cusdis with your App
+                ID.
               </p>
               <div className="space-y-2 text-sm text-left max-w-2xl mx-auto bg-muted/50 p-4 rounded-lg">
                 <p className="font-semibold mb-2">Setup Instructions:</p>
                 <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                  <li>Create a public GitHub repository (or use an existing one)</li>
-                  <li>Enable Discussions in your repository settings</li>
                   <li>
-                    Visit{" "}
+                    Sign up at{" "}
                     <a
-                      href="https://giscus.app"
+                      href="https://cusdis.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:underline inline-flex items-center gap-1"
                     >
-                      giscus.app
+                      cusdis.com
                       <ExternalLink className="h-3 w-3" />
                     </a>{" "}
-                    to get your configuration
+                    or self-host
                   </li>
-                  <li>Add the following to your <code className="bg-muted px-1 rounded">.env.local</code> file:</li>
+                  <li>Create a website and get your App ID</li>
+                  <li>
+                    Add the following to your{" "}
+                    <code className="bg-muted px-1 rounded">.env.local</code>{" "}
+                    file:
+                  </li>
                 </ol>
                 <pre className="bg-background p-3 rounded mt-2 text-xs overflow-x-auto">
-{`NEXT_PUBLIC_GISCUS_REPO=username/repo
-NEXT_PUBLIC_GISCUS_REPO_ID=your-repo-id
-NEXT_PUBLIC_GISCUS_CATEGORY=General
-NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id`}
+                  {`NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
+# Optional: for self-hosted Cusdis
+NEXT_PUBLIC_CUSDIS_HOST=https://your-cusdis-instance.com`}
                 </pre>
               </div>
             </div>
           ) : (
             <>
-              <div ref={ref} className="giscus-container" style={{ minHeight: '200px', position: 'relative', zIndex: 1 }} />
+              <div
+                ref={ref}
+                className="cusdis-container"
+                style={{ minHeight: "200px", position: "relative", zIndex: 1 }}
+              />
               <noscript>
                 <p className="text-sm text-muted-foreground">
-                  Please enable JavaScript to view the comments powered by Giscus.
+                  Please enable JavaScript to view the comments powered by
+                  Cusdis.
                 </p>
               </noscript>
             </>

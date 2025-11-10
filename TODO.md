@@ -24,15 +24,15 @@
 6. Debug docs: 3 files in `docs/debugging/`
 
 ## Phase 2: Removal
-- [ ] Remove all Giscus-related code and components
-- [ ] Remove Giscus dependencies from package.json
+- [x] Remove all Giscus-related code and components
+- [x] Remove Giscus dependencies from package.json (N/A - CDN-based)
 
 ## Phase 3: Cusdis Setup
 - [ ] Set up Cusdis account and get app credentials
-- [ ] Install Cusdis React component package
+- [x] Install Cusdis React component package (Using CDN - React 19 incompatibility)
 
 ## Phase 4: Implementation
-- [ ] Create Cusdis comment component
+- [x] Create Cusdis comment component
 - [ ] Integrate Cusdis component into blog post layout
 - [ ] Add Cusdis configuration to environment variables
 
