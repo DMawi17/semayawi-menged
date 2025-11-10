@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { MessageSquare, ExternalLink } from "lucide-react";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { logDebug, logWarn } from "@/lib/logger";
 
 // Cusdis configuration
 const CUSDIS_CONFIG = {
@@ -12,125 +11,97 @@ const CUSDIS_CONFIG = {
   host: process.env.NEXT_PUBLIC_CUSDIS_HOST || "https://cusdis.com",
 };
 
-interface CusdisAttributes {
-  "data-app-id": string;
-  "data-page-id": string;
-  "data-page-url": string;
-  "data-page-title": string;
-  "data-theme": string;
-  "data-host"?: string;
+// Extend window type for Cusdis
+declare global {
+  interface Window {
+    CUSDIS?: any;
+  }
 }
 
 export function Comments() {
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const [isConfigured, setIsConfigured] = useState(false);
-  const [pageUrl, setPageUrl] = useState("");
-  const [pageTitle, setPageTitle] = useState("");
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get page info on client side
-    if (typeof window !== "undefined") {
-      setPageUrl(window.location.href);
-      setPageTitle(document.title);
-    }
-
     // Check if Cusdis is configured
     const configured = !!CUSDIS_CONFIG.appId;
-
-    logDebug("Cusdis configuration loaded", {
-      context: "Comments",
-      data: {
-        appId: CUSDIS_CONFIG.appId ? "configured" : "missing",
-        host: CUSDIS_CONFIG.host,
-        configured,
-        refCurrent: !!ref.current,
-      },
-    });
-
     setIsConfigured(configured);
+
+    if (configured) {
+      console.log("Cusdis Config:", {
+        appId: CUSDIS_CONFIG.appId,
+        host: CUSDIS_CONFIG.host,
+        currentUrl: typeof window !== "undefined" ? window.location.href : "N/A"
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (!isConfigured || !ref.current || !pageUrl) return;
+    if (!isConfigured || !ref.current) return;
 
-    // Clear any existing children to prevent duplicates
-    ref.current.innerHTML = "";
+    // Wait for theme to be ready
+    if (!resolvedTheme) return;
 
-    // Create Cusdis container div
-    const cusdisDiv = document.createElement("div");
-    cusdisDiv.id = "cusdis_thread";
+    const loadCusdis = () => {
+      if (!ref.current) return;
 
-    const attrs: CusdisAttributes = {
-      "data-app-id": CUSDIS_CONFIG.appId,
-      "data-page-id": pageUrl,
-      "data-page-url": pageUrl,
-      "data-page-title": pageTitle,
-      "data-theme": resolvedTheme === "dark" ? "dark" : "light",
+      // Clear existing content
+      ref.current.innerHTML = "";
+
+      // Create Cusdis div
+      const cusdisDiv = document.createElement("div");
+      cusdisDiv.id = "cusdis_thread";
+      cusdisDiv.setAttribute("data-host", CUSDIS_CONFIG.host);
+      cusdisDiv.setAttribute("data-app-id", CUSDIS_CONFIG.appId);
+      cusdisDiv.setAttribute("data-page-id", window.location.pathname);
+      cusdisDiv.setAttribute("data-page-url", window.location.href);
+      cusdisDiv.setAttribute("data-page-title", document.title);
+      cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+
+      ref.current.appendChild(cusdisDiv);
+
+      // Load script if not already loaded
+      if (!document.getElementById("cusdis-sdk")) {
+        const script = document.createElement("script");
+        script.id = "cusdis-sdk";
+        script.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
+        script.async = true;
+
+        script.onload = () => {
+          console.log("Cusdis SDK loaded successfully");
+          if (window.CUSDIS) {
+            window.CUSDIS.renderTo(cusdisDiv);
+          }
+        };
+
+        script.onerror = () => {
+          console.error("Failed to load Cusdis SDK");
+          setLoadError("Failed to load Cusdis script. Please check your connection.");
+        };
+
+        document.body.appendChild(script);
+      } else if (window.CUSDIS) {
+        // Script already loaded, initialize
+        console.log("Cusdis SDK already loaded, rendering...");
+        window.CUSDIS.renderTo(cusdisDiv);
+      }
     };
 
-    // Add host attribute if using self-hosted instance
-    if (CUSDIS_CONFIG.host !== "https://cusdis.com") {
-      attrs["data-host"] = CUSDIS_CONFIG.host;
-    }
+    loadCusdis();
+  }, [isConfigured, resolvedTheme]);
 
-    // Set all attributes
-    Object.entries(attrs).forEach(([key, value]) => {
-      cusdisDiv.setAttribute(key, value);
-    });
-
-    ref.current.appendChild(cusdisDiv);
-
-    // Check if Cusdis script is already loaded
-    const existingScript = document.querySelector('script[src*="cusdis"]');
-
-    if (existingScript) {
-      // Script already loaded, just render
-      logDebug("Cusdis script already loaded, rendering widget", { context: "Comments" });
-      if (typeof window !== "undefined" && (window as any).CUSDIS) {
-        (window as any).CUSDIS.renderTo(cusdisDiv);
-      }
-    } else {
-      // Load Cusdis script
-      const scriptElem = document.createElement("script");
-      scriptElem.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
-      scriptElem.async = true;
-      scriptElem.defer = true;
-
-      scriptElem.onload = () => {
-        logDebug("Cusdis script loaded successfully", { context: "Comments" });
-        // Render after script loads
-        if (typeof window !== "undefined" && (window as any).CUSDIS) {
-          (window as any).CUSDIS.renderTo(cusdisDiv);
-        }
-      };
-
-      scriptElem.onerror = () => {
-        logWarn("Failed to load Cusdis script", { context: "Comments" });
-      };
-
-      document.head.appendChild(scriptElem);
-    }
-  }, [isConfigured, resolvedTheme, pageUrl, pageTitle]);
-
-  // Theme change handler
+  // Handle theme changes
   useEffect(() => {
-    if (!isConfigured || !pageUrl) return;
+    if (!isConfigured || !resolvedTheme) return;
 
-    // Reload Cusdis when theme changes
-    const cusdisThread = document.getElementById("cusdis_thread");
-    if (cusdisThread) {
-      cusdisThread.setAttribute(
-        "data-theme",
-        resolvedTheme === "dark" ? "dark" : "light"
-      );
-
-      // Trigger Cusdis reload
-      if (typeof window !== "undefined" && (window as any).CUSDIS) {
-        (window as any).CUSDIS.renderTo(cusdisThread);
-      }
+    const cusdisDiv = document.getElementById("cusdis_thread");
+    if (cusdisDiv && window.CUSDIS) {
+      cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+      window.CUSDIS.setTheme(resolvedTheme === "dark" ? "dark" : "light");
     }
-  }, [resolvedTheme, isConfigured, pageUrl]);
+  }, [resolvedTheme, isConfigured]);
 
   return (
     <ErrorBoundary>
@@ -140,6 +111,12 @@ export function Comments() {
           አስተያየቶች
         </h2>
         <div className="rounded-lg border bg-card p-6">
+          {loadError && (
+            <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-lg">
+              <p className="font-semibold">Error Loading Comments</p>
+              <p className="text-sm">{loadError}</p>
+            </div>
+          )}
           {!isConfigured ? (
             <div className="text-center py-8">
               <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
