@@ -29,7 +29,9 @@ export default async function Home() {
   const postCounts: Record<string, number> = {};
   for (const category of categories) {
     postCounts[category.id] = publishedPosts.filter((post) => {
-      const postCategory = post.category === category.id || post.category === category.slug;
+      const postCategory = post.category === category.id ||
+                           post.category === category.slug ||
+                           post.category === category.nameAmharic;
       return postCategory;
     }).length;
   }

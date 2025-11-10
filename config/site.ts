@@ -26,11 +26,10 @@ export const siteConfig = {
     personalSite: "https://mawi17.netlify.app/",
   },
   navigation: [
-    { name: "Home", nameAmharic: "ዋና ገጽ", href: "/" },
-    { name: "Blog", nameAmharic: "ጽሁፎች", href: "/blog" },
-    { name: "Bookmarks", nameAmharic: "የተቀመጡ", href: "/bookmarks" },
-    { name: "History", nameAmharic: "ታሪክ", href: "/history" },
-    { name: "About", nameAmharic: "ስለ እኛ", href: "/about" },
+    { name: "Home", nameAmharic: "🏠 ዋና ገጽ", href: "/" },
+    { name: "Blog", nameAmharic: "📝 ጽሁፎች", href: "/blog" },
+    { name: "Bookmarks", nameAmharic: "🔖 የተቀመጡ", href: "/bookmarks" },
+    { name: "About", nameAmharic: "ℹ️ ስለ እኛ", href: "/about" },
   ],
 };
 
