@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: cusdis
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_v2:/var/lib/postgresql/data
     networks:
       - cusdis-network
     restart: unless-stopped
@@ -48,7 +48,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  postgres_data_v2:
     driver: local
 
 networks:
