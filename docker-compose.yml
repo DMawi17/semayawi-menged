@@ -28,7 +28,6 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       NEXTAUTH_SECRET: ${JWT_SECRET}
       DB_TYPE: pgsql
-      DB_URL: postgresql://cusdis:${DB_PASSWORD}@postgres:5432/cusdis
       NEXTAUTH_URL: http://localhost:3001
       NEXTAUTH_URL_INTERNAL: http://cusdis:3000
       HOST: 0.0.0.0
