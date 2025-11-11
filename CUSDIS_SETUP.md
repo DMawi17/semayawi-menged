@@ -93,70 +93,69 @@ npm run dev
 
 ## Option 2: Self-Hosting
 
-If you want full control over your comment data, you can self-host Cusdis.
+This project includes a pre-configured Docker Compose setup for self-hosting Cusdis.
 
 ### Prerequisites
 
-- Docker (recommended) or Node.js 16+
-- PostgreSQL database
-- Optional: Reverse proxy (Nginx, Caddy)
+- Docker with Docker Compose v2
 
-### Step 1: Deploy Cusdis
+### Step 1: Configure Environment Variables
 
-#### Using Docker (Recommended)
+1. Navigate to the `cusdis-server` directory.
+2. Create a `.env` file by copying `.env.example` (if it exists) or creating a new one.
+3. Fill in the required variables. For local development, you can use the following:
 
-```bash
-# Clone the Cusdis repository
-git clone https://github.com/djyde/cusdis.git
-cd cusdis
+```
+# Admin Credentials
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=aVeryComplexPassword!123
 
-# Create environment file
-cp .env.example .env
+# JWT Secret (min 32 characters)
+JWT_SECRET=aVeryComplexJwtSecret_min_32_chars
 
-# Configure your database and JWT secret
-# Edit .env with your settings
+# Database
+DB_PASSWORD=aVeryComplexDbPassword!123
 
-# Start with Docker Compose
-docker-compose up -d
+# URLs
+NEXTAUTH_URL=http://localhost:3000
+HOST=0.0.0.0
 ```
 
-#### Manual Deployment
+### Step 2: Start the Services
+
+1. From the `cusdis-server` directory, run the following command:
+   ```bash
+   docker compose up -d
+   ```
+2. This will start the Cusdis application, a PostgreSQL database, and an Nginx reverse proxy.
+3. The Cusdis dashboard will be available at `http://localhost:3000`.
+
+### Step 3: Configure Cusdis
+
+1. **Log in** to the Cusdis dashboard at `http://localhost:3000` with the credentials you set in the `.env` file.
+2. **Create a new website**.
+3. Copy the **App ID**.
+4. Go to the **Settings** page for your new website.
+5. In the **Allowed Origins** field, add the URL of your blog (e.g., `http://localhost:3100` for local development).
+
+### Step 4: Configure the Blog
+
+1. In the root of this project, create a `.env.local` file.
+2. Add the App ID and the URL of your self-hosted Cusdis instance:
 
 ```bash
-# Clone and install
-git clone https://github.com/djyde/cusdis.git
-cd cusdis
-npm install
-
-# Build
-npm run build
-
-# Set environment variables
-export DATABASE_URL=postgresql://user:password@localhost:5432/cusdis
-export JWT_SECRET=your-secret-key
-export NEXTAUTH_URL=https://your-cusdis-domain.com
-
-# Start the server
-npm start
+NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-from-dashboard
+NEXT_PUBLIC_CUSDIS_HOST=http://localhost:3000
 ```
 
-### Step 2: Configure Environment Variables
+### Step 5: Restart the Blog's Dev Server
 
-In your blog's `.env.local`:
-
-```bash
-# Cusdis Comments Configuration
-NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
-NEXT_PUBLIC_CUSDIS_HOST=https://your-cusdis-domain.com
-```
-
-### Step 3: Create Your Website in Cusdis
-
-1. Visit your self-hosted Cusdis dashboard
-2. Create an account
-3. Add your website
-4. Copy the App ID
-5. Update your `.env.local` with the App ID
+1. Stop your blog's development server if it's running.
+2. Start it on a port other than 3000 (which is now used by Cusdis). For example, use port 3100:
+   ```bash
+   npm run dev -- -p 3100
+   ```
+3. The comment section should now be visible on your blog posts.
 
 ---
 
@@ -211,7 +210,7 @@ Cusdis provides a moderation dashboard where you can:
 
 Access your dashboard at:
 - Cloud: [cusdis.com/dashboard](https://cusdis.com/dashboard)
-- Self-hosted: `https://your-cusdis-domain.com/dashboard`
+- Self-hosted: `https://your-cusdis-domain.com`
 
 ### Notifications
 
@@ -244,34 +243,14 @@ Enable email notifications in your Cusdis dashboard to receive alerts when:
 NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
 ```
 
-### Comments Not Loading
+### Comments Not Loading (White Box)
 
-**Problem**: Widget shows but comments don't load
+**Problem**: A white box appears instead of the comment section.
 
-**Solutions**:
-1. Verify your App ID is correct
-2. Check your domain is registered in Cusdis dashboard
-3. If self-hosting, ensure `NEXT_PUBLIC_CUSDIS_HOST` is correct
-4. Check Cusdis service status (cloud) or server logs (self-hosted)
-
-### Theme Not Changing
-
-**Problem**: Dark mode not working in comments
-
-**Solution**: This is handled automatically. If it's not working:
-1. Clear browser cache
-2. Check that your site's theme provider is working
-3. Verify the component is receiving theme updates
-
-### Self-Hosted Connection Issues
-
-**Problem**: Can't connect to self-hosted instance
-
-**Solutions**:
-1. Ensure your Cusdis server is running
-2. Check firewall rules allow connections
-3. Verify SSL certificate is valid (if using HTTPS)
-4. Check CORS settings in Cusdis configuration
+**Solution**: This is almost always a Cross-Origin Resource Sharing (CORS) issue.
+1. Open the browser console (F12) and check for CORS errors.
+2. **For self-hosting:** Ensure you have added your blog's domain (e.g., `http://localhost:3100`) to the **"Allowed Origins"** field in your website's settings in the Cusdis dashboard.
+3. **For self-hosting:** Ensure your reverse proxy (Nginx) is configured correctly to handle CORS pre-flight requests if you are seeing errors related to `Access-Control-Allow-Headers`. The `docker-compose.yml` in this project is pre-configured to handle this.
 
 ---
 
@@ -349,5 +328,5 @@ For issues specific to this blog implementation:
 
 ---
 
-**Last Updated**: 2025-11-10
+**Last Updated**: 2025-11-11
 **Cusdis Version Compatibility**: v2.x

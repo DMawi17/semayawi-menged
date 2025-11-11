@@ -303,15 +303,29 @@ Add or modify categories in `config/categories.ts`:
 
 This blog uses **Cusdis** for comments - a lightweight, privacy-friendly alternative.
 
-### Quick Setup
+### Quick Setup (Cloud)
 
-1. Sign up at [cusdis.com](https://cusdis.com) or self-host
+1. Sign up at [cusdis.com](https://cusdis.com)
 2. Create a website and get your App ID
 3. Add to `.env.local`:
    ```bash
    NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
    ```
 4. Restart the dev server
+
+### Self-Hosted Comments
+
+This project is pre-configured for self-hosting the Cusdis comment engine using Docker Compose.
+
+-   **Configuration:** All necessary files are in the `cusdis-server/` directory.
+-   **Detailed Guide:** For a complete walkthrough, see the [Self-Hosting Guide](./CUSDIS_SELFHOST_GUIDE.md).
+-   **Quick Setup:** For a quicker setup summary, see the [Setup Guide](./CUSDIS_SETUP.md).
+
+To start the self-hosted services, navigate to the `cusdis-server` directory and run:
+
+```bash
+docker compose up -d
+```
 
 **Note**: Comments will show helpful setup instructions until configured.
 
