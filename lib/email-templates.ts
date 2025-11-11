@@ -35,7 +35,7 @@ export function getWelcomeEmailHtml(subscriberEmail: string): string {
                 ${siteConfig.name}
               </h1>
               <p style="margin: 10px 0 0; color: #e0e7ff; font-size: 16px;">
-                ሰማያዊ መንገድ
+
               </p>
             </td>
           </tr>

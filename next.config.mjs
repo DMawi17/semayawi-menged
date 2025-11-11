@@ -2,6 +2,14 @@ import { createMDX } from "fumadocs-mdx/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	async rewrites() {
+		return [
+			{
+				source: '/cusdis-proxy/:path*',
+				destination: 'http://localhost:3001/:path*',
+			},
+		];
+	},
 	async headers() {
 		return [
 			{
