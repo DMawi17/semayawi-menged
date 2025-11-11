@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
-import { MessageSquare, ExternalLink } from "lucide-react";
+import { MessageSquare, ExternalLink, Loader2 } from "lucide-react";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 // Cusdis configuration
@@ -15,6 +15,7 @@ const CUSDIS_CONFIG = {
 declare global {
   interface Window {
     CUSDIS?: any;
+    CUSDIS_LOCALE?: any;
   }
 }
 
@@ -23,6 +24,9 @@ export function Comments() {
   const { resolvedTheme } = useTheme();
   const [isConfigured, setIsConfigured] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const renderAttempted = useRef(false);
 
   useEffect(() => {
     // Check if Cusdis is configured
@@ -38,84 +42,129 @@ export function Comments() {
     }
   }, []);
 
+  // Load Cusdis script once
   useEffect(() => {
-    if (!isConfigured || !ref.current) return;
+    if (!isConfigured) return;
+    if (document.getElementById("cusdis-sdk")) {
+      setScriptLoaded(true);
+      return;
+    }
 
-    // Wait for theme to be ready
-    if (!resolvedTheme) return;
+    setIsLoading(true);
+    setLoadError(null);
 
-    const loadCusdis = () => {
+    const script = document.createElement("script");
+    script.id = "cusdis-sdk";
+    script.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
+    script.async = true;
+    script.defer = true;
+
+    script.onload = () => {
+      console.log("Cusdis SDK loaded successfully");
+      setScriptLoaded(true);
+      setIsLoading(false);
+      setLoadError(null);
+    };
+
+    script.onerror = (error) => {
+      console.error("Failed to load Cusdis SDK:", error);
+      console.error("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
+      setLoadError(`Failed to load Cusdis script from ${CUSDIS_CONFIG.host}. Please check your CUSDIS_HOST configuration.`);
+      setIsLoading(false);
+      setScriptLoaded(false);
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup on unmount
+      const existingScript = document.getElementById("cusdis-sdk");
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript);
+      }
+    };
+  }, [isConfigured]);
+
+  // Render Cusdis when script is loaded and theme is ready
+  useEffect(() => {
+    if (!isConfigured || !scriptLoaded || !resolvedTheme || !ref.current) return;
+    if (renderAttempted.current) return;
+
+    const initializeCusdis = () => {
       if (!ref.current) return;
 
-      // Clear existing content
-      ref.current.innerHTML = "";
+      // Wait for CUSDIS object to be available
+      const maxAttempts = 20;
+      let attempts = 0;
 
-      // Create Cusdis div
-      const cusdisDiv = document.createElement("div");
-      cusdisDiv.id = "cusdis_thread";
-      cusdisDiv.setAttribute("data-host", CUSDIS_CONFIG.host);
-      cusdisDiv.setAttribute("data-app-id", CUSDIS_CONFIG.appId);
-      cusdisDiv.setAttribute("data-page-id", window.location.pathname);
-      cusdisDiv.setAttribute("data-page-url", window.location.href);
-      cusdisDiv.setAttribute("data-page-title", document.title);
-      cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+      const checkAndRender = () => {
+        attempts++;
 
-      // Custom CSS for horizontal layout
-      const customCSS = `
-        .cusdis-input-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.75rem;
+        if (window.CUSDIS) {
+          console.log("Cusdis SDK ready, initializing...");
+          renderAttempted.current = true;
+
+          // Clear existing content
+          ref.current!.innerHTML = "";
+
+          // Create Cusdis div
+          const cusdisDiv = document.createElement("div");
+          cusdisDiv.id = "cusdis_thread";
+          cusdisDiv.setAttribute("data-host", CUSDIS_CONFIG.host);
+          cusdisDiv.setAttribute("data-app-id", CUSDIS_CONFIG.appId);
+          cusdisDiv.setAttribute("data-page-id", window.location.pathname);
+          cusdisDiv.setAttribute("data-page-url", window.location.href);
+          cusdisDiv.setAttribute("data-page-title", document.title);
+          cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+
+          ref.current!.appendChild(cusdisDiv);
+
+          // Render with a small delay to ensure DOM is ready
+          setTimeout(() => {
+            if (window.CUSDIS && cusdisDiv) {
+              try {
+                window.CUSDIS.renderTo(cusdisDiv);
+                console.log("Cusdis rendered successfully");
+              } catch (error) {
+                console.error("Error rendering Cusdis:", error);
+                setLoadError("Failed to initialize Cusdis. Please refresh the page.");
+              }
+            }
+          }, 100);
+        } else if (attempts < maxAttempts) {
+          console.log(`Waiting for CUSDIS object... (attempt ${attempts}/${maxAttempts})`);
+          setTimeout(checkAndRender, 100);
+        } else {
+          console.error("CUSDIS object not available after max attempts");
+          setLoadError("Cusdis initialization timed out. Please refresh the page.");
         }
-        @media (max-width: 640px) {
-          .cusdis-input-row {
-            grid-template-columns: 1fr;
+      };
+
+      checkAndRender();
+    };
+
+    initializeCusdis();
+  }, [isConfigured, scriptLoaded, resolvedTheme]);
+
+  // Handle theme changes after initial render
+  useEffect(() => {
+    if (!isConfigured || !resolvedTheme || !renderAttempted.current) return;
+
+    const updateTheme = () => {
+      const cusdisDiv = document.getElementById("cusdis_thread");
+      if (cusdisDiv && window.CUSDIS) {
+        try {
+          cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
+          if (typeof window.CUSDIS.setTheme === 'function') {
+            window.CUSDIS.setTheme(resolvedTheme === "dark" ? "dark" : "light");
           }
+        } catch (error) {
+          console.error("Error updating Cusdis theme:", error);
         }
-      `;
-      cusdisDiv.setAttribute("data-custom-css", customCSS);
-
-      ref.current.appendChild(cusdisDiv);
-
-      // Load script if not already loaded
-      if (!document.getElementById("cusdis-sdk")) {
-        const script = document.createElement("script");
-        script.id = "cusdis-sdk";
-        script.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
-        script.async = true;
-
-        script.onload = () => {
-          console.log("Cusdis SDK loaded successfully");
-          if (window.CUSDIS) {
-            window.CUSDIS.renderTo(cusdisDiv);
-          }
-        };
-
-        script.onerror = () => {
-          console.error("Failed to load Cusdis SDK");
-          setLoadError("Failed to load Cusdis script. Please check your connection.");
-        };
-
-        document.body.appendChild(script);
-      } else if (window.CUSDIS) {
-        // Script already loaded, initialize
-        console.log("Cusdis SDK already loaded, rendering...");
-        window.CUSDIS.renderTo(cusdisDiv);
       }
     };
 
-    loadCusdis();
-  }, [isConfigured, resolvedTheme]);
-
-  // Handle theme changes
-  useEffect(() => {
-    if (!isConfigured || !resolvedTheme) return;
-
-    const cusdisDiv = document.getElementById("cusdis_thread");
-    if (cusdisDiv && window.CUSDIS) {
-      cusdisDiv.setAttribute("data-theme", resolvedTheme === "dark" ? "dark" : "light");
-      window.CUSDIS.setTheme(resolvedTheme === "dark" ? "dark" : "light");
-    }
+    updateTheme();
   }, [resolvedTheme, isConfigured]);
 
   return (
@@ -130,6 +179,14 @@ export function Comments() {
             <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-lg">
               <p className="font-semibold">Error Loading Comments</p>
               <p className="text-sm">{loadError}</p>
+              <p className="text-xs mt-2 text-muted-foreground">
+                Troubleshooting tips:
+              </p>
+              <ul className="text-xs mt-1 list-disc list-inside text-muted-foreground">
+                <li>Verify your Railway deployment URL in NEXT_PUBLIC_CUSDIS_HOST</li>
+                <li>Check that your Cusdis instance is running</li>
+                <li>Ensure CORS is configured correctly on your Cusdis instance</li>
+              </ul>
             </div>
           )}
           {!isConfigured ? (
@@ -156,24 +213,29 @@ export function Comments() {
                       cusdis.com
                       <ExternalLink className="h-3 w-3" />
                     </a>{" "}
-                    or self-host
+                    or self-host on Railway
                   </li>
                   <li>Create a website and get your App ID</li>
                   <li>
-                    Add the following to your{" "}
-                    <code className="bg-muted px-1 rounded">.env.local</code>{" "}
-                    file:
+                    Add the following to your environment variables (Railway or{" "}
+                    <code className="bg-muted px-1 rounded">.env.local</code>):
                   </li>
                 </ol>
                 <pre className="bg-background p-3 rounded mt-2 text-xs overflow-x-auto">
                   {`NEXT_PUBLIC_CUSDIS_APP_ID=your-app-id-here
-# Optional: for self-hosted Cusdis
-NEXT_PUBLIC_CUSDIS_HOST=https://your-cusdis-instance.com`}
+# For self-hosted Cusdis (e.g., Railway deployment)
+NEXT_PUBLIC_CUSDIS_HOST=https://your-cusdis-instance.railway.app`}
                 </pre>
               </div>
             </div>
           ) : (
             <>
+              {isLoading && (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground mr-2" />
+                  <span className="text-sm text-muted-foreground">Loading comments...</span>
+                </div>
+              )}
               <div
                 ref={ref}
                 className="cusdis-container"
