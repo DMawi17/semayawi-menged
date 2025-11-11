@@ -42,7 +42,7 @@ export function Comments() {
     }
   }, []);
 
-  // Load Cusdis script once
+  // Load Cusdis script once with retry logic
   useEffect(() => {
     if (!isConfigured) return;
     if (document.getElementById("cusdis-sdk")) {
@@ -53,28 +53,56 @@ export function Comments() {
     setIsLoading(true);
     setLoadError(null);
 
-    const script = document.createElement("script");
-    script.id = "cusdis-sdk";
-    script.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
-    script.async = true;
-    script.defer = true;
+    const loadScript = (attempt = 1) => {
+      const script = document.createElement("script");
+      script.id = "cusdis-sdk";
+      script.src = `${CUSDIS_CONFIG.host}/js/cusdis.es.js`;
+      script.async = true;
+      script.defer = true;
 
-    script.onload = () => {
-      console.log("Cusdis SDK loaded successfully");
-      setScriptLoaded(true);
-      setIsLoading(false);
-      setLoadError(null);
+      // Add timestamp to bypass cache on retries
+      if (attempt > 1) {
+        script.src += `?t=${Date.now()}`;
+      }
+
+      script.onload = () => {
+        console.log("✅ Cusdis SDK loaded successfully");
+        console.log("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
+        setScriptLoaded(true);
+        setIsLoading(false);
+        setLoadError(null);
+      };
+
+      script.onerror = (error) => {
+        console.error(`❌ Failed to load Cusdis SDK (attempt ${attempt}/3):`, error);
+        console.error("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
+
+        // Remove failed script
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        // Retry up to 3 times with exponential backoff
+        if (attempt < 3) {
+          const delay = attempt * 1000; // 1s, 2s
+          console.log(`Retrying in ${delay}ms...`);
+          setTimeout(() => loadScript(attempt + 1), delay);
+        } else {
+          // All retries failed
+          console.error("All retry attempts failed. Checking Railway deployment status...");
+          setLoadError(
+            `Unable to connect to Cusdis at ${CUSDIS_CONFIG.host}. ` +
+            `The deployment may be down or returning 403 Forbidden errors.`
+          );
+          setIsLoading(false);
+          setScriptLoaded(false);
+        }
+      };
+
+      document.head.appendChild(script);
     };
 
-    script.onerror = (error) => {
-      console.error("Failed to load Cusdis SDK:", error);
-      console.error("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
-      setLoadError(`Failed to load Cusdis script from ${CUSDIS_CONFIG.host}. Please check your CUSDIS_HOST configuration.`);
-      setIsLoading(false);
-      setScriptLoaded(false);
-    };
-
-    document.head.appendChild(script);
+    loadScript();
 
     return () => {
       // Cleanup on unmount
@@ -177,16 +205,41 @@ export function Comments() {
         <div className="rounded-lg border bg-card p-6">
           {loadError && (
             <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-lg">
-              <p className="font-semibold">Error Loading Comments</p>
-              <p className="text-sm">{loadError}</p>
-              <p className="text-xs mt-2 text-muted-foreground">
-                Troubleshooting tips:
-              </p>
-              <ul className="text-xs mt-1 list-disc list-inside text-muted-foreground">
-                <li>Verify your Railway deployment URL in NEXT_PUBLIC_CUSDIS_HOST</li>
-                <li>Check that your Cusdis instance is running</li>
-                <li>Ensure CORS is configured correctly on your Cusdis instance</li>
-              </ul>
+              <p className="font-semibold">⚠️ Error Loading Comments</p>
+              <p className="text-sm mt-2">{loadError}</p>
+
+              <div className="mt-3 p-3 bg-background rounded text-xs">
+                <p className="font-semibold mb-2">🔧 How to fix this:</p>
+                <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
+                  <li>Check your Railway deployment is running at: <code className="bg-muted px-1 rounded text-xs">{CUSDIS_CONFIG.host}</code></li>
+                  <li>Verify the deployment logs in Railway dashboard for errors</li>
+                  <li>Ensure these environment variables are set in Railway:
+                    <div className="mt-1 ml-4 p-2 bg-muted rounded">
+                      <code>DB_PASSWORD</code><br/>
+                      <code>JWT_SECRET</code><br/>
+                      <code>ADMIN_USERNAME</code><br/>
+                      <code>ADMIN_PASSWORD</code>
+                    </div>
+                  </li>
+                  <li>Try redeploying your Cusdis service on Railway</li>
+                  <li>Test the URL manually: <a
+                    href={`${CUSDIS_CONFIG.host}/js/cusdis.es.js`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {CUSDIS_CONFIG.host}/js/cusdis.es.js
+                  </a></li>
+                </ol>
+                <p className="mt-2 text-xs text-amber-600">
+                  💡 Alternative: Use Cusdis Cloud at <a
+                    href="https://cusdis.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >cusdis.com</a> while debugging
+                </p>
+              </div>
             </div>
           )}
           {!isConfigured ? (
