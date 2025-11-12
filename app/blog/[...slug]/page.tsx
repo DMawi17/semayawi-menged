@@ -200,11 +200,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="flex gap-8">
           {/* Main Content - Optimized for readability */}
           <div className="flex-1 min-w-0 max-w-4xl mx-auto xl:mx-0">
-            {/* Breadcrumbs */}
-            <Breadcrumbs
-              category={post.data.category}
-              postTitle={post.data.title}
-            />
+            {/* Breadcrumbs - Hidden on mobile */}
+            <div className="hidden md:block">
+              <Breadcrumbs
+                category={post.data.category}
+                postTitle={post.data.title}
+              />
+            </div>
 
             <article className="prose prose-slate dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-li:leading-relaxed">
           {/* Article Hero */}
@@ -232,14 +234,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Tags and Actions Row */}
           <div className="flex items-center justify-between gap-4 mb-8 not-prose">
-            {/* Tags - Last 5 only */}
+            {/* Tags - Last 2 on mobile, Last 5 on desktop */}
             {post.data.tags && post.data.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 flex-1">
-                {post.data.tags.slice(-5).map((tag) => (
+                {post.data.tags.slice(-5).map((tag, index) => (
                   <Link
                     key={tag}
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                    className={`inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors ${
+                      index < 3 ? 'hidden md:inline-flex' : ''
+                    }`}
                   >
                     {tag}
                   </Link>

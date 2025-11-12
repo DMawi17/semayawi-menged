@@ -68,19 +68,21 @@ export function FilterBar({ postCount }: FilterBarProps) {
       </div>
 
       {/* Sort Options */}
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-muted-foreground">ቅደም ተከተል:</span>
-        <Select value={sortOption} onValueChange={handleSortChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="የቅርብ ጊዜ" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="date-desc">የቅርብ ጊዜ</SelectItem>
-            <SelectItem value="date-asc">የቆየ</SelectItem>
-            <SelectItem value="title-asc">ርዕስ (ሀ-ፐ)</SelectItem>
-            <SelectItem value="title-desc">ርዕስ (ፐ-ሀ)</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center gap-3 relative">
+        <span className="text-sm text-muted-foreground shrink-0">ቅደም ተከተል:</span>
+        <div className="flex-1 max-w-[180px]">
+          <Select value={sortOption} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="የቅርብ ጊዜ" />
+            </SelectTrigger>
+            <SelectContent position="popper" className="z-50">
+              <SelectItem value="date-desc">የቅርብ ጊዜ</SelectItem>
+              <SelectItem value="date-asc">የቆየ</SelectItem>
+              <SelectItem value="title-asc">ርዕስ (ሀ-ፐ)</SelectItem>
+              <SelectItem value="title-desc">ርዕስ (ፐ-ሀ)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

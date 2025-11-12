@@ -132,7 +132,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
 
         <button
           onClick={() => handleShare("twitter")}
-          className="inline-flex items-center justify-center h-9 w-9 rounded-lg border bg-background hover:bg-[#1DA1F2] hover:text-white transition-colors cursor-pointer"
+          className="hidden md:inline-flex items-center justify-center h-9 w-9 rounded-lg border bg-background hover:bg-[#1DA1F2] hover:text-white transition-colors cursor-pointer"
           aria-label="Share on Twitter"
           title="Share on Twitter"
         >
@@ -143,7 +143,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
 
         <button
           onClick={() => handleShare("linkedin")}
-          className="inline-flex items-center justify-center h-9 w-9 rounded-lg border bg-background hover:bg-[#0A66C2] hover:text-white transition-colors cursor-pointer"
+          className="hidden md:inline-flex items-center justify-center h-9 w-9 rounded-lg border bg-background hover:bg-[#0A66C2] hover:text-white transition-colors cursor-pointer"
           aria-label="Share on LinkedIn"
           title="Share on LinkedIn"
         >

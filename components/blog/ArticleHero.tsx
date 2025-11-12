@@ -67,9 +67,9 @@ export function ArticleHero({
           {title}
         </h1>
 
-        {/* Description - Body font size */}
+        {/* Description - Body font size - Hidden on mobile */}
         {description && (
-          <p className="text-base text-slate-200 mb-4 leading-relaxed max-w-3xl">
+          <p className="hidden md:block text-base text-slate-200 mb-4 leading-relaxed max-w-3xl">
             {description}
           </p>
         )}

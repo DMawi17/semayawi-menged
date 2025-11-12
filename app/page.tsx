@@ -82,7 +82,7 @@ export default async function Home() {
           <h2 className="text-3xl font-bold">የቅርብ ጊዜ ጽሑፎች</h2>
           <Link
             href="/blog"
-            className="text-primary font-medium flex items-center gap-1 group/link hover:opacity-80 transition-opacity"
+            className="hidden md:flex text-primary font-medium items-center gap-1 group/link hover:opacity-80 transition-opacity"
           >
             ሁሉንም ተመልከት
             <svg

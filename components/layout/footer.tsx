@@ -8,18 +8,19 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 mt-20">
       <div className="container mx-auto px-6 py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-          {/* About Section */}
-          <div>
-            <h3 className="font-bold text-lg mb-4">{siteConfig.name}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              {siteConfig.descriptionAmharic}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
-              {siteConfig.work} - {siteConfig.author}
-            </p>
-          </div>
+        {/* About Section - Full width on mobile */}
+        <div className="mb-12 md:mb-0">
+          <h3 className="font-bold text-lg mb-4">{siteConfig.name}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {siteConfig.descriptionAmharic}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+            {siteConfig.work} - {siteConfig.author}
+          </p>
+        </div>
 
+        {/* Navigation and Connect - Side by side on mobile (50/50), part of 3-column grid on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-16">
           {/* Navigation Links */}
           <div>
             <h4 className="font-semibold mb-4">Navigation</h4>
@@ -76,6 +77,9 @@ export function Footer() {
               )}
             </div>
           </div>
+
+          {/* Empty third column for desktop layout alignment */}
+          <div className="hidden md:block"></div>
         </div>
 
         {/* Copyright */}
