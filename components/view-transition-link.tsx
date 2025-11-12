@@ -51,8 +51,16 @@ export function ViewTransitionLink({
       "startViewTransition" in document &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      (document as any).startViewTransition(() => {
+      // Mark this as a page transition (not theme transition)
+      document.documentElement.setAttribute('data-transition-type', 'page');
+
+      const transition = (document as any).startViewTransition(() => {
         router.push(targetUrl);
+      });
+
+      // Clean up the attribute after transition finishes
+      transition.finished.finally(() => {
+        document.documentElement.removeAttribute('data-transition-type');
       });
     } else {
       // Fallback to regular navigation

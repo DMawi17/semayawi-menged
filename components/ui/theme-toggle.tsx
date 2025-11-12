@@ -22,6 +22,9 @@ export function ThemeToggle() {
         Math.max(y, innerHeight - y)
       );
 
+      // Mark this as a theme transition (not page transition)
+      document.documentElement.setAttribute('data-transition-type', 'theme');
+
       const transition = (document as any).startViewTransition(async () => {
         setTheme(theme === "dark" ? "light" : "dark");
       });
@@ -41,6 +44,11 @@ export function ThemeToggle() {
           pseudoElement: '::view-transition-new(root)',
         }
       );
+
+      // Clean up the attribute after animation finishes
+      transition.finished.finally(() => {
+        document.documentElement.removeAttribute('data-transition-type');
+      });
     } else {
       // Fallback for browsers that don't support View Transitions
       setTheme(theme === "dark" ? "light" : "dark");
