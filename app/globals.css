@@ -2,21 +2,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* View Transitions API - Smooth Fade Effect */
-/* Keep header and footer static */
-header {
-  view-transition-name: header-persist;
-}
-
-footer {
-  view-transition-name: footer-persist;
-}
-
-/* Give main content its own transition name */
-main {
-  view-transition-name: main-content;
-}
-
 /* View Transitions API animations for supported browsers */
 /* Don't apply default animation to root - allow custom animations (like theme toggle) */
 ::view-transition-old(root) {
@@ -26,41 +11,6 @@ main {
 ::view-transition-new(root) {
   animation: none;
   /* Let JavaScript control the animation via clip-path for theme toggle */
-}
-
-/* Don't animate header and footer */
-::view-transition-old(header-persist),
-::view-transition-new(header-persist),
-::view-transition-old(footer-persist),
-::view-transition-new(footer-persist) {
-  animation: none;
-}
-
-/* Animate main content */
-::view-transition-old(main-content) {
-  animation: fade-out 0.3s ease-out;
-}
-
-::view-transition-new(main-content) {
-  animation: fade-in 0.3s ease-in;
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 /* Catppuccin Latte (Light Mode) */
