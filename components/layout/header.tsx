@@ -109,9 +109,10 @@ export function Header() {
 
         {/* Menu Content */}
         <div
-          className={`absolute right-0 h-full w-64 max-w-[80vw] bg-white dark:bg-gray-950 border-l border-gray-200 dark:border-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+          className={`absolute right-0 h-full w-64 max-w-[80vw] border-l border-gray-200 dark:border-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
             mobileMenuOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"
           }`}
+          style={{ backgroundColor: 'var(--background)' }}
         >
           <nav className="p-4 space-y-2">
             {siteConfig.navigation.map((item, index) => {
