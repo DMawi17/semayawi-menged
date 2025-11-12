@@ -93,9 +93,10 @@ export function Header() {
 
       {/* Mobile Navigation - Animated Drawer */}
       <div
-        className={`md:hidden fixed inset-0 top-16 z-40 overflow-hidden pointer-events-none ${
+        className={`md:hidden fixed inset-0 top-16 z-40 pointer-events-none ${
           mobileMenuOpen ? "pointer-events-auto" : ""
         }`}
+        style={{ overflowX: 'clip' }}
       >
         {/* Backdrop */}
         <div
