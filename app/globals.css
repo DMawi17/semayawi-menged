@@ -188,6 +188,73 @@ a:not(.no-accent):hover {
   }
 }
 
+/* Dark Theme Specific Styles */
+.dark {
+  /* Links - Beige color in dark mode */
+  a:not(.no-accent) {
+    color: #F5DEB3; /* Beige */
+  }
+
+  a:not(.no-accent):hover {
+    color: #F5DEB3;
+    opacity: 0.8;
+  }
+
+  /* Bold text - Coral color in dark mode */
+  strong, b, .prose strong, .prose b {
+    color: #DD7F68; /* Coral */
+  }
+
+  /* Blog Cards - Use card background instead of light beige */
+  article[style*="backgroundColor"] {
+    background-color: var(--card) !important;
+  }
+
+  /* Blog Tags - White text in dark mode */
+  .bg-secondary {
+    color: #ffffff !important;
+  }
+
+  /* Sidebar Table of Contents - Dark theme colors */
+  nav.sticky .border[style*="backgroundColor"] {
+    background-color: #10162A !important;
+  }
+
+  nav.sticky .border button {
+    color: #57949F; /* Font color */
+    transition: none; /* No animation */
+  }
+
+  nav.sticky .border button:hover {
+    background-color: #172649 !important; /* Hover background */
+    color: #3B82F6 !important; /* Hover font color */
+  }
+
+  nav.sticky .border button.text-primary {
+    color: #3B82F6 !important;
+  }
+
+  /* Sidebar icon and horizontal line */
+  nav.sticky .border .text-muted-foreground {
+    color: #ffffff !important;
+  }
+
+  nav.sticky .border .border-b {
+    border-color: #ffffff !important;
+  }
+
+  /* Navbar and Footer - Revert to proper dark backgrounds */
+  header.bg-muted {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
+
+  footer.bg-muted {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
+}
+
 /* Print Styles */
 @media print {
   header,
