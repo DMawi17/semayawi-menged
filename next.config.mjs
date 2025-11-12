@@ -2,14 +2,6 @@ import { createMDX } from "fumadocs-mdx/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	async rewrites() {
-		return [
-			{
-				source: '/cusdis-proxy/:path*',
-				destination: 'http://localhost:3001/:path*',
-			},
-		];
-	},
 	async headers() {
 		return [
 			{
@@ -35,13 +27,13 @@ const nextConfig = {
 						key: 'Content-Security-Policy',
 						value: [
 							"default-src 'self'",
-							"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cusdis-production-c9b7.up.railway.app https://vercel.live https://va.vercel-scripts.com",
-							"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cusdis-production-c9b7.up.railway.app",
+							"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cusdis.com https://vercel.live https://va.vercel-scripts.com",
+							"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cusdis.com",
 							"font-src 'self' https://fonts.gstatic.com",
 							"img-src 'self' data: https: blob:",
 							"media-src 'self' blob: data:",
-							"frame-src https://cusdis-production-c9b7.up.railway.app",
-							"connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://cusdis-production-c9b7.up.railway.app",
+							"frame-src https://cusdis.com",
+							"connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://cusdis.com",
 						].join('; '),
 					},
 				],
