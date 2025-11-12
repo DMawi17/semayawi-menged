@@ -44,28 +44,32 @@ html[data-transition-type='theme']::view-transition-new(root) {
   }
 }
 
-/* Catppuccin Latte (Light Mode) */
+/* Custom Theme - Light Mode */
 :root {
-  --background: #fafafa; /* Light gray matching header/footer */
-  --foreground: #4c4f69; /* Text */
+  --background: #EEE6DD; /* Body background - warm beige */
+  --foreground: #565279; /* Paragraph text, H1 - purple-gray */
   --card: #ffffff; /* White cards for contrast */
-  --card-foreground: #4c4f69; /* Text */
+  --card-foreground: #565279; /* Text on cards */
   --popover: #ffffff; /* White */
-  --popover-foreground: #4c4f69; /* Text */
-  --primary: #1e66f5; /* Blue */
-  --primary-foreground: #eff1f5; /* Base */
-  --secondary: #ccd0da; /* Surface0 */
-  --secondary-foreground: #4c4f69; /* Text */
-  --muted: #ccd0da; /* Surface0 */
-  --muted-foreground: #6c6f85; /* Subtext0 */
-  --accent: #ccd0da; /* Surface0 */
-  --accent-foreground: #4c4f69; /* Text */
-  --destructive: #d20f39; /* Red */
-  --destructive-foreground: #eff1f5; /* Base */
-  --border: #e5e7eb; /* Light border */
-  --input: #e5e7eb; /* Light input */
-  --ring: #1e66f5; /* Blue */
+  --popover-foreground: #565279; /* Text */
+  --primary: #DD7F68; /* Buttons & CTAs, H2 - coral */
+  --primary-foreground: #ffffff; /* White text on buttons */
+  --secondary: #B4637A; /* Tags & Categories, Bold text - mauve */
+  --secondary-foreground: #ffffff; /* Text on tags */
+  --muted: #DDD0C6; /* Header & Footer background - lighter beige */
+  --muted-foreground: #565279; /* Text on muted backgrounds */
+  --accent: #57949F; /* In-text links, H3 - teal */
+  --accent-foreground: #ffffff; /* Text on accent */
+  --destructive: #d20f39; /* Red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text */
+  --border: #DDD0C6; /* Borders - matches header/footer */
+  --input: #ffffff; /* Input backgrounds */
+  --ring: #57949F; /* Focus ring - teal */
   --radius: 0.5rem;
+
+  /* Custom heading colors */
+  --heading-h2: #DD7F68; /* H2 - coral */
+  --heading-h3: #57949F; /* H3 - teal */
 }
 
 /* Catppuccin Mocha (Dark Mode) */
@@ -89,6 +93,30 @@ html[data-transition-type='theme']::view-transition-new(root) {
   --border: #1e293b; /* Dark border */
   --input: #1e293b; /* Dark input */
   --ring: #89b4fa; /* Blue */
+}
+
+/* Custom heading and text styles */
+h2, .prose h2 {
+  color: var(--heading-h2);
+}
+
+h3, .prose h3 {
+  color: var(--heading-h3);
+}
+
+strong, b, .prose strong, .prose b {
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+/* Links inherit accent color */
+a:not(.no-accent) {
+  color: var(--accent);
+}
+
+a:not(.no-accent):hover {
+  color: var(--accent);
+  opacity: 0.8;
 }
 
 @theme inline {

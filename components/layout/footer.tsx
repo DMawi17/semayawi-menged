@@ -6,15 +6,15 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 mt-20">
+    <footer className="border-t border-border bg-muted mt-20">
       <div className="container mx-auto px-6 py-16 md:py-20">
         {/* About Section - Full width on mobile */}
         <div className="mb-12 md:mb-0">
           <h3 className="font-bold text-lg mb-4">{siteConfig.name}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {siteConfig.descriptionAmharic}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+          <p className="text-xs text-muted-foreground/70 mt-4">
             {siteConfig.work} - {siteConfig.author}
           </p>
         </div>
@@ -29,7 +29,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {item.nameAmharic}
                   </Link>
@@ -83,8 +83,8 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="mt-12 pt-8 border-t border-border text-center">
+          <p className="text-sm text-muted-foreground">
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
         </div>

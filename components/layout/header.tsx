@@ -29,7 +29,7 @@ export function Header() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-muted/95 backdrop-blur-md">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between min-w-0">
         {/* Logo */}
         <ViewTransitionLink
@@ -50,7 +50,7 @@ export function Header() {
                 className={`text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                   isActive
                     ? "text-primary"
-                    : "text-gray-600 dark:text-gray-400"
+                    : "text-muted-foreground"
                 }`}
               >
                 {item.nameAmharic}
@@ -125,7 +125,7 @@ export function Header() {
                   className={`block text-sm font-medium py-4 px-4 min-h-[44px] flex items-center rounded-lg transition-all duration-200 transform hover:scale-[1.02] ${
                     isActive
                       ? "bg-primary/10 text-primary shadow-sm"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                   style={{
                     animationDelay: `${index * 50}ms`,
