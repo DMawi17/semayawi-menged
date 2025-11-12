@@ -18,12 +18,14 @@ main {
 }
 
 /* View Transitions API animations for supported browsers */
+/* Don't apply default animation to root - allow custom animations (like theme toggle) */
 ::view-transition-old(root) {
-  animation: fade-out 0.3s ease-out;
+  animation: none;
 }
 
 ::view-transition-new(root) {
-  animation: fade-in 0.3s ease-in;
+  animation: none;
+  /* Let JavaScript control the animation via clip-path for theme toggle */
 }
 
 /* Don't animate header and footer */
@@ -160,19 +162,20 @@ main {
     transition-duration: 0.2s;
   }
 
-  /* Enhanced focus indicators for accessibility */
+  /* Enhanced focus indicators for accessibility - light grey border */
   *:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px #CCCCCC;
   }
 
-  /* Custom focus styles for specific elements */
+  /* Custom focus styles for specific elements - light grey border */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible,
   [role="combobox"]:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px #CCCCCC;
+    border-color: transparent;
   }
 }
 
