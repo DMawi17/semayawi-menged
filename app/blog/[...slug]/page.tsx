@@ -235,21 +235,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Tags and Actions Row */}
           <div className="flex items-center justify-between gap-4 mb-8 not-prose">
             {/* Tags - Last 2 on mobile, Last 5 on desktop */}
-            {post.data.tags && post.data.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 flex-1">
-                {post.data.tags.slice(-5).map((tag, index) => (
-                  <Link
-                    key={tag}
-                    href={`/tags/${encodeURIComponent(tag)}`}
-                    className={`inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors ${
-                      index < 3 ? 'hidden md:inline-flex' : ''
-                    }`}
-                  >
-                    {tag}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {post.data.tags && post.data.tags.length > 0 && (() => {
+              const last5Tags = post.data.tags.slice(-5);
+              return (
+                <div className="flex flex-wrap gap-2 flex-1">
+                  {last5Tags.map((tag, index) => (
+                    <Link
+                      key={tag}
+                      href={`/tags/${encodeURIComponent(tag)}`}
+                      className={`inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors ${
+                        index < last5Tags.length - 2 ? 'hidden md:inline-flex' : ''
+                      }`}
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              );
+            })()}
 
             {/* Bookmark Button */}
             <div className="shrink-0">

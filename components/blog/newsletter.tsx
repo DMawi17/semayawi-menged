@@ -92,13 +92,13 @@ export function Newsletter() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ኢሜልዎን ያስገቡ"
               required
-              className="flex-1 h-11 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full h-12 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:flex-1"
               disabled={status === "loading"}
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="h-11 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer w-full md:w-auto"
+              className="h-10 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer w-full md:w-auto"
             >
               {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
             </button>
