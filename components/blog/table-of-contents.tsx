@@ -72,7 +72,7 @@ export function TableOfContents() {
     <>
       {/* Desktop TOC - Sidebar */}
       <nav className="sticky top-24 hidden xl:block">
-        <div className="w-64 p-4 rounded-lg border bg-card">
+        <div className="w-64 p-4 rounded-lg border" style={{ backgroundColor: '#D9D7D2' }}>
           <div className="flex items-center gap-2 mb-4 pb-2 border-b">
             <List className="h-4 w-4 text-muted-foreground" />
             <h2 className="font-semibold text-sm">የጽሁፉ ይዘት</h2>
@@ -87,7 +87,7 @@ export function TableOfContents() {
                   } ${
                     activeId === heading.id
                       ? "text-primary bg-primary/10 font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      : "text-muted-foreground hover:text-white hover:bg-accent"
                   }`}
                 >
                   {heading.text}

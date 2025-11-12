@@ -242,7 +242,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Link
                     key={`mobile-${tag}`}
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-flex md:hidden items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                    className="inline-flex md:hidden items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-white hover:bg-secondary/80 transition-colors"
                   >
                     {tag}
                   </Link>
@@ -253,7 +253,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Link
                     key={`desktop-${tag}`}
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="hidden md:inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                    className="hidden md:inline-flex items-center rounded-md bg-secondary px-3 py-1 text-sm font-medium text-white hover:bg-secondary/80 transition-colors"
                   >
                     {tag}
                   </Link>

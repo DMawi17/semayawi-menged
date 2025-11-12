@@ -47,7 +47,7 @@ export function Header() {
               <ViewTransitionLink
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
+                className={`text-sm font-bold transition-colors hover:text-primary whitespace-nowrap ${
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground"

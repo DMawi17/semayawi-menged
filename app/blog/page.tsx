@@ -52,7 +52,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         {paginatedPosts.map((post) => (
           <article
             key={post.url}
-            className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
+            className="group overflow-hidden rounded-lg border transition-all hover:shadow-lg"
+            style={{ backgroundColor: '#D9D7D2' }}
           >
             <Link href={post.url}>
               {post.data.cover && (
@@ -84,7 +85,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     {post.data.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
+                        className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-white"
                       >
                         {tag}
                       </span>
