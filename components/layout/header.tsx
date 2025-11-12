@@ -93,14 +93,14 @@ export function Header() {
 
       {/* Mobile Navigation - Animated Drawer */}
       <div
-        className={`md:hidden fixed inset-0 top-16 z-40 transform transition-transform duration-300 ease-in-out ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        className={`md:hidden fixed inset-0 top-16 z-40 pointer-events-none ${
+          mobileMenuOpen ? "pointer-events-auto" : ""
         }`}
       >
         {/* Backdrop */}
         <div
           className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-            mobileMenuOpen ? "opacity-100" : "opacity-0"
+            mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           }`}
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
