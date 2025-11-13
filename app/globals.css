@@ -210,6 +210,11 @@ a:not(.no-accent):hover {
     background-color: var(--card) !important;
   }
 
+  /* Remove gradient from cards in dark mode */
+  article[style*="backgroundImage"] {
+    background-image: none !important;
+  }
+
   /* Blog Tags - White text in dark mode */
   .bg-secondary {
     color: #ffffff !important;
