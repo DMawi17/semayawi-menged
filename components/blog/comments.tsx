@@ -81,7 +81,16 @@ export function Comments() {
         script.src += `?t=${Date.now()}`;
       }
 
+      // Timeout mechanism - fail after 10 seconds
+      const timeoutId = setTimeout(() => {
+        if (!scriptLoaded) {
+          console.warn(`⏱️ Script loading timeout (attempt ${attempt}/3)`);
+          script.onerror?.(new Event('timeout') as any);
+        }
+      }, 10000);
+
       script.onload = () => {
+        clearTimeout(timeoutId);
         console.log("✅ Cusdis SDK loaded successfully");
         console.log("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
         setScriptLoaded(true);
@@ -90,8 +99,22 @@ export function Comments() {
       };
 
       script.onerror = (error) => {
-        console.error(`❌ Failed to load Cusdis SDK (attempt ${attempt}/3):`, error);
+        clearTimeout(timeoutId);
+
+        // Extract meaningful error information
+        const errorMsg = error instanceof ErrorEvent
+          ? error.message
+          : 'Network error or CORS issue';
+
+        console.error(`❌ Failed to load Cusdis SDK (attempt ${attempt}/3)`);
+        console.error("Error:", errorMsg);
         console.error("Script URL:", `${CUSDIS_CONFIG.host}/js/cusdis.es.js`);
+        console.error("Possible causes:", [
+          "1. Cusdis host is down or unreachable",
+          "2. CORS policy blocking the request",
+          "3. Network connectivity issues",
+          "4. Invalid host URL configuration"
+        ].join("\n"));
 
         // Remove failed script
         if (script.parentNode) {
@@ -101,11 +124,11 @@ export function Comments() {
         // Retry up to 3 times with exponential backoff
         if (attempt < 3) {
           const delay = attempt * 1000; // 1s, 2s
-          console.log(`Retrying in ${delay}ms...`);
+          console.log(`🔄 Retrying in ${delay}ms...`);
           setTimeout(() => loadScript(attempt + 1), delay);
         } else {
           // All retries failed
-          console.error("All retry attempts failed. Checking Railway deployment status...");
+          console.error("❌ All retry attempts failed. Checking Railway deployment status...");
           setLoadError(
             `Unable to connect to Cusdis at ${CUSDIS_CONFIG.host}. ` +
             `The deployment may be down or returning 403 Forbidden errors.`

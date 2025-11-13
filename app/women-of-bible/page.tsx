@@ -75,7 +75,7 @@ export default async function WomenOfBiblePage() {
 						return (
 							<article
 								key={post.url}
-								className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
+								className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
 							>
 								<Link href={post.url}>
 									{post.cover && (

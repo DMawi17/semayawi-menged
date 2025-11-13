@@ -205,7 +205,7 @@ a:not(.no-accent):hover {
     color: #DD7F68; /* Coral */
   }
 
-  /* Blog Cards - Use card background instead of light beige */
+  /* Blog Cards - Override inline backgroundColor with card background in dark mode */
   article[style*="backgroundColor"] {
     background-color: var(--card) !important;
   }
