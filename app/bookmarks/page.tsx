@@ -64,7 +64,7 @@ export default function BookmarksPage() {
           {bookmarks.length > 0 && (
             <button
               onClick={handleClearAll}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors text-sm font-medium cursor-pointer"
             >
               <Trash2 className="h-4 w-4" />
               <span className="hidden sm:inline">ሁሉንም ሰርዝ</span>
@@ -114,7 +114,7 @@ export default function BookmarksPage() {
 
                 <button
                   onClick={() => handleRemove(bookmark.url)}
-                  className="flex-shrink-0 h-11 w-11 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center justify-center cursor-pointer"
+                  className="flex-shrink-0 h-11 w-11 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors flex items-center justify-center cursor-pointer"
                   aria-label="Remove bookmark"
                   title="ምልክት አስወግድ"
                 >
