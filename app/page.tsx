@@ -46,7 +46,7 @@ export default async function Home() {
       {/* Hero Section with Featured Post */}
       {featuredPost && featuredPost.cover && (
         <section className="mb-16">
-          <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
+          <h2 className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
             የተመረጠ ጽሁፍ
           </h2>
           <div className="[&>a>div]:h-[350px] [&>a>div]:sm:h-[450px] [&>a>div]:md:h-[600px]">
