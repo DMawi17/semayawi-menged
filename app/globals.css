@@ -269,6 +269,11 @@ a:not(.no-accent):hover {
   color: var(--primary-foreground) !important;
 }
 
+/* Blog Tags - White text in BOTH light and dark modes */
+.bg-secondary {
+  color: #ffffff !important;
+}
+
 /* Print Styles */
 @media print {
   header,
