@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cusdis-postgres
+    environment:
+      POSTGRES_DB: cusdis
+      POSTGRES_USER: cusdis
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data_v2:/var/lib/postgresql/data
+    networks:
+      - cusdis-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cusdis"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cusdis:
+    image: djyde/cusdis:latest
+    container_name: cusdis
+    environment:
+      USERNAME: ${ADMIN_USERNAME}
+      PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      NEXTAUTH_SECRET: ${JWT_SECRET}
+      DB_TYPE: pgsql
+      NEXTAUTH_URL: http://localhost:3001
+      NEXTAUTH_URL_INTERNAL: http://cusdis:3000
+      HOST: 0.0.0.0
+      PORT: 3000
+      # Optional: Email notifications
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SENDER: ${SMTP_SENDER:-}
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cusdis-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data_v2:
+    driver: local
+
+networks:
+  cusdis-network:
+    driver: bridge

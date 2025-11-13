@@ -9,9 +9,6 @@ declare global {
   var rateLimitCleanupInterval: NodeJS.Timeout | undefined;
 }
 
-// Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // WARNING: In-memory storage - NOT suitable for production!
 // Use a database (PostgreSQL, MongoDB) or Vercel KV in production
 // Current limitations:
@@ -117,6 +114,9 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Initialize Resend with API key inside the function
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Add to subscribers set first (in production, save to database)
     // Check subscriber limit to prevent unbounded growth

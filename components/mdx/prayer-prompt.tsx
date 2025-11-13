@@ -25,11 +25,7 @@ export function PrayerPrompt({ children }: PrayerPromptProps) {
           </div>
           <button
             onClick={() => setPrayed(!prayed)}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              prayed
-                ? 'bg-pink-600 text-white'
-                : 'bg-white dark:bg-gray-800 text-pink-600 border-2 border-pink-600 hover:bg-pink-50'
-            }`}
+            className="px-4 py-2 rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             {prayed ? '🙏 ጸልያለሁ' : 'ጸሎት ያስፈልጋል'}
           </button>

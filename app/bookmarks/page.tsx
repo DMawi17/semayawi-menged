@@ -46,28 +46,32 @@ export default function BookmarksPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8">
+        {/* Line 1: Title + Icon */}
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Bookmark className="h-6 w-6 text-primary" />
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Bookmark className="h-5 w-5 md:h-6 md:w-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold">የተቀመጡ ጽሑፎች</h1>
-            <p className="text-muted-foreground">
-              {bookmarks.length} {bookmarks.length === 1 ? "ጽሁፍ" : "ጽሑፎች"}
-            </p>
-          </div>
+          <h1 className="text-xl md:text-3xl font-bold">የተቀመጡ ጽሑፎች</h1>
         </div>
 
-        {bookmarks.length > 0 && (
-          <button
-            onClick={handleClearAll}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive text-destructive bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors text-sm font-medium cursor-pointer"
-          >
-            <Trash2 className="h-4 w-4" />
-            ሁሉንም ሰርዝ
-          </button>
-        )}
+        {/* Line 2: Item count + Delete All button */}
+        <div className="flex items-center justify-between">
+          <p className="text-sm md:text-base text-muted-foreground">
+            {bookmarks.length} {bookmarks.length === 1 ? "ጽሁፍ" : "ጽሑፎች"}
+          </p>
+
+          {bookmarks.length > 0 && (
+            <button
+              onClick={handleClearAll}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors text-sm font-medium cursor-pointer"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">ሁሉንም ሰርዝ</span>
+              <span className="sm:hidden">ሰርዝ</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Empty State */}
@@ -93,14 +97,14 @@ export default function BookmarksPage() {
           {bookmarks.map((bookmark) => (
             <div
               key={bookmark.url}
-              className="group relative rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
+              className="group relative rounded-lg border bg-card p-6 hover:shadow-md transition-shadow [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
             >
               <div className="flex items-start justify-between gap-4">
                 <Link
                   href={bookmark.url}
                   className="flex-1 min-w-0"
                 >
-                  <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  <h2 className="text-base md:text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
                     {bookmark.title}
                   </h2>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -110,7 +114,7 @@ export default function BookmarksPage() {
 
                 <button
                   onClick={() => handleRemove(bookmark.url)}
-                  className="flex-shrink-0 h-11 w-11 rounded-lg border border-destructive text-destructive bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center justify-center cursor-pointer"
+                  className="flex-shrink-0 h-11 w-11 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors flex items-center justify-center cursor-pointer"
                   aria-label="Remove bookmark"
                   title="ምልክት አስወግድ"
                 >
@@ -141,7 +145,7 @@ export default function BookmarksPage() {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          ወደ ብሎግ ተመለስ
+          ወደ ብሎግ ይመለሱ
         </Link>
       </div>
     </div>

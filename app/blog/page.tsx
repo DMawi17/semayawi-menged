@@ -52,7 +52,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         {paginatedPosts.map((post) => (
           <article
             key={post.url}
-            className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
+            className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
           >
             <Link href={post.url}>
               {post.data.cover && (
@@ -67,9 +67,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 </div>
               )}
               <div className="p-5">
-                <h2 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                   {post.data.title}
-                </h2>
+                </h3>
                 {post.data.description && (
                   <p className="text-muted-foreground text-sm mb-3 line-clamp-3">
                     {post.data.description}
@@ -84,7 +84,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     {post.data.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
+                        className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-white"
                       >
                         {tag}
                       </span>

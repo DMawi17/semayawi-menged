@@ -2,47 +2,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* View Transitions API - Smooth Fade Effect */
-/* Keep header and footer static */
-header {
-  view-transition-name: header-persist;
-}
-
-footer {
-  view-transition-name: footer-persist;
-}
-
-/* Give main content its own transition name */
-main {
-  view-transition-name: main-content;
-}
-
 /* View Transitions API animations for supported browsers */
-::view-transition-old(root) {
+
+/* Page Navigation Transitions - Smooth fade effect */
+html[data-transition-type='page']::view-transition-old(root) {
   animation: fade-out 0.3s ease-out;
 }
 
-::view-transition-new(root) {
+html[data-transition-type='page']::view-transition-new(root) {
   animation: fade-in 0.3s ease-in;
 }
 
-/* Don't animate header and footer */
-::view-transition-old(header-persist),
-::view-transition-new(header-persist),
-::view-transition-old(footer-persist),
-::view-transition-new(footer-persist) {
+/* Theme Toggle Transitions - No default animation (JS controls via clip-path) */
+html[data-transition-type='theme']::view-transition-old(root),
+html[data-transition-type='theme']::view-transition-new(root) {
   animation: none;
 }
 
-/* Animate main content */
-::view-transition-old(main-content) {
-  animation: fade-out 0.3s ease-out;
+/* Fallback: No animation if type not specified */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
 }
 
-::view-transition-new(main-content) {
-  animation: fade-in 0.3s ease-in;
-}
-
+/* Keyframes for fade animations */
 @keyframes fade-out {
   from {
     opacity: 1;
@@ -61,28 +44,32 @@ main {
   }
 }
 
-/* Catppuccin Latte (Light Mode) */
+/* Custom Theme - Light Mode */
 :root {
-  --background: #fafafa; /* Light gray matching header/footer */
-  --foreground: #4c4f69; /* Text */
+  --background: #EEE6DD; /* Body background - warm beige */
+  --foreground: #565279; /* Paragraph text, H1 - purple-gray */
   --card: #ffffff; /* White cards for contrast */
-  --card-foreground: #4c4f69; /* Text */
+  --card-foreground: #565279; /* Text on cards */
   --popover: #ffffff; /* White */
-  --popover-foreground: #4c4f69; /* Text */
-  --primary: #1e66f5; /* Blue */
-  --primary-foreground: #eff1f5; /* Base */
-  --secondary: #ccd0da; /* Surface0 */
-  --secondary-foreground: #4c4f69; /* Text */
-  --muted: #ccd0da; /* Surface0 */
-  --muted-foreground: #6c6f85; /* Subtext0 */
-  --accent: #ccd0da; /* Surface0 */
-  --accent-foreground: #4c4f69; /* Text */
-  --destructive: #d20f39; /* Red */
-  --destructive-foreground: #eff1f5; /* Base */
-  --border: #e5e7eb; /* Light border */
-  --input: #e5e7eb; /* Light input */
-  --ring: #1e66f5; /* Blue */
+  --popover-foreground: #565279; /* Text */
+  --primary: #DD7F68; /* Buttons & CTAs, H2 - coral */
+  --primary-foreground: #ffffff; /* White text on buttons - LIGHT THEME */
+  --secondary: #B4637A; /* Tags & Categories, Bold text - mauve */
+  --secondary-foreground: #ffffff; /* Text on tags */
+  --muted: #DDD0C6; /* Header & Footer background - lighter beige */
+  --muted-foreground: #565279; /* Text on muted backgrounds */
+  --accent: #57949F; /* In-text links, H3 - teal */
+  --accent-foreground: #ffffff; /* Text on accent */
+  --destructive: #d20f39; /* Red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text */
+  --border: #DDD0C6; /* Borders - matches header/footer */
+  --input: #ffffff; /* Input backgrounds */
+  --ring: #57949F; /* Focus ring - teal */
   --radius: 0.5rem;
+
+  /* Custom heading colors */
+  --heading-h2: #DD7F68; /* H2 - coral */
+  --heading-h3: #57949F; /* H3 - teal */
 }
 
 /* Catppuccin Mocha (Dark Mode) */
@@ -94,7 +81,7 @@ main {
   --popover: #0f172a; /* Slightly lighter */
   --popover-foreground: #cdd6f4; /* Text */
   --primary: #89b4fa; /* Blue */
-  --primary-foreground: #1e1e2e; /* Base */
+  --primary-foreground: #1e1e2e; /* Dark text on buttons - DARK THEME */
   --secondary: #313244; /* Surface0 */
   --secondary-foreground: #cdd6f4; /* Text */
   --muted: #313244; /* Surface0 */
@@ -106,6 +93,30 @@ main {
   --border: #1e293b; /* Dark border */
   --input: #1e293b; /* Dark input */
   --ring: #89b4fa; /* Blue */
+}
+
+/* Custom heading and text styles */
+h2, .prose h2 {
+  color: var(--heading-h2);
+}
+
+h3, .prose h3 {
+  color: var(--heading-h3);
+}
+
+strong, b, .prose strong, .prose b {
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+/* Links inherit accent color */
+a:not(.no-accent) {
+  color: var(--accent);
+}
+
+a:not(.no-accent):hover {
+  color: var(--accent);
+  opacity: 0.8;
 }
 
 @theme inline {
@@ -160,20 +171,107 @@ main {
     transition-duration: 0.2s;
   }
 
-  /* Enhanced focus indicators for accessibility */
+  /* Enhanced focus indicators for accessibility - light grey border */
   *:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px #CCCCCC;
   }
 
-  /* Custom focus styles for specific elements */
+  /* Custom focus styles for specific elements - light grey border */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible,
   [role="combobox"]:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px #CCCCCC;
+    border-color: transparent;
   }
+}
+
+/* Dark Theme Specific Styles */
+.dark {
+  /* Links - Beige color in dark mode */
+  a:not(.no-accent) {
+    color: #F5DEB3; /* Beige */
+  }
+
+  a:not(.no-accent):hover {
+    color: #F5DEB3;
+    opacity: 0.8;
+  }
+
+  /* Bold text - Coral color in dark mode */
+  strong, b, .prose strong, .prose b {
+    color: #DD7F68; /* Coral */
+  }
+
+  /* Blog Cards - Use card background instead of light beige */
+  article[style*="backgroundColor"] {
+    background-color: var(--card) !important;
+  }
+
+  /* Blog Tags - White text in dark mode */
+  .bg-secondary {
+    color: #ffffff !important;
+  }
+
+  /* Buttons - Ensure dark text on primary background */
+  .bg-primary {
+    color: #1e1e2e !important; /* Dark text */
+  }
+
+  /* Sidebar Table of Contents - Dark theme colors */
+  nav.sticky .border[style*="backgroundColor"] {
+    background-color: #10162A !important;
+  }
+
+  nav.sticky .border button {
+    color: #57949F; /* Font color */
+    transition: none; /* No animation */
+  }
+
+  nav.sticky .border button:hover {
+    background-color: #172649 !important; /* Hover background */
+    color: #3B82F6 !important; /* Hover font color */
+  }
+
+  nav.sticky .border button.text-primary {
+    color: #3B82F6 !important;
+  }
+
+  /* Sidebar icon and horizontal line */
+  nav.sticky .border .text-muted-foreground {
+    color: #ffffff !important;
+  }
+
+  nav.sticky .border .border-b {
+    border-color: #ffffff !important;
+  }
+
+  /* Navbar and Footer - Revert to proper dark backgrounds */
+  header.bg-muted {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
+
+  footer.bg-muted {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
+}
+
+/* Light Theme Button Text - Ensure white text */
+.bg-primary {
+  color: #ffffff !important;
+}
+
+.text-primary-foreground {
+  color: var(--primary-foreground) !important;
+}
+
+/* Blog Tags - White text in BOTH light and dark modes */
+.bg-secondary {
+  color: #ffffff !important;
 }
 
 /* Print Styles */
@@ -226,14 +324,44 @@ main {
   }
 }
 
-/* Giscus Comments Styles */
-.giscus-container {
+/* Cusdis Comments Styles */
+.cusdis-container {
   width: 100%;
 }
 
-.giscus-container iframe.giscus-frame {
+#cusdis_thread {
+  width: 100% !important;
+}
+
+#cusdis_thread iframe {
   width: 100% !important;
   border: none !important;
-  pointer-events: auto !important;
-  z-index: 1 !important;
+  min-height: 300px;
+  background: transparent;
+  border-radius: 0.5rem;
+}
+
+/* Ensure Cusdis widget matches theme */
+#cusdis_thread[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+#cusdis_thread[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Improve Cusdis form styling within iframe */
+#cusdis_thread iframe body {
+  font-family: var(--font-sans) !important;
+}
+
+/* Additional styling to blend with the blog theme */
+.cusdis-container {
+  margin-top: 1rem;
+}
+
+/* Ensure proper spacing and alignment */
+#cusdis_thread {
+  display: block;
+  overflow: hidden;
 }

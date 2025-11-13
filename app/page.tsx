@@ -46,7 +46,7 @@ export default async function Home() {
       {/* Hero Section with Featured Post */}
       {featuredPost && featuredPost.cover && (
         <section className="mb-16">
-          <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
+          <h2 className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">
             የተመረጠ ጽሁፍ
           </h2>
           <div className="[&>a>div]:h-[350px] [&>a>div]:sm:h-[450px] [&>a>div]:md:h-[600px]">
@@ -82,7 +82,7 @@ export default async function Home() {
           <h2 className="text-3xl font-bold">የቅርብ ጊዜ ጽሑፎች</h2>
           <Link
             href="/blog"
-            className="text-primary font-medium flex items-center gap-1 group/link hover:opacity-80 transition-opacity"
+            className="hidden md:flex text-primary font-medium items-center gap-1 group/link hover:opacity-80 transition-opacity"
           >
             ሁሉንም ተመልከት
             <svg
@@ -109,7 +109,7 @@ export default async function Home() {
             return (
               <article
                 key={post.url}
-                className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
+                className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
               >
                 <Link href={post.url}>
                   {post.cover && (

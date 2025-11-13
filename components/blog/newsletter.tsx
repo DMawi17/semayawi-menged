@@ -76,29 +76,29 @@ export function Newsletter() {
 
   return (
     <div className="mt-12 p-6 rounded-lg border bg-gradient-to-br from-primary/5 to-primary/10">
-      <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+      <div className="flex flex-col md:flex-row md:items-start gap-4">
+        <div className="flex-shrink-0 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto md:mx-0">
           <Mail className="h-6 w-6 text-primary" />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 text-center md:text-left">
           <h3 className="font-bold text-lg mb-2">አዲስ ጽሁፎችን ይቀበሉ</h3>
           <p className="text-sm text-muted-foreground mb-4">
             የመጽሐፍ ቅዱስ ጥናቶችን እና አዲስ ጽሁፎችን በቀጥታ ወደ ኢሜልዎ ይቀበሉ።
           </p>
-          <form onSubmit={handleSubmit} className="flex gap-2">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ኢሜልዎን ያስገቡ"
               required
-              className="flex-1 h-11 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full h-12 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               disabled={status === "loading"}
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="h-11 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="h-10 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer w-full"
             >
               {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
             </button>
