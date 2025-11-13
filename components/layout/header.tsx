@@ -34,7 +34,7 @@ export function Header() {
 				{/* Logo */}
 				<ViewTransitionLink
 					href="/"
-					className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white bg-clip-text text-transparent"
+					className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white [background-clip:text] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-transparent"
 				>
 					{siteConfig.name}
 				</ViewTransitionLink>
@@ -50,8 +50,8 @@ export function Header() {
 							<ViewTransitionLink
 								key={item.href}
 								href={item.href}
-								className={`text-sm font-bold transition-colors hover:opacity-80 whitespace-nowrap ${
-									isActive ? "text-primary" : ""
+								className={`no-accent text-sm font-bold transition-colors hover:opacity-80 whitespace-nowrap ${
+									isActive ? "text-primary" : "text-foreground"
 								}`}
 							>
 								{item.nameAmharic}
