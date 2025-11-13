@@ -168,7 +168,7 @@ export default async function Home() {
         </p>
         <Link
           href="/about"
-          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-foreground transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
+          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
         >
           ተጨማሪ ያንብቡ
         </Link>

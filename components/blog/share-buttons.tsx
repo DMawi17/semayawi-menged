@@ -83,7 +83,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
         {supportsNativeShare ? (
           <button
             onClick={handleNativeShare}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#fe640b] dark:bg-amber-600 text-white rounded-lg font-semibold h-9 hover:opacity-90 transition-opacity cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-semibold h-9 hover:bg-primary/90 transition-colors cursor-pointer"
             aria-label="Share"
             title="Share"
           >
@@ -91,7 +91,7 @@ export function ShareButtons({ title, url, description }: ShareButtonsProps) {
             <span>ያጋሩ</span>
           </button>
         ) : (
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#fe640b] dark:bg-amber-600 text-white rounded-lg font-semibold h-9">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-semibold h-9">
             <Share2 className="h-4 w-4" />
             <span>ያጋሩ</span>
           </div>

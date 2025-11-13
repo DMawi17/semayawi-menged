@@ -34,7 +34,7 @@ export function ScrollToTop() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 p-4 bg-[#fe640b] hover:bg-[#e55100] dark:bg-amber-600 dark:hover:bg-amber-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50"
+          className="fixed bottom-8 right-8 p-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50"
           title="ወደ ላይ ተመለስ"
           aria-label="Scroll to top"
         >
