@@ -109,7 +109,7 @@ export default async function Home() {
             return (
               <article
                 key={post.url}
-                className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg"
+                className="group overflow-hidden rounded-lg border bg-gradient-to-br from-[#EDDFD6]/30 to-[#EDDFD6]/60 dark:bg-card transition-all hover:shadow-lg"
               >
                 <Link href={post.url}>
                   {post.cover && (
@@ -168,7 +168,7 @@ export default async function Home() {
         </p>
         <Link
           href="/about"
-          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
+          className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-foreground transition-colors hover:bg-primary/90 shadow-lg shadow-primary/25"
         >
           ተጨማሪ ያንብቡ
         </Link>
