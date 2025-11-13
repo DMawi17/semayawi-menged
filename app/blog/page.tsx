@@ -67,9 +67,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 </div>
               )}
               <div className="p-5">
-                <h2 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300">
                   {post.data.title}
-                </h2>
+                </h3>
                 {post.data.description && (
                   <p className="text-muted-foreground text-sm mb-3 line-clamp-3">
                     {post.data.description}
