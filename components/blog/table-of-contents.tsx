@@ -72,7 +72,7 @@ export function TableOfContents() {
     <>
       {/* Desktop TOC - Sidebar */}
       <nav className="sticky top-24 hidden xl:block">
-        <div className="w-64 p-4 rounded-lg border bg-card [background-image:linear-gradient(to_bottom_right,rgb(237_223_214/0.3),rgb(237_223_214/0.6))] dark:[background-image:none]">
+        <div className="w-64 p-4 rounded-lg border bg-card [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]">
           <div className="flex items-center gap-2 mb-4 pb-2 border-b">
             <List className="h-4 w-4 text-muted-foreground" />
             <h2 className="font-semibold text-sm">የጽሁፉ ይዘት</h2>
