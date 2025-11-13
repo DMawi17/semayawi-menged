@@ -85,7 +85,7 @@ export function Newsletter() {
           <p className="text-sm text-muted-foreground mb-4">
             የመጽሐፍ ቅዱስ ጥናቶችን እና አዲስ ጽሁፎችን በቀጥታ ወደ ኢሜልዎ ይቀበሉ።
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <input
               type="email"
               value={email}
