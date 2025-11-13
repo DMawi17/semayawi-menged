@@ -97,7 +97,7 @@ export default function BookmarksPage() {
           {bookmarks.map((bookmark) => (
             <div
               key={bookmark.url}
-              className="group relative rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
+              className="group relative rounded-lg border bg-card p-6 hover:shadow-md transition-shadow [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
             >
               <div className="flex items-start justify-between gap-4">
                 <Link
