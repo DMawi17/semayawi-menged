@@ -109,7 +109,7 @@ export default async function Home() {
             return (
               <article
                 key={post.url}
-                className="group overflow-hidden rounded-lg border bg-gradient-to-br from-[#EDDFD6]/30 to-[#EDDFD6]/60 dark:bg-card transition-all hover:shadow-lg"
+                className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg [background-image:linear-gradient(to_bottom_right,rgb(237_223_214/0.3),rgb(237_223_214/0.6))] dark:[background-image:none]"
               >
                 <Link href={post.url}>
                   {post.cover && (
