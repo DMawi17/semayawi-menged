@@ -75,9 +75,9 @@ export default async function WomenOfBiblePage() {
 						return (
 							<article
 								key={post.url}
-								className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg dark:bg-card"
+								className="group overflow-hidden rounded-lg border transition-all hover:shadow-lg dark:bg-card"
 								style={{
-									backgroundImage: 'linear-gradient(to bottom right, rgba(237, 223, 214, 0.3), rgba(237, 223, 214, 0.6))'
+									backgroundColor: '#EDDFD6'
 								}}
 							>
 								<Link href={post.url}>
