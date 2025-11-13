@@ -75,10 +75,7 @@ export default async function MenOfBiblePage() {
 						return (
 							<article
 								key={post.url}
-								className="group overflow-hidden rounded-lg border transition-all hover:shadow-lg dark:bg-card"
-								style={{
-									backgroundColor: '#EDDFD6'
-								}}
+								className="group overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg [background-image:linear-gradient(to_bottom_right,rgba(237,223,214,0.3),rgba(237,223,214,0.6))] dark:[background-image:none]"
 							>
 								<Link href={post.url}>
 									{post.cover && (
