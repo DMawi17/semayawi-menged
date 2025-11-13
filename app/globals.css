@@ -53,7 +53,7 @@ html[data-transition-type='theme']::view-transition-new(root) {
   --popover: #ffffff; /* White */
   --popover-foreground: #565279; /* Text */
   --primary: #DD7F68; /* Buttons & CTAs, H2 - coral */
-  --primary-foreground: #ffffff; /* White text on buttons */
+  --primary-foreground: #ffffff; /* White text on buttons - LIGHT THEME */
   --secondary: #B4637A; /* Tags & Categories, Bold text - mauve */
   --secondary-foreground: #ffffff; /* Text on tags */
   --muted: #DDD0C6; /* Header & Footer background - lighter beige */
@@ -81,7 +81,7 @@ html[data-transition-type='theme']::view-transition-new(root) {
   --popover: #0f172a; /* Slightly lighter */
   --popover-foreground: #cdd6f4; /* Text */
   --primary: #89b4fa; /* Blue */
-  --primary-foreground: #1e1e2e; /* Base */
+  --primary-foreground: #1e1e2e; /* Dark text on buttons - DARK THEME */
   --secondary: #313244; /* Surface0 */
   --secondary-foreground: #cdd6f4; /* Text */
   --muted: #313244; /* Surface0 */
@@ -215,6 +215,11 @@ a:not(.no-accent):hover {
     color: #ffffff !important;
   }
 
+  /* Buttons - Ensure dark text on primary background */
+  .bg-primary {
+    color: #1e1e2e !important; /* Dark text */
+  }
+
   /* Sidebar Table of Contents - Dark theme colors */
   nav.sticky .border[style*="backgroundColor"] {
     background-color: #10162A !important;
@@ -253,6 +258,15 @@ a:not(.no-accent):hover {
     background-color: var(--background) !important;
     border-color: var(--border) !important;
   }
+}
+
+/* Light Theme Button Text - Ensure white text */
+.bg-primary {
+  color: #ffffff !important;
+}
+
+.text-primary-foreground {
+  color: var(--primary-foreground) !important;
 }
 
 /* Print Styles */
