@@ -38,7 +38,7 @@ export function Header() {
 				{/* Logo */}
 				<ViewTransitionLink
 					href="/"
-					className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white [background-clip:text] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-transparent"
+					className="text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity bg-gradient-to-r from-gray-700 via-gray-500 to-gray-700 dark:from-white dark:via-gray-400 dark:to-white [background-clip:text] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-transparent"
 				>
 					{siteConfig.name}
 				</ViewTransitionLink>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { Github, Twitter, Globe } from "lucide-react";
+import { Github, Twitter, Globe, Mail } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -73,6 +73,15 @@ export function Footer() {
                 >
                   <Twitter className="h-4 w-4" />
                   <span>Twitter</span>
+                </a>
+              )}
+              {siteConfig.links.email && (
+                <a
+                  href={`mailto:${siteConfig.links.email}`}
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>Email</span>
                 </a>
               )}
             </div>

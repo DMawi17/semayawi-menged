@@ -24,12 +24,13 @@ export const siteConfig = {
     twitter: "https://twitter.com",
     github: "https://github.com/DMawi17",
     personalSite: "https://mawi17.netlify.app/",
+    email: "contact@example.com",
   },
   navigation: [
     { name: "Home", nameAmharic: "🏠 ዋና ገጽ", href: "/" },
     { name: "Blog", nameAmharic: "📝 ጽሁፎች", href: "/blog" },
     { name: "Bookmarks", nameAmharic: "🔖 የተቀመጡ", href: "/bookmarks" },
-    { name: "About", nameAmharic: "ℹ️ ስለ እኛ", href: "/about" },
+    { name: "About", nameAmharic: "🙋 ስለ እኛ", href: "/about" },
   ],
 };
 
