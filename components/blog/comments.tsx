@@ -50,7 +50,7 @@ export function Comments() {
       return;
     }
 
-    // Set Amharic locale
+    // Set Amharic locale - Updated 2025-11-18
     window.CUSDIS_LOCALE = {
       powered_by: 'አስተያየቶች በ Cusdis የቀረቡ ናቸው',
       post_comment: 'አስተያየት ይስጡ',
