@@ -52,14 +52,9 @@ export function FilterBar({ postCount }: FilterBarProps) {
               onClick={() => setCategoryFilter(category.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 categoryFilter === category.id
-                  ? "text-white"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
-              style={
-                categoryFilter === category.id
-                  ? { backgroundColor: category.color }
-                  : undefined
-              }
             >
               {category.icon} {category.nameAmharic} (
               {postCount.byCategory[category.id] || 0})

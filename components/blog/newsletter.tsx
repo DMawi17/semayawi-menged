@@ -85,14 +85,14 @@ export function Newsletter() {
           <p className="text-sm text-muted-foreground mb-4">
             የመጽሐፍ ቅዱስ ጥናቶችን እና አዲስ ጽሁፎችን በቀጥታ ወደ ኢሜልዎ ይቀበሉ።
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ኢሜልዎን ያስገቡ"
               required
-              className="w-full h-12 px-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full h-12 px-3 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               disabled={status === "loading"}
             />
             <button

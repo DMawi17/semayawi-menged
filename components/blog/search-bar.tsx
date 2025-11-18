@@ -44,7 +44,7 @@ export function SearchBar() {
           placeholder="ጽሑፍ ይፈልጉ..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full h-10 pl-10 pr-10 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          className="w-full h-10 pl-10 pr-10 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
         />
         {searchQuery && (
           <button
