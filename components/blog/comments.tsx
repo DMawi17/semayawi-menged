@@ -253,7 +253,7 @@ export function Comments() {
           <MessageSquare className="h-6 w-6" />
           አስተያየቶች
         </h2>
-        <div className="rounded-lg border bg-card p-6">
+        <div className="rounded-lg">
           {loadError && (
             <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-lg">
               <p className="font-semibold">⚠️ Error Loading Comments</p>
