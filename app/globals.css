@@ -183,20 +183,18 @@ a:not(.no-accent):hover {
     transition-duration: 0.2s;
   }
 
-  /* Enhanced focus indicators for accessibility - light grey border */
+  /* Enhanced focus indicators for accessibility */
   *:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #CCCCCC;
   }
 
-  /* Custom focus styles for specific elements - light grey border */
+  /* Custom focus styles for specific elements - border color change */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible,
   [role="combobox"]:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #CCCCCC;
-    border-color: transparent;
+    border-color: hsl(var(--primary) / 0.5);
   }
 }
 
