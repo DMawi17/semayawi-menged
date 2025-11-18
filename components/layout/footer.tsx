@@ -8,10 +8,10 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-muted mt-20">
       <div className="container mx-auto px-6 py-16 md:py-20">
-        {/* All sections in grid - mobile: stacked, desktop: 3 columns in one row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-          {/* About Section */}
-          <div>
+        {/* All sections in grid - mobile: About full, Nav+Connect side by side; desktop: flex with space around */}
+        <div className="grid grid-cols-2 gap-8 md:flex md:justify-around">
+          {/* About Section - full width on mobile */}
+          <div className="col-span-2">
             <h3 className="font-bold text-lg mb-4">{siteConfig.name}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {siteConfig.descriptionAmharic}

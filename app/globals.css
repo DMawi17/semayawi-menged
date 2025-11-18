@@ -152,21 +152,22 @@ a:not(.no-accent):hover {
   }
 
   html {
-    overflow-y: scroll !important; /* Force scrollbar to always be visible to prevent layout shift */
+    overflow-y: scroll; /* Force scrollbar to always be visible to prevent layout shift */
   }
 
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
-    /* Prevent Radix UI from hiding overflow and causing page shift */
-    overflow-y: scroll !important;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
   }
 
   /* Prevent Radix UI scroll lock from shifting page */
   html[data-scroll-locked] {
     overflow-y: scroll !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  body[data-scroll-locked] {
     margin-right: 0 !important;
     padding-right: 0 !important;
   }

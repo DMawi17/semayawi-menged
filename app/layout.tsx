@@ -27,6 +27,7 @@ const agbalumo = Agbalumo({
   variable: "--font-agbalumo",
   weight: "400",
   display: "swap",
+  preload: false, // Only used on specific pages, not globally
 });
 
 export const metadata: Metadata = {

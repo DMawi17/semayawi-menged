@@ -19,17 +19,21 @@ export function Header() {
 	// Prevent body scroll when mobile menu is open
 	useEffect(() => {
 		if (mobileMenuOpen) {
+			// Use position fixed on html to prevent scroll while keeping sticky working
+			document.documentElement.style.overflow = "hidden";
 			document.body.style.overflow = "hidden";
 		} else {
-			document.body.style.overflow = "unset";
+			document.documentElement.style.overflow = "";
+			document.body.style.overflow = "";
 		}
 		return () => {
-			document.body.style.overflow = "unset";
+			document.documentElement.style.overflow = "";
+			document.body.style.overflow = "";
 		};
 	}, [mobileMenuOpen]);
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-border bg-muted/80 backdrop-blur-md">
+		<header className={`${mobileMenuOpen ? 'fixed' : 'sticky'} top-0 z-50 w-full border-b border-border bg-muted md:bg-muted/70 md:backdrop-blur-md`}>
 			<nav className="container mx-auto px-4 h-16 flex items-center justify-between min-w-0">
 				{/* Logo */}
 				<ViewTransitionLink

@@ -11,6 +11,10 @@ const CUSDIS_CONFIG = {
   host: process.env.NEXT_PUBLIC_CUSDIS_HOST || "https://cusdis.com",
 };
 
+// Check if we're in development and using a proxy (which won't work locally)
+const isDev = process.env.NODE_ENV === "development";
+const isUsingProxy = CUSDIS_CONFIG.host.startsWith("/");
+
 // Extend window type for Cusdis
 declare global {
   interface Window {
@@ -45,6 +49,13 @@ export function Comments() {
   // Load Cusdis script once with retry logic
   useEffect(() => {
     if (!isConfigured) return;
+
+    // Skip loading in development when using proxy (won't work locally)
+    if (isDev && isUsingProxy) {
+      console.log("⏭️ Skipping Cusdis in development (proxy only works in production)");
+      return;
+    }
+
     if (document.getElementById("cusdis-sdk")) {
       setScriptLoaded(true);
       return;
