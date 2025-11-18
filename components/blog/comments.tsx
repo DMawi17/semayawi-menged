@@ -53,17 +53,29 @@ export function Comments() {
     // Set Amharic locale
     window.CUSDIS_LOCALE = {
       powered_by: 'አስተያየቶች በ Cusdis የቀረቡ ናቸው',
-      post_comment: 'ላክ',
+      post_comment: 'አስተያየት ይስጡ',
       loading: 'በመጫን ላይ',
-      email: 'ኢሜል (ግዴታ አይደለም)',
+
+      // Labels
+      email: 'ኢሜል',
       nickname: 'ስም',
-      reply_placeholder: 'አስተያየትዎን እዚህ ይጻፉ...',
+      comment_label: 'አስተያየት',
+
+      // Placeholders
+      email_placeholder: 'ኢሜሎትን ይፃፉ',
+      nickname_placeholder: 'ስሞትን ይፃፉ',
+      comment_placeholder: 'አስተያየትዎን ይፃፉ',
+
+      // Buttons and actions
+      reply_placeholder: 'መልስ...',
       reply_btn: 'መልስ',
       sending: 'በመላክ ላይ...',
+
+      // Validation and messages
       mod_badge: 'አስተዳዳሪ',
-      content_is_required: 'የአስተያየት ይዘት ያስፈልጋል',
+      content_is_required: 'አስተያየት ያስፈልጋል',
       nickname_is_required: 'ስም ያስፈልጋል',
-      comment_has_been_sent: 'አስተያየትዎ በግምገማ ላይ ነው፤ እባክዎ እስኪጸድቅ ይጠብቁ።',
+      comment_has_been_sent: 'አስተያየትዎ ተልኳል። እባክዎን ለማረጋገጥ ይጠብቁ።',
     };
 
     setIsLoading(true);
