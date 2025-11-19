@@ -73,9 +73,9 @@ export function Comments() {
       comment_label: 'አስተያየት',
 
       // Placeholders
-      email_placeholder: 'ኢሜሎትን ይፃፉ',
-      nickname_placeholder: 'ስሞትን ይፃፉ',
-      comment_placeholder: 'አስተያየትዎን ይፃፉ',
+      email_placeholder: 'የኢሜይል አድራሻ',
+      nickname_placeholder: 'ስም',
+      comment_placeholder: 'አስተያየትዎን ይጻፉ ...',
 
       // Buttons and actions
       reply_placeholder: 'መልስ...',
