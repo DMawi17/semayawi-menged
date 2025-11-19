@@ -86,7 +86,7 @@ export function Comments() {
       mod_badge: 'አስተዳዳሪ',
       content_is_required: 'አስተያየት ያስፈልጋል',
       nickname_is_required: 'ስም ያስፈልጋል',
-      comment_has_been_sent: 'አስተያየትዎ ተልኳል። እባክዎን ለማረጋገጥ ይጠብቁ።',
+      comment_has_been_sent: 'አስተያየትዎ ተልኳል። እባክዎን እስኪጸድቅ ይጠብቁ።',
     };
 
     setIsLoading(true);
