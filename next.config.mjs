@@ -32,7 +32,7 @@ const nextConfig = {
 							"font-src 'self' https://fonts.gstatic.com",
 							"img-src 'self' data: https: blob:",
 							"media-src 'self' blob: data:",
-							"frame-src https://cusdis-production-d5a0.up.railway.app",
+							"frame-src 'self' https://cusdis-production-d5a0.up.railway.app blob: data:",
 							"connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://cusdis-production-d5a0.up.railway.app",
 						].join('; '),
 					},
