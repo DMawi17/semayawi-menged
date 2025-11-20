@@ -83,7 +83,7 @@ export default function BookmarksPage() {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>ሁሉንም ምልክቶች ይሰረዙ?</AlertDialogTitle>
+                  <AlertDialogTitle>ሁሉም የተቀመጡ ጽሑፎች ይሰረዙ?</AlertDialogTitle>
                   <AlertDialogDescription>
                     ይህ እርምጃ ሊቀለበስ አይችልም። ሁሉም የተቀመጡ ጽሑፎች በቋሚነት ይሰረዛሉ።
                   </AlertDialogDescription>
@@ -94,7 +94,7 @@ export default function BookmarksPage() {
                     onClick={handleClearAll}
                     className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer dark:bg-destructive dark:text-white"
                   >
-                    አዎ፣ ሁሉንም ሰርዝ
+                    ሰርዝ
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
