@@ -284,6 +284,13 @@ a:not(.no-accent):hover {
   color: #ffffff !important;
 }
 
+/* Code block copy button cursor */
+pre button,
+[data-rehype-pretty-code-fragment] button,
+.prose pre button {
+  cursor: pointer !important;
+}
+
 /* Print Styles */
 @media print {
   header,
