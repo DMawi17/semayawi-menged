@@ -61,7 +61,7 @@ export function Comments() {
       return;
     }
 
-    // Set Amharic locale - Updated 2025-11-18
+    // Set Amharic locale - Updated 2025-11-20
     window.CUSDIS_LOCALE = {
       powered_by: 'አስተያየቶች በ Cusdis የቀረቡ ናቸው',
       post_comment: 'አስተያየት ይስጡ',
@@ -80,7 +80,7 @@ export function Comments() {
       // Buttons and actions
       reply_placeholder: 'መልስ...',
       reply_btn: 'መልስ',
-      sending: 'በመላክ ላይ...',
+      sending: 'አስተያየት ይስጡ', // Keep same as post_comment to prevent size change
 
       // Validation and messages
       mod_badge: 'አስተዳዳሪ',
