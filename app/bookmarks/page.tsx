@@ -11,6 +11,17 @@ import {
   formatRelativeTime,
   type Bookmark as BookmarkType,
 } from "@/lib/localStorage-utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
@@ -27,10 +38,8 @@ export default function BookmarksPage() {
   };
 
   const handleClearAll = () => {
-    if (window.confirm("እርግጠኛ ነዎት ሁሉንም ምልክቶች መሰረዝ ይፈልጋሉ? (Are you sure you want to clear all bookmarks?)")) {
-      clearAllBookmarks();
-      setBookmarks([]);
-    }
+    clearAllBookmarks();
+    setBookmarks([]);
   };
 
   if (loading) {
@@ -62,14 +71,34 @@ export default function BookmarksPage() {
           </p>
 
           {bookmarks.length > 0 && (
-            <button
-              onClick={handleClearAll}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors text-sm font-medium cursor-pointer"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">ሁሉንም ሰርዝ</span>
-              <span className="sm:hidden">ሰርዝ</span>
-            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors text-sm font-medium cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">ሁሉንም ሰርዝ</span>
+                  <span className="sm:hidden">ሰርዝ</span>
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>ሁሉንም ምልክቶች ይሰረዙ?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    ይህ እርምጃ ሊቀለበስ አይችልም። ሁሉም የተቀመጡ ጽሑፎች በቋሚነት ይሰረዛሉ።
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">አቋርጥ</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleClearAll}
+                    className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer dark:bg-destructive dark:text-white"
+                  >
+                    አዎ፣ ሁሉንም ሰርዝ
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
       </div>
