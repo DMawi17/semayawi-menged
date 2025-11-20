@@ -93,6 +93,8 @@ export function Newsletter() {
               placeholder="ኢሜልዎን ያስገቡ"
               className="w-full h-12 px-3 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:border-primary/50 text-sm"
               disabled={status === "loading"}
+              aria-invalid={status === "error"}
+              aria-describedby={message ? "newsletter-message" : undefined}
             />
             <button
               type="submit"
@@ -102,15 +104,19 @@ export function Newsletter() {
               {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
             </button>
           </form>
-          {message && (
-            <p
-              className={`mt-2 text-sm ${
-                status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
-              }`}
-            >
-              {message}
-            </p>
-          )}
+          {/* Fixed height container to prevent layout shift */}
+          <div className="h-7 mt-2" role="status" aria-live="polite">
+            {message && (
+              <p
+                id="newsletter-message"
+                className={`text-sm leading-7 transition-opacity ${
+                  status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {message}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
