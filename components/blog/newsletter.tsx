@@ -87,11 +87,10 @@ export function Newsletter() {
           </p>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ኢሜልዎን ያስገቡ"
-              required
               className="w-full h-12 px-3 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:border-primary/50 text-sm"
               disabled={status === "loading"}
             />
