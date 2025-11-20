@@ -91,6 +91,9 @@ export function getWelcomeEmailHtml(subscriberEmail: string): string {
                 <a href="${siteConfig.url}/blog" style="color: #667eea; text-decoration: none; font-size: 12px; margin: 0 10px;">ብሎግ (Blog)</a>
                 <a href="${siteConfig.url}/about" style="color: #667eea; text-decoration: none; font-size: 12px; margin: 0 10px;">ስለ እኛ (About)</a>
               </div>
+              <p style="margin: 15px 0 0; color: #9ca3af; font-size: 11px; text-align: center;">
+                <a href="${siteConfig.url}/unsubscribe?email=${encodeURIComponent(safeEmail)}" style="color: #9ca3af; text-decoration: underline;">አባልነትን ይሰርዙ (Unsubscribe)</a>
+              </p>
             </td>
           </tr>
         </table>
