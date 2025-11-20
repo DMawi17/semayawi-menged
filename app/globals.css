@@ -337,10 +337,12 @@ a:not(.no-accent):hover {
 /* Cusdis Comments Styles */
 .cusdis-container {
   width: 100%;
+  overflow: hidden; /* Prevent scrollbar */
 }
 
 #cusdis_thread {
   width: 100% !important;
+  overflow: hidden !important; /* Prevent scrollbar */
 }
 
 #cusdis_thread iframe {
@@ -349,6 +351,7 @@ a:not(.no-accent):hover {
   min-height: 300px;
   background: transparent;
   border-radius: 0.5rem;
+  overflow: hidden !important; /* Prevent scrollbar in iframe */
 }
 
 /* Ensure Cusdis widget matches theme */
@@ -363,6 +366,7 @@ a:not(.no-accent):hover {
 /* Improve Cusdis form styling within iframe */
 #cusdis_thread iframe body {
   font-family: var(--font-sans) !important;
+  overflow: hidden !important; /* Prevent scrollbar in iframe body */
 }
 
 /* Additional styling to blend with the blog theme */
@@ -373,5 +377,5 @@ a:not(.no-accent):hover {
 /* Ensure proper spacing and alignment */
 #cusdis_thread {
   display: block;
-  overflow: hidden;
+  overflow: hidden !important;
 }
