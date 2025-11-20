@@ -32,7 +32,7 @@ export function BibleVerse({ verse, reference, variant = 'default' }: BibleVerse
         {/* Copy button - top right corner */}
         <button
           onClick={handleCopy}
-          className="absolute top-4 right-4 p-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition flex items-center gap-1"
+          className="absolute top-4 right-4 p-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition flex items-center gap-1 cursor-pointer"
           title={copied ? 'ተቀድቷል!' : 'ቅዳ'}
         >
           <Copy className="w-4 h-4" />
@@ -62,7 +62,7 @@ export function BibleVerse({ verse, reference, variant = 'default' }: BibleVerse
       {/* Copy button - top right corner */}
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 p-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md text-xs transition"
+        className="absolute top-3 right-3 p-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md text-xs transition cursor-pointer"
         title={copied ? 'ተቀድቷል!' : 'ቅዳ'}
       >
         <Copy className="w-3.5 h-3.5" />
