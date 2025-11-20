@@ -61,7 +61,7 @@ export function Newsletter() {
 
       if (response.ok) {
         setStatus("success");
-        setMessage(data.message || "አመሰግናለሁ! የተመዘገቡ ናቸው።");
+        setMessage(data.message || "እናመሰግናለን! ተመዝግበዋል።");
         setEmail("");
       } else {
         setStatus("error");

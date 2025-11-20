@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     if (subscribers.has(normalizedEmail)) {
       return NextResponse.json(
         {
-          message: "ቀደም ብለው ተመዝግበዋል! (You're already subscribed!)",
+          message: "ቀደም ብለው ተመዝግበዋል!",
         },
         { status: 200 }
       );
@@ -132,10 +132,11 @@ export async function POST(req: NextRequest) {
     // Try to send welcome email using Resend (non-blocking)
     // If email sending fails (e.g., unverified recipient in Resend), subscription still succeeds
     try {
+      const fromEmail = process.env.RESEND_FROM_EMAIL || `${siteConfig.name} <onboarding@resend.dev>`;
       const { data, error } = await resend.emails.send({
-        from: `${siteConfig.name} <onboarding@resend.dev>`, // Update this in production with your verified domain
+        from: fromEmail,
         to: [normalizedEmail],
-        subject: `እንኳን ደህና መጡ ወደ ${siteConfig.name}! (Welcome to ${siteConfig.name}!)`,
+        subject: `እንኳን ደህና መጡ ወደ ${siteConfig.name}!`,
         html: getWelcomeEmailHtml(normalizedEmail),
         text: getWelcomeEmailText(normalizedEmail),
       });
@@ -156,7 +157,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "አመሰግናለሁ! የተመዘገቡ ናቸው። (Thank you! You're subscribed.)",
+        message: "እናመሰግናለን! ተመዝግበዋል።",
         success: true,
       },
       { status: 200 }
