@@ -9,33 +9,33 @@ interface CalloutProps {
 const calloutConfig = {
   info: {
     emoji: "ℹ️",
-    bgColor: "bg-gradient-to-r from-blue-50/80 to-sky-50/80 dark:from-blue-900/20 dark:to-sky-900/20",
-    borderColor: "border-blue-500 dark:border-blue-400",
-    titleColor: "text-blue-800 dark:text-blue-300",
+    bgColor: "bg-gradient-to-r from-[#E8F4F5]/80 to-[#D4E9EB]/80 dark:from-[#57949F]/10 dark:to-[#57949F]/20",
+    borderColor: "border-[#57949F] dark:border-[#57949F]",
+    titleColor: "text-[#3d6870] dark:text-[#7AAFB8]",
   },
   warning: {
     emoji: "⚠️",
-    bgColor: "bg-gradient-to-r from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20",
-    borderColor: "border-yellow-500 dark:border-yellow-400",
-    titleColor: "text-yellow-800 dark:text-yellow-300",
+    bgColor: "bg-gradient-to-r from-[#F9EBE5]/80 to-[#F4DDD3]/80 dark:from-[#DD7F68]/10 dark:to-[#DD7F68]/20",
+    borderColor: "border-[#DD7F68] dark:border-[#DD7F68]",
+    titleColor: "text-[#B05940] dark:text-[#E89A82]",
   },
   danger: {
     emoji: "🚨",
-    bgColor: "bg-gradient-to-r from-red-50/80 to-rose-50/80 dark:from-red-900/20 dark:to-rose-900/20",
-    borderColor: "border-red-500 dark:border-red-400",
-    titleColor: "text-red-800 dark:text-red-300",
+    bgColor: "bg-gradient-to-r from-[#FCE8E8]/80 to-[#F8D6D6]/80 dark:from-red-900/10 dark:to-rose-900/20",
+    borderColor: "border-[#d20f39] dark:border-red-400",
+    titleColor: "text-[#a00c2e] dark:text-red-300",
   },
   success: {
     emoji: "✅",
-    bgColor: "bg-gradient-to-r from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20",
-    borderColor: "border-green-500 dark:border-green-400",
-    titleColor: "text-green-800 dark:text-green-300",
+    bgColor: "bg-gradient-to-r from-[#E5F3F0]/80 to-[#D4E9E5]/80 dark:from-emerald-900/10 dark:to-teal-900/20",
+    borderColor: "border-[#4a9982] dark:border-emerald-400",
+    titleColor: "text-[#2d7a63] dark:text-emerald-300",
   },
   spiritual: {
     emoji: "🔥",
-    bgColor: "bg-gradient-to-r from-purple-50/80 to-violet-50/80 dark:from-purple-900/20 dark:to-violet-900/20",
-    borderColor: "border-purple-500 dark:border-purple-400",
-    titleColor: "text-purple-800 dark:text-purple-300",
+    bgColor: "bg-gradient-to-r from-[#F3E8ED]/80 to-[#E9D6DF]/80 dark:from-[#B4637A]/10 dark:to-[#B4637A]/20",
+    borderColor: "border-[#B4637A] dark:border-[#B4637A]",
+    titleColor: "text-[#8d4d61] dark:text-[#C98399]",
   },
 };
 
