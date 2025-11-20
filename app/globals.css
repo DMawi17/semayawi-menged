@@ -369,6 +369,14 @@ a:not(.no-accent):hover {
   overflow: hidden !important; /* Prevent scrollbar in iframe body */
 }
 
+/* Fix button size to prevent layout shift during sending */
+#cusdis_thread iframe body button[type="submit"],
+#cusdis_thread iframe body .cusdis-sdk button {
+  white-space: nowrap !important; /* Prevent text wrapping */
+  min-height: 40px !important; /* Fix button height */
+  height: 40px !important; /* Fix button height */
+}
+
 /* Additional styling to blend with the blog theme */
 .cusdis-container {
   margin-top: 1rem;
