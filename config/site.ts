@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "ሰማያዊ መንገድ",
   nameEnglish: "Semayawi Menged",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://semayawi.blog",
   description: "Biblical stories and wisdom in Amharic - Women of the Bible, Church History, and Theological insights",
   descriptionAmharic: "የመጽሐፍ ቅዱስ ታሪኮች እና ጥበብ - የቅዱሳን ሴቶች፣ የቤተክርስቲያን ታሪክ እና የሃይማኖት ትምህርቶች",
   author: "ዳግማዊ አሰግድ",
