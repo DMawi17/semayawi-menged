@@ -5,7 +5,6 @@ import { ReactNode } from "react";
 import { slug as slugger } from "github-slugger";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
-import { Highlight } from "@/components/mdx/highlight";
 import { SectionDivider } from "@/components/blog/SectionDivider";
 import { BibleVerse } from "@/components/mdx/bible-verse";
 import { PrayerPrompt } from "@/components/mdx/prayer-prompt";
@@ -189,7 +188,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		// Custom components
 		Callout,
 		Quote,
-		Highlight,
 		BibleVerse,
 		PrayerPrompt,
 		NumberedList,
