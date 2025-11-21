@@ -1,83 +1,188 @@
-# Replace Giscus with Cusdis - Task List
+# Security & Code Quality TODO List
 
-## Phase 1: Setup & Discovery
-- [x] Create new branch from main and checkout
-- [x] Create TODO.md file with all tasks listed
-- [x] Research current Giscus implementation in the codebase
-
-### Research Findings:
-**Giscus Implementation Details:**
-- Main component: `components/blog/comments.tsx` (160 lines)
-- DNS prefetch in: `app/layout.tsx:74`
-- Environment variables in: `.env.local` (4 Giscus variables)
-- Documentation files: `GISCUS_SETUP.md`, `IMPLEMENTATION_SUMMARY.md`
-- Test files: 9 Playwright test files in `tests/` directory
-- Debug docs: 3 files in `docs/debugging/` directory
-- No Giscus package dependency (uses CDN script injection)
-
-**Files to Remove/Update:**
-1. Components: `components/blog/comments.tsx`
-2. Layout: `app/layout.tsx` (remove DNS prefetch)
-3. Environment: `.env.local` (remove 4 Giscus vars)
-4. Documentation: `GISCUS_SETUP.md`, `IMPLEMENTATION_SUMMARY.md`, `README.md`
-5. Tests: All 9 Giscus-related test files
-6. Debug docs: 3 files in `docs/debugging/`
-
-## Phase 2: Removal
-- [x] Remove all Giscus-related code and components
-- [x] Remove Giscus dependencies from package.json (N/A - CDN-based)
-
-## Phase 3: Cusdis Setup
-- [x] ~~Set up Cusdis account and get app credentials~~ (User will do this following CUSDIS_SETUP.md)
-- [x] Install Cusdis React component package (Using CDN - React 19 incompatibility)
-
-## Phase 4: Implementation
-- [x] Create Cusdis comment component
-- [x] Integrate Cusdis component into blog post layout (Already integrated)
-- [x] Add Cusdis configuration to environment variables
-
-## Phase 5: Polish & Testing
-- [x] Style Cusdis component to match blog theme (Styling built into component)
-- [x] Test Cusdis implementation on development server (✓ Tested - working)
-- [x] Update documentation with Cusdis setup instructions (CUSDIS_SETUP.md created)
-
-### Test Results:
-- ✅ Dev server starts successfully
-- ✅ Blog page loads with Cusdis component
-- ✅ Unconfigured state shows setup instructions
-- ✅ Amharic UI elements display correctly
-- ✅ Component structure matches previous implementation
+Generated: 2025-11-20
+Based on: Comprehensive Security & Code Quality Review
 
 ---
 
-## ✅ Migration Complete!
+## 🚨 CRITICAL Priority (Must Fix Before Production)
 
-All tasks have been successfully completed. The blog now uses Cusdis instead of Giscus.
+- [x] **Fix JSON-LD XSS Vulnerability** ✅ COMPLETED
+  - File: `components/seo/json-ld.tsx`
+  - Issue: `dangerouslySetInnerHTML` with unsanitized JSON could allow script injection
+  - Action: Add sanitization helper to escape `</script>` tags
+  - Severity: CRITICAL - XSS vulnerability
+  - Fixed: Added `sanitizeJsonLd()` helper and applied to all 6 JSON-LD functions
 
-### Summary of Changes:
-1. ✅ Removed all Giscus-related code (4 test files, 3 debug docs, 2 setup docs)
-2. ✅ Removed Giscus configuration from environment files
-3. ✅ Created new Cusdis comment component with CDN approach
-4. ✅ Updated README.md with Cusdis references
-5. ✅ Created comprehensive CUSDIS_SETUP.md documentation
-6. ✅ Tested implementation successfully
-
-### Next Steps for User:
-1. Sign up at https://cusdis.com
-2. Create a website and get App ID
-3. Add `NEXT_PUBLIC_CUSDIS_APP_ID` to `.env.local`
-4. Restart dev server
-5. Test comments on blog posts
-
-### Files Changed:
-- Modified: `components/blog/comments.tsx`, `app/layout.tsx`, `.env.local`, `.env.example`, `README.md`
-- Created: `CUSDIS_SETUP.md`, `TODO.md`
-- Deleted: 9 Giscus test files, 3 debug docs, `GISCUS_SETUP.md`, `IMPLEMENTATION_SUMMARY.md`
+- [ ] **Fix Newsletter Subscription Race Condition**
+  - File: `app/api/newsletter/route.ts`
+  - Issue: User added to subscribers before email send confirmation
+  - Action: Send email first, then add to subscribers list
+  - Severity: CRITICAL - Data consistency issue
 
 ---
 
-## Notes
-- Cusdis is lightweight and privacy-friendly
-- Requires App ID from cusdis.com
-- Self-hostable or use their cloud service
-- See CUSDIS_SETUP.md for detailed setup instructions
+## 🔴 HIGH Priority (Fix This Week)
+
+- [ ] **Enhance CSRF Protection in Newsletter API**
+  - File: `app/api/newsletter/route.ts`
+  - Issue: Origin header check is bypassable
+  - Action: Add explicit allowed origins list with referer validation
+  - Severity: HIGH - CSRF attack vector
+
+- [ ] **Add Error Handling to Clipboard API (BibleVerse)**
+  - File: `components/mdx/bible-verse.tsx`
+  - Issue: Missing try-catch and navigator availability check
+  - Action: Wrap clipboard operations in async try-catch
+  - Severity: MEDIUM - Runtime crash potential
+
+- [ ] **Add Error Handling to Clipboard API (ShareButtons)**
+  - File: `components/blog/share-buttons.tsx`
+  - Issue: Unhandled promise rejection in native share
+  - Action: Add navigator availability check and proper error handling
+  - Severity: MEDIUM - User experience issue
+
+- [ ] **Fix Rate Limiting Memory Leak**
+  - File: `app/api/newsletter/route.ts`
+  - Issue: Cleanup interval causes memory leak in serverless
+  - Action: Replace interval-based cleanup with per-request cleanup
+  - Severity: MEDIUM - Memory leak in serverless
+
+- [ ] **Add CSP Nonce to Cusdis Script Loading**
+  - File: `components/blog/comments.tsx`
+  - Issue: External script loading without SRI or CSP nonce
+  - Action: Add nonce support for CSP-compatible loading
+  - Severity: MEDIUM - Supply chain attack vector
+
+---
+
+## 🟡 MEDIUM Priority (This Month)
+
+- [ ] **Add React.memo to ShareButtons Component**
+  - File: `components/blog/share-buttons.tsx`
+  - Issue: Unnecessary re-renders on parent updates
+  - Action: Wrap component with React.memo
+  - Severity: HIGH - Performance optimization
+
+- [ ] **Optimize TableOfContents Performance**
+  - File: `components/blog/table-of-contents.tsx`
+  - Issue: Expensive DOM queries and excessive re-renders
+  - Action: Add requestAnimationFrame for batched updates, optimize selector
+  - Severity: MEDIUM - Performance optimization
+
+- [ ] **Optimize Image Loading Configuration**
+  - File: `lib/mdx-components.tsx`
+  - Issue: Missing lazy loading, sizes, and blur placeholder
+  - Action: Add sizes, loading="lazy", quality optimization
+  - Severity: MEDIUM - Core Web Vitals impact
+
+- [ ] **Fix TypeScript any Usage (comments.tsx)**
+  - File: `components/blog/comments.tsx`
+  - Issue: `CUSDIS?: any; CUSDIS_LOCALE?: any;`
+  - Action: Define proper TypeScript interfaces for Cusdis
+  - Severity: MEDIUM - Type safety
+
+- [ ] **Fix TypeScript any Usage (view-transition-link.tsx)**
+  - File: `components/view-transition-link.tsx`
+  - Issue: `[key: string]: any;` in interface
+  - Action: Define proper types for view transition properties
+  - Severity: MEDIUM - Type safety
+
+- [ ] **Fix TypeScript any Usage (newsletter route)**
+  - File: `app/api/newsletter/route.ts`
+  - Issue: Implicit any in `catch (emailError)`
+  - Action: Type error as `unknown` and narrow type
+  - Severity: MEDIUM - Type safety
+
+---
+
+## 🟢 LOW Priority (This Quarter)
+
+- [ ] **Create Shared Error Handling Utility**
+  - Files: Multiple components with duplicate patterns
+  - Issue: Duplicate error handling code in newsletter, bookmark, share buttons
+  - Action: Create `lib/error-handler.ts` with shared utility
+  - Severity: MEDIUM - Code maintainability
+
+- [ ] **Add JSDoc Comments to Utility Functions**
+  - Files: `lib/reading-time.ts`, `lib/utils.ts`, others
+  - Issue: Missing documentation for utility functions
+  - Action: Add comprehensive JSDoc comments
+  - Severity: LOW - Documentation
+
+- [ ] **Standardize Error Messages**
+  - Files: Multiple components
+  - Issue: Mix of Amharic/English in console logs vs user messages
+  - Action: Create `config/messages.ts` with centralized messages
+  - Severity: LOW - User experience
+
+- [ ] **Setup Unit Testing Framework**
+  - Files: New test files
+  - Issue: No unit tests, only e2e tests exist
+  - Action: Install Vitest, create example tests for lib/email-validation.ts
+  - Severity: MEDIUM - Testing coverage
+
+- [ ] **Add Content Security Policy Headers**
+  - Files: `next.config.js` or middleware
+  - Issue: No CSP headers implemented
+  - Action: Add CSP configuration for production
+  - Severity: MEDIUM - Security hardening
+
+---
+
+## 📋 Architectural Improvements (Future)
+
+- [ ] **Create API Client Utilities Folder**
+  - Action: Add `lib/api/` folder for organized API client code
+  - Priority: LOW
+
+- [ ] **Add Validation Schemas Folder**
+  - Action: Add `lib/validation/` folder for Zod schemas or similar
+  - Priority: LOW
+
+- [ ] **Add Constants Folder**
+  - Action: Add `lib/constants/` for app-wide constants
+  - Priority: LOW
+
+- [ ] **Setup Storybook Documentation**
+  - Action: Install Storybook and document MDX components
+  - Priority: LOW
+
+- [ ] **Add Bundle Size Monitoring**
+  - Action: Setup bundlesize or similar for CI monitoring
+  - Priority: LOW
+
+- [ ] **Implement Error Tracking Service**
+  - Action: Integrate Sentry or similar for production error tracking
+  - Priority: MEDIUM
+
+---
+
+## ✅ Completed Items
+
+- [x] **Fix JSON-LD XSS Vulnerability** (2025-11-20)
+  - File: `components/seo/json-ld.tsx`
+  - Added `sanitizeJsonLd()` helper that escapes `<`, `>`, `&`, and Unicode line/paragraph separators
+  - Applied to all 6 JSON-LD schema functions
+  - Prevents XSS attacks through malicious post titles or descriptions
+
+---
+
+## 📊 Progress Summary
+
+- **Total Items**: 29
+- **Critical**: 1 remaining (1 completed)
+- **High**: 5
+- **Medium**: 10
+- **Low**: 12
+- **Completed**: 1
+
+---
+
+## 🎯 Current Focus
+
+Starting with CRITICAL priority items to ensure production safety.
+
+---
+
+_Last Updated: 2025-11-20_

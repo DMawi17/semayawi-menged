@@ -19,7 +19,6 @@ import { HistoryTracker } from "@/components/blog/history-tracker";
 import { AudioPlayer } from "@/components/blog/audio-player";
 import { Callout } from "@/components/mdx/callout";
 import { Quote } from "@/components/mdx/quote";
-import { Highlight } from "@/components/mdx/highlight";
 import { BibleVerse } from "@/components/mdx/bible-verse";
 import { PrayerPrompt } from "@/components/mdx/prayer-prompt";
 import { NumberedList, ListItem } from "@/components/mdx/numbered-list";
@@ -144,7 +143,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const mdxComponents = getMDXComponents({
     Callout,
     Quote,
-    Highlight,
     DropCap,
     BibleVerse,
     PrayerPrompt,

@@ -13,6 +13,7 @@ function isValidEmail(email: string): boolean {
 }
 
 export function Newsletter() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -31,6 +32,13 @@ export function Newsletter() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate name
+    if (!name.trim()) {
+      setStatus("error");
+      setMessage("እባክዎ ስምዎን ያስገቡ።");
+      return;
+    }
 
     // Validate email format
     if (!email.trim()) {
@@ -54,7 +62,7 @@ export function Newsletter() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim() }),
       });
 
       const data = await response.json();
@@ -62,6 +70,7 @@ export function Newsletter() {
       if (response.ok) {
         setStatus("success");
         setMessage(data.message || "እናመሰግናለን! ተመዝግበዋል።");
+        setName("");
         setEmail("");
       } else {
         setStatus("error");
@@ -85,38 +94,64 @@ export function Newsletter() {
           <p className="text-sm text-muted-foreground mb-4">
             የመጽሐፍ ቅዱስ ጥናቶችን እና አዲስ ጽሁፎችን በቀጥታ ወደ ኢሜልዎ ይቀበሉ።
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ኢሜልዎን ያስገቡ"
-              className="w-full h-12 px-3 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:border-primary/50 text-sm"
-              disabled={status === "loading"}
-              aria-invalid={status === "error"}
-              aria-describedby={message ? "newsletter-message" : undefined}
-            />
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              className="h-10 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer w-full"
-            >
-              {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
-            </button>
-          </form>
-          {/* Fixed height container to prevent layout shift */}
-          <div className="h-7 mt-2" role="status" aria-live="polite">
-            {message && (
-              <p
-                id="newsletter-message"
-                className={`text-sm leading-7 transition-opacity ${
-                  status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
-                }`}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <label htmlFor="newsletter-name" className="block text-sm font-medium mb-1.5">
+                  ስም
+                </label>
+                <input
+                  id="newsletter-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="ስምዎን ያስገቡ"
+                  className="w-full h-11 px-4 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:border-primary/50 text-sm"
+                  disabled={status === "loading"}
+                  aria-invalid={status === "error"}
+                  aria-describedby={message ? "newsletter-message" : undefined}
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="newsletter-email" className="block text-sm font-medium mb-1.5">
+                  ኢሜል
+                </label>
+                <input
+                  id="newsletter-email"
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ኢሜልዎን ያስገቡ"
+                  className="w-full h-11 px-4 rounded-lg border bg-white/60 dark:bg-white/5 focus:outline-none focus:border-primary/50 text-sm"
+                  disabled={status === "loading"}
+                  aria-invalid={status === "error"}
+                  aria-describedby={message ? "newsletter-message" : undefined}
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              {/* Fixed height container to prevent layout shift */}
+              <div className="flex-1 h-11 flex items-center" role="status" aria-live="polite">
+                {message && (
+                  <p
+                    id="newsletter-message"
+                    className={`text-sm transition-opacity ${
+                      status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {message}
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="h-11 px-8 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
               >
-                {message}
-              </p>
-            )}
-          </div>
+                {status === "loading" ? "በመላክ ላይ..." : "ይመዝገቡ"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

@@ -7,6 +7,21 @@ type JsonLd = {
 	[key: string]: unknown;
 };
 
+/**
+ * Sanitizes JSON-LD data to prevent XSS attacks
+ * Escapes characters that could break out of JSON context
+ * @param obj - JSON-LD object to sanitize
+ * @returns Sanitized JSON string safe for dangerouslySetInnerHTML
+ */
+function sanitizeJsonLd(obj: JsonLd): string {
+	return JSON.stringify(obj)
+		.replace(/</g, '\\u003c')
+		.replace(/>/g, '\\u003e')
+		.replace(/&/g, '\\u0026')
+		.replace(/\u2028/g, '\\u2028') // Line separator
+		.replace(/\u2029/g, '\\u2029'); // Paragraph separator
+}
+
 // Article Schema for blog posts
 export function ArticleJsonLd({
 	title,
@@ -63,7 +78,7 @@ export function ArticleJsonLd({
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }
@@ -88,7 +103,7 @@ export function BreadcrumbJsonLd({
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }
@@ -121,7 +136,7 @@ export function PersonJsonLd({
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }
@@ -145,7 +160,7 @@ export function OrganizationJsonLd() {
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }
@@ -171,7 +186,7 @@ export function WebSiteJsonLd() {
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }
@@ -195,7 +210,7 @@ export function BlogJsonLd() {
 	return (
 		<script
 			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
 		/>
 	);
 }

@@ -4,9 +4,10 @@ import { Metadata } from "next";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPostsByCategory } from "@/lib/categories.server";
 import { CategoryBadge } from "@/components/blog/category-badge";
-import { Calendar } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { notFound } from "next/navigation";
 import { formatEthiopianDate } from "@/lib/ethiopian-date";
+import { calculateReadingTime } from "@/lib/reading-time";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const category = getCategoryBySlug("women-of-bible");
@@ -71,6 +72,7 @@ export default async function WomenOfBiblePage() {
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{posts.map((post) => {
 						const formattedDate = formatEthiopianDate(post.date);
+						const readingTime = calculateReadingTime(post.rawContent || "");
 
 						return (
 							<article
@@ -90,7 +92,7 @@ export default async function WomenOfBiblePage() {
 										</div>
 									)}
 									<div className="p-5">
-										<div className="flex items-center gap-3 mb-3">
+										<div className="flex items-center gap-3 mb-3 flex-wrap">
 											<CategoryBadge
 												categoryId={post.category}
 												showIcon={false}
@@ -105,6 +107,10 @@ export default async function WomenOfBiblePage() {
 												>
 													{formattedDate}
 												</time>
+											</div>
+											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+												<Clock className="h-3 w-3" />
+												<span>{readingTime.minutes} ደቂቃ</span>
 											</div>
 										</div>
 
