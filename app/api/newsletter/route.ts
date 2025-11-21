@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     // Parse request body
     const body = await req.json();
-    const { email } = body;
+    const { email, name } = body;
 
     // Validate email using robust validation utility
     const validation = validateEmail(email, {
@@ -136,9 +136,9 @@ export async function POST(req: NextRequest) {
       const { data, error } = await resend.emails.send({
         from: fromEmail,
         to: [normalizedEmail],
-        subject: `እንኳን ደህና መጡ ወደ ${siteConfig.name}!`,
-        html: getWelcomeEmailHtml(normalizedEmail),
-        text: getWelcomeEmailText(normalizedEmail),
+        subject: `🙏 እንኳን ወደ ${siteConfig.name} በደህና መጡ!`,
+        html: getWelcomeEmailHtml(normalizedEmail, name),
+        text: getWelcomeEmailText(normalizedEmail, name),
       });
 
       if (error) {
