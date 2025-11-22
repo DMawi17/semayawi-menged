@@ -108,39 +108,8 @@ export async function POST(req: NextRequest) {
     // Initialize Resend with API key inside the function
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Check for duplicate in Resend audience (more reliable than in-memory)
-    try {
-      // Try to get the contact from Resend
-      const audienceId = process.env.RESEND_AUDIENCE_ID;
-
-      if (audienceId) {
-        // Check if contact already exists in audience
-        const { data: contacts } = await resend.contacts.list({
-          audienceId: audienceId,
-        });
-
-        if (contacts && contacts.data) {
-          const existingContact = contacts.data.find(
-            (contact: any) => contact.email.toLowerCase() === normalizedEmail.toLowerCase()
-          );
-
-          if (existingContact) {
-            console.log(`Duplicate subscription attempt: ${normalizedEmail}`);
-            return NextResponse.json(
-              {
-                message: "ቀደም ብለው ተመዝግበዋል! (You're already subscribed!)",
-              },
-              { status: 200 }
-            );
-          }
-        }
-      }
-    } catch (checkError) {
-      // If checking fails, log but continue (fail open)
-      console.warn("Failed to check for duplicate subscription:", checkError);
-    }
-
-    // Also check in-memory cache for this session
+    // Check for duplicate subscription using in-memory cache
+    // In production, this should check a database
     if (subscribers.has(normalizedEmail)) {
       return NextResponse.json(
         {
@@ -161,28 +130,23 @@ export async function POST(req: NextRequest) {
     }
     subscribers.add(normalizedEmail);
 
-    // Add contact to Resend audience for better management
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
-    if (audienceId) {
-      try {
-        const result = await resend.contacts.create({
-          email: normalizedEmail,
-          firstName: name || "",
-          audienceId: audienceId,
-        });
-        console.log(`Added ${normalizedEmail} to Resend audience. Result:`, result);
-      } catch (audienceError: any) {
-        // Log error but don't fail subscription
-        console.error("Failed to add to Resend audience. Error details:", {
-          message: audienceError.message,
-          name: audienceError.name,
-          audienceId,
-          email: normalizedEmail,
-          fullError: audienceError,
-        });
+    // Add contact to Resend (contacts are now global, no audience ID needed)
+    // Resend has updated their API - contacts are identified by email and managed via /contacts endpoint
+    try {
+      const result = await resend.contacts.create({
+        email: normalizedEmail,
+        firstName: name || "",
+        unsubscribed: false,
+      });
+
+      if (result.data) {
+        console.log(`Added ${normalizedEmail} to Resend contacts. ID: ${result.data.id}`);
+      } else if (result.error) {
+        console.warn(`Failed to add to Resend contacts:`, result.error);
       }
-    } else {
-      console.warn("RESEND_AUDIENCE_ID not configured - skipping audience sync");
+    } catch (contactError: any) {
+      // Log error but don't fail subscription
+      console.warn("Failed to add to Resend contacts:", contactError);
     }
 
     // Try to send welcome email using Resend (non-blocking)
