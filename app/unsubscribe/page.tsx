@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -15,7 +15,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export default function UnsubscribePage() {
+function UnsubscribeContent() {
 	const searchParams = useSearchParams();
 	const email = searchParams.get("email");
 	const [status, setStatus] = useState<
@@ -182,5 +182,22 @@ export default function UnsubscribePage() {
 				)}
 			</div>
 		</div>
+	);
+}
+
+export default function UnsubscribePage() {
+	return (
+		<Suspense fallback={
+			<div className="container mx-auto px-4 py-16 max-w-2xl">
+				<div className="text-center">
+					<h1 className="text-4xl font-bold mb-6">
+						የደብዳቤ ዝርዝር አባልነትን መሰረዝ
+					</h1>
+					<p className="text-muted-foreground">በመጫን ላይ...</p>
+				</div>
+			</div>
+		}>
+			<UnsubscribeContent />
+		</Suspense>
 	);
 }
