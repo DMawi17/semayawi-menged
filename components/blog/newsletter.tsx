@@ -97,7 +97,7 @@ export function Newsletter() {
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
-                <label htmlFor="newsletter-name" className="block text-sm font-medium mb-1.5">
+                <label htmlFor="newsletter-name" className="block text-sm font-medium mb-1.5 text-left">
                   ስም
                 </label>
                 <input
@@ -113,7 +113,7 @@ export function Newsletter() {
                 />
               </div>
               <div className="flex-1">
-                <label htmlFor="newsletter-email" className="block text-sm font-medium mb-1.5">
+                <label htmlFor="newsletter-email" className="block text-sm font-medium mb-1.5 text-left">
                   ኢሜል
                 </label>
                 <input
