@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateEmail } from "@/lib/email-validation";
+import { Resend } from "resend";
 
 // WARNING: In-memory storage - NOT suitable for production!
 // In production, use a database to track unsubscribes
@@ -42,6 +43,28 @@ export async function POST(req: NextRequest) {
 
 		// Add to unsubscribed list (in production, update database)
 		unsubscribedEmails.add(normalizedEmail);
+
+		// Update contact in Resend to mark as unsubscribed
+		if (process.env.RESEND_API_KEY) {
+			try {
+				const resend = new Resend(process.env.RESEND_API_KEY);
+
+				// Update the contact to set unsubscribed = true
+				const result = await resend.contacts.update({
+					email: normalizedEmail,
+					unsubscribed: true,
+				});
+
+				if (result.data) {
+					console.log(`Unsubscribed in Resend: ${normalizedEmail} (ID: ${result.data.id})`);
+				} else if (result.error) {
+					console.warn(`Failed to update in Resend:`, result.error);
+				}
+			} catch (resendError) {
+				// Log error but don't fail the unsubscribe
+				console.warn("Failed to update Resend contact:", resendError);
+			}
+		}
 
 		console.log(`Unsubscribed: ${normalizedEmail}`);
 
