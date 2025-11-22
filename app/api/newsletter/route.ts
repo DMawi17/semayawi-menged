@@ -94,16 +94,6 @@ export async function POST(req: NextRequest) {
     // Use normalized email from validation
     const normalizedEmail = validation.normalizedEmail!;
 
-    // Check for duplicate subscription (in production, check database)
-    if (subscribers.has(normalizedEmail)) {
-      return NextResponse.json(
-        {
-          message: "ቀደም ብለው ተመዝግበዋል!",
-        },
-        { status: 200 }
-      );
-    }
-
     // Check if RESEND_API_KEY is configured
     if (!process.env.RESEND_API_KEY) {
       console.error("RESEND_API_KEY is not configured");
@@ -118,6 +108,48 @@ export async function POST(req: NextRequest) {
     // Initialize Resend with API key inside the function
     const resend = new Resend(process.env.RESEND_API_KEY);
 
+    // Check for duplicate in Resend audience (more reliable than in-memory)
+    try {
+      // Try to get the contact from Resend
+      const audienceId = process.env.RESEND_AUDIENCE_ID;
+
+      if (audienceId) {
+        // Check if contact already exists in audience
+        const { data: contacts } = await resend.contacts.list({
+          audienceId: audienceId,
+        });
+
+        if (contacts && contacts.data) {
+          const existingContact = contacts.data.find(
+            (contact: any) => contact.email.toLowerCase() === normalizedEmail.toLowerCase()
+          );
+
+          if (existingContact) {
+            console.log(`Duplicate subscription attempt: ${normalizedEmail}`);
+            return NextResponse.json(
+              {
+                message: "ቀደም ብለው ተመዝግበዋል! (You're already subscribed!)",
+              },
+              { status: 200 }
+            );
+          }
+        }
+      }
+    } catch (checkError) {
+      // If checking fails, log but continue (fail open)
+      console.warn("Failed to check for duplicate subscription:", checkError);
+    }
+
+    // Also check in-memory cache for this session
+    if (subscribers.has(normalizedEmail)) {
+      return NextResponse.json(
+        {
+          message: "ቀደም ብለው ተመዝግበዋል!",
+        },
+        { status: 200 }
+      );
+    }
+
     // Add to subscribers set first (in production, save to database)
     // Check subscriber limit to prevent unbounded growth
     if (subscribers.size >= MAX_SUBSCRIBERS) {
@@ -128,6 +160,30 @@ export async function POST(req: NextRequest) {
       if (firstEmail) subscribers.delete(firstEmail);
     }
     subscribers.add(normalizedEmail);
+
+    // Add contact to Resend audience for better management
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    if (audienceId) {
+      try {
+        const result = await resend.contacts.create({
+          email: normalizedEmail,
+          firstName: name || "",
+          audienceId: audienceId,
+        });
+        console.log(`Added ${normalizedEmail} to Resend audience. Result:`, result);
+      } catch (audienceError: any) {
+        // Log error but don't fail subscription
+        console.error("Failed to add to Resend audience. Error details:", {
+          message: audienceError.message,
+          name: audienceError.name,
+          audienceId,
+          email: normalizedEmail,
+          fullError: audienceError,
+        });
+      }
+    } else {
+      console.warn("RESEND_AUDIENCE_ID not configured - skipping audience sync");
+    }
 
     // Try to send welcome email using Resend (non-blocking)
     // If email sending fails (e.g., unverified recipient in Resend), subscription still succeeds

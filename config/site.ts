@@ -24,7 +24,7 @@ export const siteConfig = {
     twitter: "https://twitter.com",
     github: "https://github.com/DMawi17",
     personalSite: "https://mawi17.netlify.app/",
-    email: "contact@example.com",
+    email: "info@semayawi.blog",
   },
   navigation: [
     { name: "Home", nameAmharic: "🏠 ዋና ገጽ", href: "/" },
